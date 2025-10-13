@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NeuralMeet - Your AI Meeting Clone That Attends Meetings For You</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            padding: 40px 0;
+            text-align: center;
+        }
+        
+        .logo {
+            font-size: 2.5em;
+            font-weight: 800;
+            color: white;
+            margin-bottom: 10px;
+        }
+        
+        .tagline {
+            font-size: 1.3em;
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 300;
+        }
+        
+        .hero {
+            background: white;
+            border-radius: 20px;
+            padding: 60px 40px;
+            margin: 40px 0;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+        }
+        
+        .hero h1 {
+            font-size: 3em;
+            margin-bottom: 20px;
+            color: #1a202c;
+            line-height: 1.2;
+        }
+        
+        .hero p {
+            font-size: 1.3em;
+            color: #4a5568;
+            margin-bottom: 30px;
+        }
+        
+        .problem {
+            background: #fff5f5;
+            border-left: 4px solid #fc8181;
+            padding: 30px;
+            margin: 30px 0;
+            border-radius: 10px;
+        }
+        
+        .problem h3 {
+            color: #c53030;
+            font-size: 1.5em;
+            margin-bottom: 15px;
+        }
+        
+        .solution {
+            background: #f0fff4;
+            border-left: 4px solid #48bb78;
+            padding: 30px;
+            margin: 30px 0;
+            border-radius: 10px;
+        }
+        
+        .solution h3 {
+            color: #22543d;
+            font-size: 1.5em;
+            margin-bottom: 15px;
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            margin: 40px 0;
+        }
+        
+        .stat {
+            text-align: center;
+            padding: 20px;
+            background: #edf2f7;
+            border-radius: 10px;
+        }
+        
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: 800;
+            color: #2c5364;
+            margin-bottom: 10px;
+        }
+        
+        .stat-label {
+            font-size: 1em;
+            color: #4a5568;
+        }
+        
+        .cta-section {
+            text-align: center;
+            margin: 50px 0;
+        }
+        
+        .demo-form {
+            display: flex;
+            max-width: 600px;
+            margin: 30px auto;
+            gap: 10px;
+        }
+        
+        .demo-input {
+            flex: 1;
+            padding: 15px 20px;
+            font-size: 1.1em;
+            border: 2px solid #cbd5e0;
+            border-radius: 10px;
+            outline: none;
+        }
+        
+        .demo-input:focus {
+            border-color: #2c5364;
+        }
+        
+        .cta-button {
+            padding: 15px 40px;
+            font-size: 1.1em;
+            background: linear-gradient(135deg, #0f2027 0%, #2c5364 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: transform 0.2s;
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-2px);
+        }
+        
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin: 50px 0;
+        }
+        
+        .feature {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        }
+        
+        .feature h3 {
+            font-size: 1.5em;
+            margin-bottom: 15px;
+            color: #1a202c;
+        }
+        
+        .feature p {
+            color: #4a5568;
+            line-height: 1.8;
+        }
+        
+        .use-cases {
+            background: white;
+            border-radius: 20px;
+            padding: 50px 40px;
+            margin: 40px 0;
+        }
+        
+        .use-cases h2 {
+            font-size: 2.5em;
+            margin-bottom: 40px;
+            color: #1a202c;
+            text-align: center;
+        }
+        
+        .case {
+            padding: 30px;
+            margin: 20px 0;
+            border-left: 4px solid #2c5364;
+            background: #f7fafc;
+            border-radius: 10px;
+        }
+        
+        .case h4 {
+            font-size: 1.3em;
+            color: #2c5364;
+            margin-bottom: 10px;
+        }
+        
+        .pricing {
+            background: white;
+            border-radius: 20px;
+            padding: 50px 40px;
+            margin: 40px 0;
+            text-align: center;
+        }
+        
+        .pricing h2 {
+            font-size: 2.5em;
+            margin-bottom: 40px;
+            color: #1a202c;
+        }
+        
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
+        
+        .plan {
+            padding: 30px;
+            border: 2px solid #cbd5e0;
+            border-radius: 15px;
+            transition: transform 0.3s, border-color 0.3s;
+        }
+        
+        .plan:hover {
+            transform: translateY(-5px);
+            border-color: #2c5364;
+        }
+        
+        .plan-name {
+            font-size: 1.5em;
+            font-weight: 700;
+            color: #1a202c;
+            margin-bottom: 10px;
+        }
+        
+        .plan-price {
+            font-size: 2.5em;
+            font-weight: 800;
+            color: #2c5364;
+            margin-bottom: 20px;
+        }
+        
+        .plan-features {
+            list-style: none;
+            margin-bottom: 30px;
+            text-align: left;
+        }
+        
+        .plan-features li {
+            padding: 10px 0;
+            border-bottom: 1px solid #e2e8f0;
+            color: #4a5568;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 40px 0;
+            color: white;
+        }
+        
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2em;
+            }
+            
+            .hero p {
+                font-size: 1.1em;
+            }
+            
+            .demo-form {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">NEURALMEET</div>
+            <div class="tagline">Your AI Clone Handles Meetings. You Handle What Matters.</div>
+        </header>
+        
+        <div class="hero">
+            <h1>Never Attend Another Unnecessary Meeting</h1>
+            <p>AI-powered digital clone with your voice, face, and decision-making logic. Attends meetings, makes decisions within your parameters, escalates critical issues.</p>
+            
+            <div class="problem">
+                <h3>The Meeting Crisis</h3>
+                <p>Executives waste 23 hours per week in meetings. 67 percent are unnecessary. That is 1,200 hours per year lost to calendar chaos.</p>
+            </div>
+            
+            <div class="solution">
+                <h3>The NeuralMeet Solution</h3>
+                <p>Your AI clone attends on your behalf. It speaks like you, decides like you, and only bothers you when it truly matters. Reclaim your time. Maintain your presence.</p>
+            </div>
+            
+            <div class="stats">
+                <div class="stat">
+                    <div class="stat-number">23hrs</div>
+                    <div class="stat-label">Saved Per Week</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number">67%</div>
+                    <div class="stat-label">Meetings Eliminated</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number">$47B</div>
+                    <div class="stat-label">Market Size</div>
+                </div>
+            </div>
+            
+            <div class="cta-section">
+                <h2>Schedule Your AI Clone Demo</h2>
+                <form class="demo-form" id="demoForm">
+                    <input type="email" class="demo-input" placeholder="Work email address" required>
+                    <button type="submit" class="cta-button">Book Demo</button>
+                </form>
+                <p style="color: #718096; font-size: 0.9em;">30-minute demo. See your clone in action.</p>
+            </div>
+        </div>
+        
+        <div class="features">
+            <div class="feature">
+                <h3>Voice and Video Clone</h3>
+                <p>Perfect replication of your voice tone, speaking patterns, and video presence. Meeting participants cannot tell the difference.</p>
+            </div>
+            <div class="feature">
+                <h3>Decision Framework</h3>
+                <p>Define your decision rules once. Your clone applies them consistently across all meetings. Budget thresholds, approval chains, priority logic.</p>
+            </div>
+            <div class="feature">
+                <h3>Smart Escalation</h3>
+                <p>AI knows when to loop you in. New project requests, budget overruns, team conflicts. Critical issues get your attention. Everything else runs automatically.</p>
+            </div>
+            <div class="feature">
+                <h3>Meeting Intelligence</h3>
+                <p>Every meeting transcribed, summarized, and analyzed. Action items extracted. Decisions logged. Full searchable archive of your professional interactions.</p>
+            </div>
+            <div class="feature">
+                <h3>Continuous Learning</h3>
+                <p>Your clone gets smarter with every meeting. Learns your preferences, adapts to your style, becomes more accurate over time.</p>
+            </div>
+            <div class="feature">
+                <h3>Enterprise Security</h3>
+                <p>SOC 2 compliant. End-to-end encryption. Zero data retention policy. Your meetings, your data, your control.</p>
+            </div>
+        </div>
+        
+        <div class="use-cases">
+            <h2>Who Needs This</h2>
+            <div class="case">
+                <h4>C-Suite Executives</h4>
+                <p>Attend board meetings, quarterly reviews, and investor calls while your clone handles operational syncs, status updates, and recurring check-ins.</p>
+            </div>
+            <div class="case">
+                <h4>Venture Capitalists</h4>
+                <p>50+ meetings per week reviewing deals. Send your clone to initial pitches, portfolio updates, and introduction calls. You focus on term sheets and closings.</p>
+            </div>
+            <div class="case">
+                <h4>Management Consultants</h4>
+                <p>Client meetings across multiple time zones. Your clone maintains client relationships while you deliver the high-value strategic work.</p>
+            </div>
+            <div class="case">
+                <h4>Remote Leaders</h4>
+                <p>Distributed teams mean 24/7 meeting requests. Your clone provides global coverage while you maintain healthy work-life balance.</p>
+            </div>
+        </div>
+        
+        <div class="pricing">
+            <h2>Pricing Built For Results</h2>
+            <div class="pricing-grid">
+                <div class="plan">
+                    <div class="plan-name">Solopreneur</div>
+                    <div class="plan-price">$149</div>
+                    <ul class="plan-features">
+                        <li>20 meetings per month</li>
+                        <li>Voice clone</li>
+                        <li>Basic decision rules</li>
+                        <li>Meeting summaries</li>
+                        <li>Email escalations</li>
+                    </ul>
+                    <button class="cta-button">Start Trial</button>
+                </div>
+                <div class="plan">
+                    <div class="plan-name">Executive</div>
+                    <div class="plan-price">$499</div>
+                    <ul class="plan-features">
+                        <li>Unlimited meetings</li>
+                        <li>Voice and video clone</li>
+                        <li>Advanced decision framework</li>
+                        <li>Real-time escalations</li>
+                        <li>Meeting intelligence</li>
+                        <li>Priority support</li>
+                    </ul>
+                    <button class="cta-button">Start Trial</button>
+                </div>
+                <div class="plan">
+                    <div class="plan-name">Enterprise</div>
+                    <div class="plan-price">$999</div>
+                    <ul class="plan-features">
+                        <li>Everything in Executive</li>
+                        <li>Team licenses</li>
+                        <li>Custom integrations</li>
+                        <li>Dedicated success manager</li>
+                        <li>SLA guarantees</li>
+                        <li>Compliance support</li>
+                    </ul>
+                    <button class="cta-button">Contact Sales</button>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>&copy; 2025 NeuralMeet. Reclaim your time. Keep your presence.</p>
+        </footer>
+    </div>
+    
+    <script>
+        document.getElementById('demoForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const email = this.querySelector('input').value;
+            alert('Demo request received! We will contact you at: ' + email);
+            this.reset();
+        });
+    </script>
+</body>
+</html>
