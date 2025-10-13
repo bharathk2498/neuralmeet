@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NeuralMeet - Your AI Meeting Clone That Attends Meetings For You</title>
+    <title>NeuralMeet - Your AI Meeting Clone</title>
     <style>
         * {
             margin: 0;
@@ -12,11 +12,36 @@
         }
         
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
             line-height: 1.6;
-            color: #333;
-            background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
-            min-height: 100vh;
+            color: #f7fafc;
+            overflow-x: hidden;
+        }
+        
+        .animated-bg {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 25%, #334155 50%, #1e3a8a 75%, #1e40af 100%);
+            background-size: 400% 400%;
+            animation: bgShift 20s ease infinite;
+            z-index: -1;
+        }
+        
+        @keyframes bgShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+        
+        .grid-overlay {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: -1;
         }
         
         .container {
@@ -28,270 +53,447 @@
         header {
             padding: 40px 0;
             text-align: center;
+            animation: fadeInDown 1s ease;
+        }
+        
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
         
         .logo {
-            font-size: 2.5em;
-            font-weight: 800;
-            color: white;
-            margin-bottom: 10px;
+            font-size: 3.5em;
+            font-weight: 900;
+            background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 50%, #2563eb 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 15px;
+            letter-spacing: -2px;
         }
         
         .tagline {
-            font-size: 1.3em;
+            font-size: 1.5em;
             color: rgba(255, 255, 255, 0.9);
             font-weight: 300;
+            letter-spacing: 0.5px;
         }
         
         .hero {
-            background: white;
-            border-radius: 20px;
-            padding: 60px 40px;
-            margin: 40px 0;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: 30px;
+            padding: 80px 50px;
+            margin: 60px 0;
+            box-shadow: 0 30px 90px rgba(59, 130, 246, 0.2);
+            animation: fadeInUp 1s ease 0.3s both;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
         
         .hero h1 {
-            font-size: 3em;
-            margin-bottom: 20px;
-            color: #1a202c;
+            font-size: 4em;
+            margin-bottom: 25px;
+            background: linear-gradient(135deg, #fff 0%, #93c5fd 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
             line-height: 1.2;
+            font-weight: 900;
         }
         
         .hero p {
-            font-size: 1.3em;
-            color: #4a5568;
-            margin-bottom: 30px;
+            font-size: 1.5em;
+            color: rgba(255, 255, 255, 0.85);
+            margin-bottom: 40px;
+            line-height: 1.8;
         }
         
         .problem {
-            background: #fff5f5;
-            border-left: 4px solid #fc8181;
-            padding: 30px;
-            margin: 30px 0;
-            border-radius: 10px;
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(220, 38, 38, 0.05) 100%);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            border-left: 4px solid #ef4444;
+            padding: 35px;
+            margin: 35px 0;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
         }
         
         .problem h3 {
-            color: #c53030;
-            font-size: 1.5em;
+            color: #fca5a5;
+            font-size: 1.8em;
             margin-bottom: 15px;
+            font-weight: 700;
+        }
+        
+        .problem p {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.1em;
+            line-height: 1.8;
         }
         
         .solution {
-            background: #f0fff4;
-            border-left: 4px solid #48bb78;
-            padding: 30px;
-            margin: 30px 0;
-            border-radius: 10px;
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.1) 0%, rgba(22, 163, 74, 0.05) 100%);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            border-left: 4px solid #22c55e;
+            padding: 35px;
+            margin: 35px 0;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
         }
         
         .solution h3 {
-            color: #22543d;
-            font-size: 1.5em;
+            color: #86efac;
+            font-size: 1.8em;
             margin-bottom: 15px;
+            font-weight: 700;
+        }
+        
+        .solution p {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.1em;
+            line-height: 1.8;
         }
         
         .stats {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
             gap: 30px;
-            margin: 40px 0;
+            margin: 50px 0;
         }
         
         .stat {
             text-align: center;
-            padding: 20px;
-            background: #edf2f7;
-            border-radius: 10px;
+            padding: 40px 30px;
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            transition: all 0.4s ease;
+        }
+        
+        .stat:hover {
+            transform: translateY(-15px) scale(1.05);
+            background: rgba(59, 130, 246, 0.15);
+            box-shadow: 0 25px 50px rgba(59, 130, 246, 0.3);
         }
         
         .stat-number {
-            font-size: 2.5em;
-            font-weight: 800;
-            color: #2c5364;
+            font-size: 4em;
+            font-weight: 900;
+            background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
             margin-bottom: 10px;
         }
         
         .stat-label {
-            font-size: 1em;
-            color: #4a5568;
+            font-size: 1.2em;
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 600;
         }
         
         .cta-section {
             text-align: center;
-            margin: 50px 0;
+            margin: 60px 0;
+        }
+        
+        .cta-section h2 {
+            font-size: 2.8em;
+            margin-bottom: 25px;
+            color: #fff;
         }
         
         .demo-form {
             display: flex;
-            max-width: 600px;
-            margin: 30px auto;
-            gap: 10px;
+            max-width: 650px;
+            margin: 40px auto;
+            gap: 15px;
+            padding: 12px;
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 50px;
+            backdrop-filter: blur(10px);
         }
         
         .demo-input {
             flex: 1;
-            padding: 15px 20px;
+            padding: 20px 30px;
             font-size: 1.1em;
-            border: 2px solid #cbd5e0;
-            border-radius: 10px;
+            border: none;
+            border-radius: 50px;
             outline: none;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
         }
         
-        .demo-input:focus {
-            border-color: #2c5364;
+        .demo-input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
         }
         
         .cta-button {
-            padding: 15px 40px;
-            font-size: 1.1em;
-            background: linear-gradient(135deg, #0f2027 0%, #2c5364 100%);
+            padding: 20px 50px;
+            font-size: 1.2em;
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
             color: white;
             border: none;
-            border-radius: 10px;
+            border-radius: 50px;
             cursor: pointer;
-            font-weight: 600;
-            transition: transform 0.2s;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.4);
         }
         
         .cta-button:hover {
-            transform: translateY(-2px);
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(59, 130, 246, 0.6);
         }
         
         .features {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-            margin: 50px 0;
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            gap: 35px;
+            margin: 80px 0;
         }
         
         .feature {
-            background: white;
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            padding: 45px;
+            border-radius: 25px;
+            transition: all 0.4s ease;
+        }
+        
+        .feature:hover {
+            transform: translateY(-15px);
+            border-color: rgba(59, 130, 246, 0.5);
+            box-shadow: 0 25px 70px rgba(59, 130, 246, 0.3);
+        }
+        
+        .feature-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5em;
+            margin-bottom: 25px;
         }
         
         .feature h3 {
-            font-size: 1.5em;
-            margin-bottom: 15px;
-            color: #1a202c;
+            font-size: 1.9em;
+            margin-bottom: 20px;
+            color: #fff;
         }
         
         .feature p {
-            color: #4a5568;
-            line-height: 1.8;
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.9;
+            font-size: 1.05em;
         }
         
         .use-cases {
-            background: white;
-            border-radius: 20px;
-            padding: 50px 40px;
-            margin: 40px 0;
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: 30px;
+            padding: 80px 50px;
+            margin: 60px 0;
         }
         
         .use-cases h2 {
-            font-size: 2.5em;
-            margin-bottom: 40px;
-            color: #1a202c;
+            font-size: 3.2em;
+            margin-bottom: 50px;
             text-align: center;
+            background: linear-gradient(135deg, #fff 0%, #93c5fd 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
         
         .case {
-            padding: 30px;
-            margin: 20px 0;
-            border-left: 4px solid #2c5364;
-            background: #f7fafc;
-            border-radius: 10px;
+            padding: 35px;
+            margin: 25px 0;
+            border-left: 4px solid #3b82f6;
+            background: rgba(59, 130, 246, 0.1);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+        
+        .case:hover {
+            transform: translateX(10px);
+            background: rgba(59, 130, 246, 0.15);
         }
         
         .case h4 {
-            font-size: 1.3em;
-            color: #2c5364;
-            margin-bottom: 10px;
+            font-size: 1.6em;
+            color: #60a5fa;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+        
+        .case p {
+            color: rgba(255, 255, 255, 0.85);
+            line-height: 1.8;
+            font-size: 1.05em;
         }
         
         .pricing {
-            background: white;
-            border-radius: 20px;
-            padding: 50px 40px;
-            margin: 40px 0;
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: 30px;
+            padding: 80px 50px;
+            margin: 60px 0;
             text-align: center;
         }
         
         .pricing h2 {
-            font-size: 2.5em;
-            margin-bottom: 40px;
-            color: #1a202c;
+            font-size: 3.2em;
+            margin-bottom: 60px;
+            background: linear-gradient(135deg, #fff 0%, #93c5fd 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
         
         .pricing-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 30px;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
         }
         
         .plan {
-            padding: 30px;
-            border: 2px solid #cbd5e0;
-            border-radius: 15px;
-            transition: transform 0.3s, border-color 0.3s;
+            padding: 50px 35px;
+            border: 2px solid rgba(59, 130, 246, 0.3);
+            border-radius: 25px;
+            background: rgba(15, 23, 42, 0.5);
+            backdrop-filter: blur(10px);
+            transition: all 0.4s ease;
         }
         
         .plan:hover {
-            transform: translateY(-5px);
-            border-color: #2c5364;
+            transform: translateY(-15px) scale(1.03);
+            border-color: #3b82f6;
+            box-shadow: 0 25px 70px rgba(59, 130, 246, 0.4);
+        }
+        
+        .plan.featured {
+            border-color: #3b82f6;
+            box-shadow: 0 20px 60px rgba(59, 130, 246, 0.4);
+            position: relative;
+        }
+        
+        .featured-badge {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            color: white;
+            padding: 8px 25px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 700;
         }
         
         .plan-name {
-            font-size: 1.5em;
-            font-weight: 700;
-            color: #1a202c;
-            margin-bottom: 10px;
+            font-size: 2em;
+            font-weight: 800;
+            color: #fff;
+            margin-bottom: 15px;
         }
         
         .plan-price {
-            font-size: 2.5em;
-            font-weight: 800;
-            color: #2c5364;
-            margin-bottom: 20px;
+            font-size: 4em;
+            font-weight: 900;
+            background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 30px;
         }
         
         .plan-features {
             list-style: none;
-            margin-bottom: 30px;
+            margin-bottom: 40px;
             text-align: left;
         }
         
         .plan-features li {
-            padding: 10px 0;
-            border-bottom: 1px solid #e2e8f0;
-            color: #4a5568;
+            padding: 15px 0;
+            color: rgba(255, 255, 255, 0.85);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .plan-features li::before {
+            content: '✓';
+            width: 24px;
+            height: 24px;
+            background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            flex-shrink: 0;
         }
         
         footer {
             text-align: center;
-            padding: 40px 0;
-            color: white;
+            padding: 60px 0;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1.1em;
         }
         
         @media (max-width: 768px) {
             .hero h1 {
-                font-size: 2em;
+                font-size: 2.5em;
             }
             
             .hero p {
-                font-size: 1.1em;
+                font-size: 1.2em;
             }
             
             .demo-form {
                 flex-direction: column;
+                border-radius: 20px;
+            }
+            
+            .demo-input, .cta-button {
+                border-radius: 15px;
             }
         }
     </style>
 </head>
 <body>
+    <div class="animated-bg"></div>
+    <div class="grid-overlay"></div>
+    
     <div class="container">
         <header>
             <div class="logo">NEURALMEET</div>
@@ -303,12 +505,12 @@
             <p>AI-powered digital clone with your voice, face, and decision-making logic. Attends meetings, makes decisions within your parameters, escalates critical issues.</p>
             
             <div class="problem">
-                <h3>The Meeting Crisis</h3>
+                <h3>⚠️ The Meeting Crisis</h3>
                 <p>Executives waste 23 hours per week in meetings. 67 percent are unnecessary. That is 1,200 hours per year lost to calendar chaos.</p>
             </div>
             
             <div class="solution">
-                <h3>The NeuralMeet Solution</h3>
+                <h3>✨ The NeuralMeet Solution</h3>
                 <p>Your AI clone attends on your behalf. It speaks like you, decides like you, and only bothers you when it truly matters. Reclaim your time. Maintain your presence.</p>
             </div>
             
@@ -333,32 +535,38 @@
                     <input type="email" class="demo-input" placeholder="Work email address" required>
                     <button type="submit" class="cta-button">Book Demo</button>
                 </form>
-                <p style="color: #718096; font-size: 0.9em;">30-minute demo. See your clone in action.</p>
+                <p style="color: rgba(255,255,255,0.6); font-size: 0.95em;">30-minute demo. See your clone in action.</p>
             </div>
         </div>
         
         <div class="features">
             <div class="feature">
+                <div class="feature-icon">🎭</div>
                 <h3>Voice and Video Clone</h3>
                 <p>Perfect replication of your voice tone, speaking patterns, and video presence. Meeting participants cannot tell the difference.</p>
             </div>
             <div class="feature">
+                <div class="feature-icon">🧠</div>
                 <h3>Decision Framework</h3>
                 <p>Define your decision rules once. Your clone applies them consistently across all meetings. Budget thresholds, approval chains, priority logic.</p>
             </div>
             <div class="feature">
+                <div class="feature-icon">⚡</div>
                 <h3>Smart Escalation</h3>
                 <p>AI knows when to loop you in. New project requests, budget overruns, team conflicts. Critical issues get your attention. Everything else runs automatically.</p>
             </div>
             <div class="feature">
+                <div class="feature-icon">📊</div>
                 <h3>Meeting Intelligence</h3>
                 <p>Every meeting transcribed, summarized, and analyzed. Action items extracted. Decisions logged. Full searchable archive of your professional interactions.</p>
             </div>
             <div class="feature">
+                <div class="feature-icon">🎯</div>
                 <h3>Continuous Learning</h3>
                 <p>Your clone gets smarter with every meeting. Learns your preferences, adapts to your style, becomes more accurate over time.</p>
             </div>
             <div class="feature">
+                <div class="feature-icon">🔒</div>
                 <h3>Enterprise Security</h3>
                 <p>SOC 2 compliant. End-to-end encryption. Zero data retention policy. Your meetings, your data, your control.</p>
             </div>
@@ -367,19 +575,19 @@
         <div class="use-cases">
             <h2>Who Needs This</h2>
             <div class="case">
-                <h4>C-Suite Executives</h4>
+                <h4>👔 C-Suite Executives</h4>
                 <p>Attend board meetings, quarterly reviews, and investor calls while your clone handles operational syncs, status updates, and recurring check-ins.</p>
             </div>
             <div class="case">
-                <h4>Venture Capitalists</h4>
+                <h4>💼 Venture Capitalists</h4>
                 <p>50+ meetings per week reviewing deals. Send your clone to initial pitches, portfolio updates, and introduction calls. You focus on term sheets and closings.</p>
             </div>
             <div class="case">
-                <h4>Management Consultants</h4>
+                <h4>📈 Management Consultants</h4>
                 <p>Client meetings across multiple time zones. Your clone maintains client relationships while you deliver the high-value strategic work.</p>
             </div>
             <div class="case">
-                <h4>Remote Leaders</h4>
+                <h4>🌍 Remote Leaders</h4>
                 <p>Distributed teams mean 24/7 meeting requests. Your clone provides global coverage while you maintain healthy work-life balance.</p>
             </div>
         </div>
@@ -399,7 +607,8 @@
                     </ul>
                     <button class="cta-button">Start Trial</button>
                 </div>
-                <div class="plan">
+                <div class="plan featured">
+                    <div class="featured-badge">MOST POPULAR</div>
                     <div class="plan-name">Executive</div>
                     <div class="plan-price">$499</div>
                     <ul class="plan-features">
@@ -429,7 +638,7 @@
         </div>
         
         <footer>
-            <p>&copy; 2025 NeuralMeet. Reclaim your time. Keep your presence.</p>
+            <p>© 2025 NeuralMeet. Reclaim your time. Keep your presence.</p>
         </footer>
     </div>
     
@@ -437,7 +646,7 @@
         document.getElementById('demoForm').addEventListener('submit', function(e) {
             e.preventDefault();
             const email = this.querySelector('input').value;
-            alert('Demo request received! We will contact you at: ' + email);
+            alert('🎉 Demo request received! We will contact you at: ' + email);
             this.reset();
         });
     </script>
