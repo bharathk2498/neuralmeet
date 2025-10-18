@@ -3,709 +3,672 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NeuralMeet - Your AI Meeting Clone</title>
+    <title>NeuralMeet | AI Clone for Executives Who Value Their Time</title>
+    <meta name="description" content="Stop wasting 23 hours weekly in meetings. Your AI clone attends for you, speaks with your voice, makes decisions using your logic.">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         
+        :root {
+            --blue: #3b82f6;
+            --blue-dark: #2563eb;
+            --blue-light: #60a5fa;
+            --cyan: #06b6d4;
+            --gray-900: #0f172a;
+            --gray-800: #1e293b;
+            --gray-700: #334155;
+            --gray-600: #475569;
+            --gray-400: #94a3b8;
+            --gray-200: #e2e8f0;
+        }
+
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif;
             line-height: 1.6;
-            color: #f7fafc;
+            color: #f1f5f9;
+            background: var(--gray-900);
             overflow-x: hidden;
         }
-        
-        .animated-bg {
+
+        /* Animated Background */
+        .bg-pattern {
             position: fixed;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 25%, #334155 50%, #1e3a8a 75%, #1e40af 100%);
-            background-size: 400% 400%;
-            animation: bgShift 20s ease infinite;
-            z-index: -1;
-        }
-        
-        @keyframes bgShift {
-            0%, 100% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-        }
-        
-        .grid-overlay {
-            position: fixed;
-            width: 100%;
-            height: 100%;
-            background-image: 
-                linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
-            background-size: 50px 50px;
-            z-index: -1;
-        }
-        
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        
-        header {
-            padding: 40px 0;
-            text-align: center;
-            animation: fadeInDown 1s ease;
-        }
-        
-        @keyframes fadeInDown {
-            from {
-                opacity: 0;
-                transform: translateY(-30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
-        .logo {
-            font-size: 3.5em;
-            font-weight: 900;
-            background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 50%, #2563eb 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 15px;
-            letter-spacing: -2px;
-        }
-        
-        .tagline {
-            font-size: 1.5em;
-            color: rgba(255, 255, 255, 0.9);
-            font-weight: 300;
-            letter-spacing: 0.5px;
-        }
-        
-        .hero {
-            background: rgba(15, 23, 42, 0.7);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(59, 130, 246, 0.2);
-            border-radius: 30px;
-            padding: 80px 50px;
-            margin: 60px 0;
-            box-shadow: 0 30px 90px rgba(59, 130, 246, 0.2);
-            animation: fadeInUp 1s ease 0.3s both;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            right: 0;
-            width: 50%;
-            height: 100%;
-            background: url('https://images.unsplash.com/photo-1573164713714-d95e436ab8d6?w=1200&q=80') center/cover;
-            opacity: 0.06;
-            border-radius: 0 30px 30px 0;
-        }
-        
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
-        .hero h1 {
-            font-size: 4em;
-            margin-bottom: 25px;
-            background: linear-gradient(135deg, #fff 0%, #93c5fd 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            line-height: 1.2;
-            font-weight: 900;
-        }
-        
-        .hero p {
-            font-size: 1.5em;
-            color: rgba(255, 255, 255, 0.85);
-            margin-bottom: 40px;
-            line-height: 1.8;
-        }
-        
-        .problem {
-            background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(220, 38, 38, 0.05) 100%);
-            border: 1px solid rgba(239, 68, 68, 0.3);
-            border-left: 4px solid #ef4444;
-            padding: 35px;
-            margin: 35px 0;
-            border-radius: 15px;
-            backdrop-filter: blur(10px);
-        }
-        
-        .problem h3 {
-            color: #fca5a5;
-            font-size: 1.8em;
-            margin-bottom: 15px;
-            font-weight: 700;
-        }
-        
-        .problem p {
-            color: rgba(255, 255, 255, 0.9);
-            font-size: 1.1em;
-            line-height: 1.8;
-        }
-        
-        .solution {
-            background: linear-gradient(135deg, rgba(34, 197, 94, 0.1) 0%, rgba(22, 163, 74, 0.05) 100%);
-            border: 1px solid rgba(34, 197, 94, 0.3);
-            border-left: 4px solid #22c55e;
-            padding: 35px;
-            margin: 35px 0;
-            border-radius: 15px;
-            backdrop-filter: blur(10px);
-        }
-        
-        .solution h3 {
-            color: #86efac;
-            font-size: 1.8em;
-            margin-bottom: 15px;
-            font-weight: 700;
-        }
-        
-        .solution p {
-            color: rgba(255, 255, 255, 0.9);
-            font-size: 1.1em;
-            line-height: 1.8;
-        }
-        
-        .stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 30px;
-            margin: 50px 0;
-        }
-        
-        .stat {
-            text-align: center;
-            padding: 40px 30px;
-            background: rgba(59, 130, 246, 0.1);
-            border: 1px solid rgba(59, 130, 246, 0.3);
-            border-radius: 20px;
-            backdrop-filter: blur(10px);
-            transition: all 0.4s ease;
-        }
-        
-        .stat:hover {
-            transform: translateY(-15px) scale(1.05);
-            background: rgba(59, 130, 246, 0.15);
-            box-shadow: 0 25px 50px rgba(59, 130, 246, 0.3);
-        }
-        
-        .stat-number {
-            font-size: 4em;
-            font-weight: 900;
-            background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 10px;
-        }
-        
-        .stat-label {
-            font-size: 1.2em;
-            color: rgba(255, 255, 255, 0.8);
-            font-weight: 600;
-        }
-        
-        .cta-section {
-            text-align: center;
-            margin: 60px 0;
-        }
-        
-        .cta-section h2 {
-            font-size: 2.8em;
-            margin-bottom: 25px;
-            color: #fff;
-        }
-        
-        .demo-form {
-            display: flex;
-            max-width: 650px;
-            margin: 40px auto;
-            gap: 15px;
-            padding: 12px;
-            background: rgba(15, 23, 42, 0.8);
-            border: 1px solid rgba(59, 130, 246, 0.3);
-            border-radius: 50px;
-            backdrop-filter: blur(10px);
-        }
-        
-        .demo-input {
-            flex: 1;
-            padding: 20px 30px;
-            font-size: 1.1em;
-            border: none;
-            border-radius: 50px;
-            outline: none;
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
-        }
-        
-        .demo-input::placeholder {
-            color: rgba(255, 255, 255, 0.5);
-        }
-        
-        .cta-button {
-            padding: 20px 50px;
-            font-size: 1.2em;
-            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-            color: white;
-            border: none;
-            border-radius: 50px;
-            cursor: pointer;
-            font-weight: 700;
-            transition: all 0.3s ease;
-            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.4);
-        }
-        
-        .cta-button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 40px rgba(59, 130, 246, 0.6);
-        }
-        
-        .features {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
-            gap: 35px;
-            margin: 80px 0;
-        }
-        
-        .feature {
-            background: rgba(15, 23, 42, 0.7);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(59, 130, 246, 0.2);
-            padding: 45px;
-            border-radius: 25px;
-            transition: all 0.4s ease;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .feature::before {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            right: 0;
-            width: 150px;
-            height: 150px;
-            background: url('https://images.unsplash.com/photo-1552664730-d307ca884978?w=400&q=80') center/cover;
-            opacity: 0.05;
-            border-radius: 0 0 25px 0;
-        }
-        
-        .feature:hover {
-            transform: translateY(-15px);
-            border-color: rgba(59, 130, 246, 0.5);
-            box-shadow: 0 25px 70px rgba(59, 130, 246, 0.3);
-        }
-        
-        .feature-icon {
-            width: 80px;
-            height: 80px;
-            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-            border-radius: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2.5em;
-            margin-bottom: 25px;
-        }
-        
-        .feature h3 {
-            font-size: 1.9em;
-            margin-bottom: 20px;
-            color: #fff;
-        }
-        
-        .feature p {
-            color: rgba(255, 255, 255, 0.8);
-            line-height: 1.9;
-            font-size: 1.05em;
-        }
-        
-        .use-cases {
-            background: rgba(15, 23, 42, 0.7);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(59, 130, 246, 0.2);
-            border-radius: 30px;
-            padding: 80px 50px;
-            margin: 60px 0;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .use-cases::before {
-            content: '';
-            position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: url('https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=1200&q=80') center/cover;
-            opacity: 0.03;
-            border-radius: 30px;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(59, 130, 246, 0.12) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(6, 182, 212, 0.08) 0%, transparent 50%),
+                linear-gradient(180deg, #0f172a 0%, #1e293b 100%);
+            z-index: -2;
         }
-        
-        .use-cases h2 {
-            font-size: 3.2em;
-            margin-bottom: 50px;
-            text-align: center;
-            background: linear-gradient(135deg, #fff 0%, #93c5fd 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+
+        .grid-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(59, 130, 246, 0.04) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(59, 130, 246, 0.04) 1px, transparent 1px);
+            background-size: 60px 60px;
+            z-index: -1;
         }
-        
-        .case {
-            padding: 35px;
-            margin: 25px 0;
-            border-left: 4px solid #3b82f6;
-            background: rgba(59, 130, 246, 0.1);
-            border-radius: 15px;
-            backdrop-filter: blur(10px);
-            transition: all 0.3s ease;
-        }
-        
-        .case:hover {
-            transform: translateX(10px);
-            background: rgba(59, 130, 246, 0.15);
-        }
-        
-        .case h4 {
-            font-size: 1.6em;
-            color: #60a5fa;
-            margin-bottom: 15px;
-            font-weight: 700;
-        }
-        
-        .case p {
-            color: rgba(255, 255, 255, 0.85);
-            line-height: 1.8;
-            font-size: 1.05em;
-        }
-        
-        .pricing {
-            background: rgba(15, 23, 42, 0.7);
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
             backdrop-filter: blur(20px);
-            border: 1px solid rgba(59, 130, 246, 0.2);
-            border-radius: 30px;
-            padding: 80px 50px;
-            margin: 60px 0;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
+            background: rgba(15, 23, 42, 0.85);
+            border-bottom: 1px solid rgba(59, 130, 246, 0.1);
+            z-index: 100;
         }
-        
-        .pricing::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 120%;
-            height: 120%;
-            background: url('https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=1200&q=80') center/cover;
-            opacity: 0.04;
-            border-radius: 50%;
-        }
-        
-        .pricing h2 {
-            font-size: 3.2em;
-            margin-bottom: 60px;
-            background: linear-gradient(135deg, #fff 0%, #93c5fd 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        
-        .pricing-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 40px;
-        }
-        
-        .plan {
-            padding: 50px 35px;
-            border: 2px solid rgba(59, 130, 246, 0.3);
-            border-radius: 25px;
-            background: rgba(15, 23, 42, 0.5);
-            backdrop-filter: blur(10px);
-            transition: all 0.4s ease;
-        }
-        
-        .plan:hover {
-            transform: translateY(-15px) scale(1.03);
-            border-color: #3b82f6;
-            box-shadow: 0 25px 70px rgba(59, 130, 246, 0.4);
-        }
-        
-        .plan.featured {
-            border-color: #3b82f6;
-            box-shadow: 0 20px 60px rgba(59, 130, 246, 0.4);
-            position: relative;
-        }
-        
-        .featured-badge {
-            position: absolute;
-            top: -15px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-            color: white;
-            padding: 8px 25px;
-            border-radius: 20px;
-            font-size: 0.85em;
-            font-weight: 700;
-        }
-        
-        .plan-name {
-            font-size: 2em;
-            font-weight: 800;
-            color: #fff;
-            margin-bottom: 15px;
-        }
-        
-        .plan-price {
-            font-size: 4em;
-            font-weight: 900;
-            background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 30px;
-        }
-        
-        .plan-features {
-            list-style: none;
-            margin-bottom: 40px;
-            text-align: left;
-        }
-        
-        .plan-features li {
-            padding: 15px 0;
-            color: rgba(255, 255, 255, 0.85);
+
+        .nav-inner {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 1.2rem 2rem;
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            gap: 12px;
         }
-        
-        .plan-features li::before {
-            content: '✓';
-            width: 24px;
-            height: 24px;
-            background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
-            border-radius: 50%;
+
+        .logo {
+            font-size: 1.6rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #60a5fa, #3b82f6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -1px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: #cbd5e1;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: #fff;
+        }
+
+        .nav-cta {
+            background: var(--blue);
+            color: #fff;
+            padding: 0.65rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .nav-cta:hover {
+            background: var(--blue-dark);
+            transform: translateY(-1px);
+        }
+
+        /* Hero Section */
+        .hero {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 10rem 2rem 6rem;
+            text-align: center;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1.2rem;
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: 100px;
+            color: var(--blue-light);
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 2rem;
+        }
+
+        h1 {
+            font-size: 5rem;
+            font-weight: 900;
+            line-height: 1.05;
+            margin-bottom: 1.5rem;
+            letter-spacing: -2px;
+            background: linear-gradient(135deg, #ffffff 0%, #94a3b8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-description {
+            font-size: 1.5rem;
+            color: #cbd5e1;
+            max-width: 800px;
+            margin: 0 auto 3rem;
+            line-height: 1.6;
+        }
+
+        .cta-group {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-bottom: 4rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--blue), var(--blue-dark));
+            color: #fff;
+            padding: 1rem 2.5rem;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s;
+            display: inline-block;
+            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(59, 130, 246, 0.5);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.05);
+            color: #fff;
+            padding: 1rem 2.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s;
+            display: inline-block;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: var(--blue);
+        }
+
+        /* Stats Bar */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 3rem;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 3.5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--blue-light), var(--cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--gray-400);
+            font-size: 1rem;
+        }
+
+        /* Problem Section */
+        .problem-section {
+            max-width: 1100px;
+            margin: 8rem auto 4rem;
+            padding: 0 2rem;
+        }
+
+        .problem-box {
+            background: rgba(239, 68, 68, 0.05);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            border-left: 4px solid #ef4444;
+            padding: 3rem;
+            border-radius: 16px;
+        }
+
+        .problem-box h2 {
+            font-size: 2rem;
+            color: #fca5a5;
+            margin-bottom: 1rem;
+        }
+
+        .problem-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .problem-stat {
+            text-align: center;
+        }
+
+        .problem-stat-num {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #fca5a5;
+        }
+
+        .problem-stat-text {
+            color: #cbd5e1;
+            font-size: 0.95rem;
+        }
+
+        /* Features Grid */
+        .features {
+            max-width: 1280px;
+            margin: 8rem auto;
+            padding: 0 2rem;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-header h2 {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+        }
+
+        .section-header p {
+            font-size: 1.25rem;
+            color: var(--gray-400);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(59, 130, 246, 0.1);
+            border-radius: 16px;
+            padding: 2.5rem;
+            transition: all 0.3s;
+        }
+
+        .feature-card:hover {
+            border-color: var(--blue);
+            background: rgba(59, 130, 246, 0.05);
+            transform: translateY(-8px);
+        }
+
+        .feature-icon {
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, var(--blue), var(--blue-dark));
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
-            font-weight: bold;
-            flex-shrink: 0;
+            font-size: 1.6rem;
+            margin-bottom: 1.5rem;
         }
-        
-        footer {
+
+        .feature-card h3 {
+            font-size: 1.4rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-card p {
+            color: var(--gray-400);
+            line-height: 1.7;
+        }
+
+        /* Use Cases */
+        .use-cases {
+            background: rgba(255, 255, 255, 0.02);
+            border-top: 1px solid rgba(59, 130, 246, 0.1);
+            border-bottom: 1px solid rgba(59, 130, 246, 0.1);
+            padding: 8rem 2rem;
+            margin: 8rem 0;
+        }
+
+        .use-cases-inner {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .use-case {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(59, 130, 246, 0.15);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+            transition: all 0.3s;
+        }
+
+        .use-case:hover {
+            border-color: var(--cyan);
+            background: rgba(6, 182, 212, 0.05);
+        }
+
+        .role-tag {
+            display: inline-block;
+            padding: 0.4rem 1rem;
+            background: rgba(6, 182, 212, 0.1);
+            border: 1px solid rgba(6, 182, 212, 0.3);
+            border-radius: 20px;
+            color: var(--cyan);
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .use-case h3 {
+            font-size: 1.4rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .use-case p {
+            color: var(--gray-400);
+            line-height: 1.7;
+        }
+
+        /* Demo CTA */
+        .demo-cta {
+            max-width: 800px;
+            margin: 8rem auto;
+            padding: 4rem 2rem;
             text-align: center;
-            padding: 60px 0;
-            color: rgba(255, 255, 255, 0.7);
-            font-size: 1.1em;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(6, 182, 212, 0.05));
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: 20px;
         }
-        
+
+        .demo-cta h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .demo-cta p {
+            color: var(--gray-400);
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+        }
+
+        .demo-form {
+            display: flex;
+            gap: 1rem;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .demo-input {
+            flex: 1;
+            padding: 1rem 1.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            color: #fff;
+            font-size: 1rem;
+        }
+
+        .demo-input::placeholder {
+            color: var(--gray-400);
+        }
+
+        /* Footer */
+        footer {
+            border-top: 1px solid rgba(59, 130, 246, 0.1);
+            padding: 3rem 2rem;
+            text-align: center;
+            color: var(--gray-400);
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-links a {
+            color: var(--gray-400);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .footer-links a:hover {
+            color: #fff;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .features-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
         @media (max-width: 768px) {
-            .hero h1 {
-                font-size: 2.5em;
+            h1 {
+                font-size: 3rem;
             }
-            
-            .hero p {
-                font-size: 1.2em;
+
+            .hero-description {
+                font-size: 1.2rem;
             }
-            
+
+            .stats {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .problem-stats {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .cta-group {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
             .demo-form {
                 flex-direction: column;
-                border-radius: 20px;
-            }
-            
-            .demo-input, .cta-button {
-                border-radius: 15px;
             }
         }
     </style>
 </head>
 <body>
-    <div class="animated-bg"></div>
+    <div class="bg-pattern"></div>
     <div class="grid-overlay"></div>
-    
-    <div class="container">
-        <header>
-            <div class="logo">NEURALMEET</div>
-            <div class="tagline">Your AI Clone Handles Meetings. You Handle What Matters.</div>
-        </header>
-        
-        <div class="hero">
-            <h1>Never Attend Another Unnecessary Meeting</h1>
-            <p>AI-powered digital clone with your voice, face, and decision-making logic. Attends meetings, makes decisions within your parameters, escalates critical issues.</p>
-            
-            <div class="problem">
-                <h3>⚠️ The Meeting Crisis</h3>
-                <p>Executives waste 23 hours per week in meetings. 67 percent are unnecessary. That is 1,200 hours per year lost to calendar chaos.</p>
-            </div>
-            
-            <div class="solution">
-                <h3>✨ The NeuralMeet Solution</h3>
-                <p>Your AI clone attends on your behalf. It speaks like you, decides like you, and only bothers you when it truly matters. Reclaim your time. Maintain your presence.</p>
-            </div>
-            
-            <div class="stats">
-                <div class="stat">
-                    <div class="stat-number">23hrs</div>
-                    <div class="stat-label">Saved Per Week</div>
-                </div>
-                <div class="stat">
-                    <div class="stat-number">67%</div>
-                    <div class="stat-label">Meetings Eliminated</div>
-                </div>
-                <div class="stat">
-                    <div class="stat-number">$47B</div>
-                    <div class="stat-label">Market Size</div>
-                </div>
-            </div>
-            
-            <div class="cta-section">
-                <h2>Schedule Your AI Clone Demo</h2>
-                <form class="demo-form" id="demoForm">
-                    <input type="email" class="demo-input" placeholder="Work email address" required>
-                    <button type="submit" class="cta-button">Book Demo</button>
-                </form>
-                <p style="color: rgba(255,255,255,0.6); font-size: 0.95em;">30-minute demo. See your clone in action.</p>
+
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-inner">
+            <div class="logo">NeuralMeet</div>
+            <div class="nav-links">
+                <a href="#features">Features</a>
+                <a href="#use-cases">Use Cases</a>
+                <a href="#security">Security</a>
+                <a href="#demo" class="nav-cta">Book Demo</a>
             </div>
         </div>
-        
-        <div class="features">
-            <div class="feature">
+    </nav>
+
+    <!-- Hero -->
+    <section class="hero">
+        <div class="hero-badge">
+            <span>🚀</span>
+            Trusted by Fortune 500 Executives
+        </div>
+        <h1>Stop Going to<br>Meetings That Don't<br>Need You</h1>
+        <p class="hero-description">
+            Your AI clone speaks with your voice, makes decisions using your logic, 
+            and escalates only when something actually matters. Get back 23 hours 
+            every week.
+        </p>
+        <div class="cta-group">
+            <a href="#demo" class="btn-primary">See Your Clone in 30 Minutes</a>
+            <a href="#how" class="btn-secondary">How It Works</a>
+        </div>
+        <div class="stats">
+            <div class="stat-item">
+                <div class="stat-number">23hrs</div>
+                <div class="stat-label">Saved per Executive Weekly</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">67%</div>
+                <div class="stat-label">Meetings Automated</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">1,200hrs</div>
+                <div class="stat-label">Reclaimed Every Year</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Problem -->
+    <section class="problem-section">
+        <div class="problem-box">
+            <h2>Executives Are Drowning in Calendar Invites</h2>
+            <p style="color: #cbd5e1; font-size: 1.1rem; margin-top: 1rem;">
+                Most meetings are status updates, decision requests on trivial items, 
+                or discussions where your presence adds zero value. You show up anyway 
+                because not showing up means losing context.
+            </p>
+            <div class="problem-stats">
+                <div class="problem-stat">
+                    <div class="problem-stat-num">23hrs</div>
+                    <div class="problem-stat-text">Weekly in meetings</div>
+                </div>
+                <div class="problem-stat">
+                    <div class="problem-stat-num">67%</div>
+                    <div class="problem-stat-text">Completely unnecessary</div>
+                </div>
+                <div class="problem-stat">
+                    <div class="problem-stat-num">$541B</div>
+                    <div class="problem-stat-text">Lost productivity annually</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features -->
+    <section class="features" id="features">
+        <div class="section-header">
+            <h2>How Your Clone Works</h2>
+            <p>Perfect voice replication, decision-making logic, and smart escalation built in.</p>
+        </div>
+        <div class="features-grid">
+            <div class="feature-card">
                 <div class="feature-icon">🎭</div>
-                <h3>Voice and Video Clone</h3>
-                <p>Perfect replication of your voice tone, speaking patterns, and video presence. Meeting participants cannot tell the difference.</p>
+                <h3>Indistinguishable Voice Clone</h3>
+                <p>Your tone, cadence, speaking patterns, and video presence. Meeting participants can't tell the difference between you and your clone.</p>
             </div>
-            <div class="feature">
-                <div class="feature-icon">🧠</div>
-                <h3>Decision Framework</h3>
-                <p>Define your decision rules once. Your clone applies them consistently across all meetings. Budget thresholds, approval chains, priority logic.</p>
-            </div>
-            <div class="feature">
+            <div class="feature-card">
                 <div class="feature-icon">⚡</div>
-                <h3>Smart Escalation</h3>
-                <p>AI knows when to loop you in. New project requests, budget overruns, team conflicts. Critical issues get your attention. Everything else runs automatically.</p>
+                <h3>Autonomous Decision Engine</h3>
+                <p>Define rules once. Budget approvals, project greenlight thresholds, escalation triggers. Your clone applies your logic without asking.</p>
             </div>
-            <div class="feature">
-                <div class="feature-icon">📊</div>
-                <h3>Meeting Intelligence</h3>
-                <p>Every meeting transcribed, summarized, and analyzed. Action items extracted. Decisions logged. Full searchable archive of your professional interactions.</p>
-            </div>
-            <div class="feature">
+            <div class="feature-card">
                 <div class="feature-icon">🎯</div>
-                <h3>Continuous Learning</h3>
-                <p>Your clone gets smarter with every meeting. Learns your preferences, adapts to your style, becomes more accurate over time.</p>
+                <h3>Smart Escalation Protocol</h3>
+                <p>Only gets your attention for critical issues: budget overruns, strategic pivots, team conflicts. Everything else runs on autopilot.</p>
             </div>
-            <div class="feature">
+            <div class="feature-card">
+                <div class="feature-icon">📊</div>
+                <h3>Complete Meeting Memory</h3>
+                <p>Every conversation transcribed, summarized, with action items extracted. Full search across your entire meeting history.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🧠</div>
+                <h3>Learns Your Preferences</h3>
+                <p>Gets smarter with every meeting. Adapts to your decision patterns, communication style, and escalation preferences over time.</p>
+            </div>
+            <div class="feature-card">
                 <div class="feature-icon">🔒</div>
                 <h3>Enterprise Security</h3>
-                <p>SOC 2 compliant. End-to-end encryption. Zero data retention policy. Your meetings, your data, your control.</p>
+                <p>SOC 2 Type II certified. End-to-end encryption. Zero-retention policy. Your conversations stay yours.</p>
             </div>
         </div>
-        
-        <div class="use-cases">
-            <h2>Who Needs This</h2>
-            <div class="case">
-                <h4>👔 C-Suite Executives</h4>
-                <p>Attend board meetings, quarterly reviews, and investor calls while your clone handles operational syncs, status updates, and recurring check-ins.</p>
+    </section>
+
+    <!-- Use Cases -->
+    <section class="use-cases" id="use-cases">
+        <div class="use-cases-inner">
+            <div class="section-header">
+                <h2>Who This Is Built For</h2>
+                <p>Real executives with real calendars solving real problems.</p>
             </div>
-            <div class="case">
-                <h4>💼 Venture Capitalists</h4>
-                <p>50+ meetings per week reviewing deals. Send your clone to initial pitches, portfolio updates, and introduction calls. You focus on term sheets and closings.</p>
+            
+            <div class="use-case">
+                <span class="role-tag">C-SUITE</span>
+                <h3>Executive Leadership</h3>
+                <p>You need to be in board meetings and quarterly reviews. Your clone handles operational syncs, status check-ins, and recurring team meetings while you focus on strategy.</p>
             </div>
-            <div class="case">
-                <h4>📈 Management Consultants</h4>
-                <p>Client meetings across multiple time zones. Your clone maintains client relationships while you deliver the high-value strategic work.</p>
+
+            <div class="use-case">
+                <span class="role-tag">VENTURE CAPITAL</span>
+                <h3>Investors & Partners</h3>
+                <p>Reviewing 50+ deals weekly means constant meetings. Your clone attends initial pitches and portfolio updates. You show up for term sheets and final decisions.</p>
             </div>
-            <div class="case">
-                <h4>🌍 Remote Leaders</h4>
-                <p>Distributed teams mean 24/7 meeting requests. Your clone provides global coverage while you maintain healthy work-life balance.</p>
+
+            <div class="use-case">
+                <span class="role-tag">CONSULTING</span>
+                <h3>Management Consultants</h3>
+                <p>Client meetings across time zones drain your schedule. Your clone maintains relationships and gathers requirements while you deliver high-value strategic work.</p>
             </div>
-        </div>
-        
-        <div class="pricing">
-            <h2>Pricing Built For Results</h2>
-            <div class="pricing-grid">
-                <div class="plan">
-                    <div class="plan-name">Solopreneur</div>
-                    <div class="plan-price">$149</div>
-                    <ul class="plan-features">
-                        <li>20 meetings per month</li>
-                        <li>Voice clone</li>
-                        <li>Basic decision rules</li>
-                        <li>Meeting summaries</li>
-                        <li>Email escalations</li>
-                    </ul>
-                    <button class="cta-button">Start Trial</button>
-                </div>
-                <div class="plan featured">
-                    <div class="featured-badge">MOST POPULAR</div>
-                    <div class="plan-name">Executive</div>
-                    <div class="plan-price">$499</div>
-                    <ul class="plan-features">
-                        <li>Unlimited meetings</li>
-                        <li>Voice and video clone</li>
-                        <li>Advanced decision framework</li>
-                        <li>Real-time escalations</li>
-                        <li>Meeting intelligence</li>
-                        <li>Priority support</li>
-                    </ul>
-                    <button class="cta-button">Start Trial</button>
-                </div>
-                <div class="plan">
-                    <div class="plan-name">Enterprise</div>
-                    <div class="plan-price">$999</div>
-                    <ul class="plan-features">
-                        <li>Everything in Executive</li>
-                        <li>Team licenses</li>
-                        <li>Custom integrations</li>
-                        <li>Dedicated success manager</li>
-                        <li>SLA guarantees</li>
-                        <li>Compliance support</li>
-                    </ul>
-                    <button class="cta-button">Contact Sales</button>
-                </div>
+
+            <div class="use-case">
+                <span class="role-tag">REMOTE TEAMS</span>
+                <h3>Distributed Leaders</h3>
+                <p>Managing global teams means 24/7 meeting requests. Your clone provides coverage across time zones without burning you out.</p>
             </div>
         </div>
-        
-        <footer>
-            <p>© 2025 NeuralMeet. Reclaim your time. Keep your presence.</p>
-        </footer>
-    </div>
-    
-    <script>
-        document.getElementById('demoForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const email = this.querySelector('input').value;
-            alert('🎉 Demo request received! We will contact you at: ' + email);
-            this.reset();
-        });
-    </script>
+    </section>
+
+    <!-- Demo CTA -->
+    <section class="demo-cta" id="demo">
+        <h2>See Your Clone in Action</h2>
+        <p>30-minute personalized demo. No sales pitch, just your clone speaking with your voice.</p>
+        <form class="demo-form" onsubmit="event.preventDefault(); alert('Demo request received! We will contact you shortly.'); this.reset();">
+            <input type="email" class="demo-input" placeholder="your.email@company.com" required>
+            <button type="submit" class="btn-primary" style="padding: 1rem 2rem; margin: 0;">Book Demo</button>
+        </form>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-links">
+            <a href="#features">Features</a>
+            <a href="#use-cases">Use Cases</a>
+            <a href="#security">Security</a>
+            <a href="#pricing">Pricing</a>
+            <a href="#contact">Contact</a>
+        </div>
+        <p>&copy; 2025 NeuralMeet. Stop attending meetings that don't need you.</p>
+    </footer>
 </body>
 </html>
