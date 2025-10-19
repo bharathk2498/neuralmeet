@@ -700,39 +700,30 @@
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
-        // Supabase config
-        const SUPABASE_URL = 'https://rmnmiqpxqpjvpcavkmxn.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJtbm1pcXB4cXBqdnBjYXZrbXhuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTM5OTUzMTAsImV4cCI6MjA2OTU3MTMxMH0.deKUH0tkvzCoHcqIedPDeG2YcS_lxrhVpGjMJU-ErF0';
+        const SUPABASE_URL = 'https://axzvvnqasdsnopbzjqrq.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF4enZ2bnFhc2Rzbm9wYnpqcXJxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA4MTc5MjQsImV4cCI6MjA3NjM5MzkyNH0.Yw5PYzGAwOeTj0mgXQ5zYg_He045qO2j2c-Z40n5WIM';
         
         let supabase;
         if (SUPABASE_URL && SUPABASE_ANON_KEY) {
             supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
         }
 
-        // Page navigation
         function showPage(page) {
-            // Hide all pages
             document.querySelectorAll('.page-content').forEach(p => p.style.display = 'none');
-            // Remove active from all menu items
             document.querySelectorAll('.menu-item').forEach(m => m.classList.remove('active'));
             
-            // Show selected page
             const pageElement = document.getElementById(`${page}-page`);
             if (pageElement) {
                 pageElement.style.display = 'block';
             }
             
-            // Set active menu item
             event.target.closest('.menu-item').classList.add('active');
         }
 
-        // Calendar connections
         function connectCalendar(provider) {
             alert(`Connecting to ${provider}... This will initiate OAuth flow in production.`);
-            // In production, this would redirect to OAuth provider
         }
 
-        // File uploads
         function handleVoiceUpload(event) {
             const files = event.target.files;
             if (files.length > 0) {
@@ -751,13 +742,11 @@
             }
         }
 
-        // Clone form submission
         document.getElementById('clone-form')?.addEventListener('submit', async (e) => {
             e.preventDefault();
             alert('Clone training initiated! This would upload to HeyGen + Emily AI in production.');
         });
 
-        // Logout
         async function logout() {
             if (supabase) {
                 await supabase.auth.signOut();
@@ -765,7 +754,6 @@
             window.location.href = 'auth.html';
         }
 
-        // Initialize
         window.addEventListener('load', async () => {
             if (!supabase) {
                 console.error('Supabase not initialized');
@@ -776,7 +764,6 @@
             if (!session) {
                 window.location.href = 'auth.html';
             } else {
-                // Set user info
                 const userName = session.user.user_metadata?.full_name || session.user.email.split('@')[0];
                 document.getElementById('user-name').textContent = userName;
                 document.getElementById('user-avatar').textContent = userName.charAt(0).toUpperCase();
