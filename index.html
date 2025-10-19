@@ -39,7 +39,6 @@
             -webkit-font-smoothing: antialiased;
         }
 
-        /* Animated Background */
         .bg-canvas {
             position: fixed;
             top: 0;
@@ -71,7 +70,6 @@
             100% { transform: translateY(50px); }
         }
 
-        /* Floating particles */
         .particles {
             position: fixed;
             top: 0;
@@ -98,7 +96,6 @@
             100% { transform: translateY(-100vh) translateX(100px); opacity: 0; }
         }
 
-        /* Navigation */
         nav {
             position: fixed;
             top: 0;
@@ -194,7 +191,6 @@
             display: none;
         }
 
-        /* Hero Section */
         .hero {
             max-width: 1400px;
             margin: 0 auto;
@@ -309,7 +305,6 @@
             border-color: var(--primary);
         }
 
-        /* Stats Section */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -351,7 +346,6 @@
             font-weight: 500;
         }
 
-        /* ROI Calculator Section */
         .roi-section {
             max-width: 1400px;
             margin: 8rem auto;
@@ -445,7 +439,6 @@
             font-size: 0.95rem;
         }
 
-        /* Features Section */
         .features {
             max-width: 1400px;
             margin: 8rem auto;
@@ -537,7 +530,6 @@
             z-index: 1;
         }
 
-        /* Security & Compliance */
         .security-badges {
             max-width: 1400px;
             margin: 6rem auto;
@@ -577,7 +569,6 @@
             color: var(--text-muted);
         }
 
-        /* Use Cases */
         .use-cases {
             background: rgba(255, 255, 255, 0.01);
             border-top: 1px solid var(--border);
@@ -631,7 +622,6 @@
             font-size: 1.05rem;
         }
 
-        /* Testimonials */
         .testimonials {
             max-width: 1400px;
             margin: 8rem auto;
@@ -689,7 +679,6 @@
             color: var(--text-muted);
         }
 
-        /* CTA Section */
         .cta-section {
             max-width: 900px;
             margin: 8rem auto;
@@ -764,7 +753,6 @@
             color: var(--text-muted);
         }
 
-        /* Footer */
         footer {
             border-top: 1px solid var(--border);
             padding: 4rem 2rem 2rem;
@@ -813,9 +801,12 @@
             font-size: 0.9rem;
         }
 
-        /* Mobile Responsive */
         @media (max-width: 768px) {
             .nav-menu {
+                gap: 1rem;
+            }
+            
+            .nav-menu a:not(.nav-cta) {
                 display: none;
             }
 
@@ -857,12 +848,10 @@
             }
         }
 
-        /* Smooth Scroll */
         html {
             scroll-behavior: smooth;
         }
 
-        /* Loading animation */
         @keyframes shimmer {
             0% { background-position: -1000px 0; }
             100% { background-position: 1000px 0; }
@@ -880,7 +869,6 @@
     <div class="grid-bg"></div>
     <div class="particles" id="particles"></div>
 
-    <!-- Navigation -->
     <nav id="navbar">
         <div class="nav-container">
             <div class="logo">NeuralMeet</div>
@@ -889,12 +877,11 @@
                 <a href="#roi">ROI Calculator</a>
                 <a href="#use-cases">Use Cases</a>
                 <a href="#security">Security</a>
-                <a href="#demo" class="nav-cta">Book Demo</a>
+                <a href="auth.html" class="nav-cta">Login</a>
             </div>
         </div>
     </nav>
 
-    <!-- Hero Section -->
     <section class="hero">
         <div class="hero-content">
             <div class="hero-badge">Trusted by Fortune 500 Executives</div>
@@ -904,7 +891,7 @@
                 and escalates only critical issues. Reclaim 1,200+ hours annually.
             </p>
             <div class="cta-buttons">
-                <a href="#demo" class="btn btn-primary">See Your Clone in 30 Minutes</a>
+                <a href="auth.html" class="btn btn-primary">Get Started Free</a>
                 <a href="#roi" class="btn btn-secondary">Calculate Your ROI</a>
             </div>
             <div class="stats-grid">
@@ -928,7 +915,6 @@
         </div>
     </section>
 
-    <!-- ROI Calculator -->
     <section class="roi-section" id="roi">
         <div class="roi-calculator">
             <h2>Calculate Your Time Savings</h2>
@@ -970,7 +956,6 @@
         </div>
     </section>
 
-    <!-- Security Badges -->
     <section class="security-badges" id="security">
         <div class="badges-container">
             <div class="badge">
@@ -992,7 +977,6 @@
         </div>
     </section>
 
-    <!-- Features Section -->
     <section class="features" id="features">
         <div class="section-header">
             <h2>Enterprise-Grade AI Cloning</h2>
@@ -1032,7 +1016,6 @@
         </div>
     </section>
 
-    <!-- Use Cases -->
     <section class="use-cases" id="use-cases">
         <div class="use-cases-container">
             <div class="section-header">
@@ -1066,7 +1049,6 @@
         </div>
     </section>
 
-    <!-- Testimonials -->
     <section class="testimonials">
         <div class="section-header">
             <h2>Trusted by Leaders</h2>
@@ -1106,17 +1088,15 @@
         </div>
     </section>
 
-    <!-- CTA Section -->
     <section class="cta-section" id="demo">
-        <h2>See Your Clone in Action</h2>
-        <p>30-minute personalized demo. No sales pitch, just your clone speaking with your voice.</p>
-        <form class="demo-form" id="demoForm">
-            <input type="email" class="demo-input" placeholder="your.email@company.com" required>
-            <button type="submit" class="btn btn-primary">Book Demo Now</button>
-        </form>
+        <h2>Ready to Get Started?</h2>
+        <p>Create your account and set up your AI clone in under 10 minutes.</p>
+        <div style="margin-top: 2rem; position: relative; z-index: 1;">
+            <a href="auth.html" class="btn btn-primary" style="font-size: 1.1rem; padding: 1.2rem 3rem;">Start Free Trial</a>
+            <p style="margin-top: 1rem; font-size: 0.9rem; color: var(--text-muted);">No credit card required • 14-day free trial</p>
+        </div>
     </section>
 
-    <!-- Footer -->
     <footer>
         <div class="footer-container">
             <div class="footer-section">
@@ -1162,18 +1142,16 @@
     </footer>
 
     <script>
-        // ROI Calculator
         function updateROI() {
             const meetingsPerWeek = parseFloat(document.getElementById('meetingsPerWeek').value) || 30;
             const hourlyRate = parseFloat(document.getElementById('hourlyRate').value) || 250;
             const automationRate = parseFloat(document.getElementById('automationRate').value) || 67;
 
-            // Assumptions: average meeting is 1 hour
             const hoursPerWeek = meetingsPerWeek;
             const automatedHours = hoursPerWeek * (automationRate / 100);
             const weeklyValue = automatedHours * hourlyRate;
             const annualValue = weeklyValue * 52;
-            const annualCost = 499 * 12; // $499/month subscription
+            const annualCost = 499 * 12;
             const roi = annualValue / annualCost;
 
             document.getElementById('hoursSaved').textContent = automatedHours.toFixed(0);
@@ -1186,10 +1164,8 @@
         document.getElementById('hourlyRate').addEventListener('input', updateROI);
         document.getElementById('automationRate').addEventListener('input', updateROI);
 
-        // Initialize ROI calculator
         updateROI();
 
-        // Navbar scroll effect
         window.addEventListener('scroll', () => {
             const navbar = document.getElementById('navbar');
             if (window.scrollY > 100) {
@@ -1199,14 +1175,6 @@
             }
         });
 
-        // Demo form submission
-        document.getElementById('demoForm').addEventListener('submit', (e) => {
-            e.preventDefault();
-            alert('Demo request received! We will contact you within 24 hours.');
-            e.target.reset();
-        });
-
-        // Generate floating particles
         const particlesContainer = document.getElementById('particles');
         for (let i = 0; i < 20; i++) {
             const particle = document.createElement('div');
@@ -1217,7 +1185,6 @@
             particlesContainer.appendChild(particle);
         }
 
-        // Smooth scroll for anchor links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
@@ -1228,7 +1195,6 @@
             });
         });
 
-        // Intersection Observer for fade-in animations
         const observerOptions = {
             threshold: 0.1,
             rootMargin: '0px 0px -100px 0px'
