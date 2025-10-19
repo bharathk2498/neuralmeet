@@ -159,6 +159,16 @@
             transform: none;
         }
 
+        .btn-secondary {
+            background: var(--bg-card);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--primary);
+        }
+
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -249,7 +259,8 @@
         }
 
         .form-group input,
-        .form-group textarea {
+        .form-group textarea,
+        .form-group select {
             width: 100%;
             padding: 0.8rem 1rem;
             background: rgba(255, 255, 255, 0.05);
@@ -261,7 +272,8 @@
         }
 
         .form-group input:focus,
-        .form-group textarea:focus {
+        .form-group textarea:focus,
+        .form-group select:focus {
             outline: none;
             border-color: var(--primary);
             background: rgba(79, 70, 229, 0.05);
@@ -333,6 +345,12 @@
             color: var(--warning);
         }
 
+        .alert.info {
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            color: #3b82f6;
+        }
+
         .progress-container {
             margin-top: 1rem;
         }
@@ -351,6 +369,156 @@
             transition: width 0.3s;
         }
 
+        .meeting-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            transition: all 0.3s;
+        }
+
+        .meeting-card:hover {
+            border-color: var(--primary);
+            transform: translateX(4px);
+        }
+
+        .meeting-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .meeting-title {
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .meeting-time {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
+
+        .meeting-status {
+            padding: 0.3rem 0.8rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .status-active {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--success);
+        }
+
+        .status-scheduled {
+            background: rgba(59, 130, 246, 0.2);
+            color: #3b82f6;
+        }
+
+        .status-completed {
+            background: rgba(148, 163, 184, 0.2);
+            color: var(--text-muted);
+        }
+
+        .meeting-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .page-content {
+            display: none;
+        }
+
+        .page-content.active {
+            display: block;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.3s;
+        }
+
+        .card:hover {
+            border-color: var(--primary);
+        }
+
+        .card-title {
+            font-weight: 600;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .feature-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            background: rgba(79, 70, 229, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .table th,
+        .table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .table th {
+            font-weight: 600;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+        }
+
+        .table tr:hover {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .badge-success {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--success);
+        }
+
+        .badge-primary {
+            background: rgba(79, 70, 229, 0.2);
+            color: var(--primary);
+        }
+
+        .badge-warning {
+            background: rgba(245, 158, 11, 0.2);
+            color: var(--warning);
+        }
+
         @media (max-width: 768px) {
             .sidebar {
                 display: none;
@@ -358,6 +526,9 @@
             .main-content {
                 margin-left: 0;
                 padding: 1.5rem;
+            }
+            .stats-grid {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -367,9 +538,25 @@
         <aside class="sidebar">
             <div class="sidebar-logo">◆ NeuralMeet</div>
             <ul class="sidebar-menu">
-                <li class="menu-item active" onclick="showPage('clone')">
+                <li class="menu-item active" onclick="showPage('overview')">
+                    <span class="menu-icon">📊</span>
+                    <span>Overview</span>
+                </li>
+                <li class="menu-item" onclick="showPage('meetings')">
+                    <span class="menu-icon">📅</span>
+                    <span>Meetings</span>
+                </li>
+                <li class="menu-item" onclick="showPage('clone')">
                     <span class="menu-icon">🎭</span>
                     <span>AI Clone</span>
+                </li>
+                <li class="menu-item" onclick="showPage('analytics')">
+                    <span class="menu-icon">📈</span>
+                    <span>Analytics</span>
+                </li>
+                <li class="menu-item" onclick="showPage('settings')">
+                    <span class="menu-icon">⚙️</span>
+                    <span>Settings</span>
                 </li>
             </ul>
         </aside>
@@ -379,6 +566,170 @@
                 <div class="page-title">
                     <h1>Welcome back, Bharath</h1>
                     <p>Your AI clone is ready to handle your meetings</p>
+                </div>
+                <div class="user-menu">
+                    <div class="user-avatar">BK</div>
+                </div>
+            </div>
+
+            <div id="overview-page" class="page-content active">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div>
+                                <div class="stat-label">Total Meetings</div>
+                                <div class="stat-value">42</div>
+                                <div class="stat-change">+12 this week</div>
+                            </div>
+                            <div class="stat-icon" style="background: rgba(79, 70, 229, 0.1);">📅</div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div>
+                                <div class="stat-label">Hours Saved</div>
+                                <div class="stat-value">28h</div>
+                                <div class="stat-change">+5h this week</div>
+                            </div>
+                            <div class="stat-icon" style="background: rgba(16, 185, 129, 0.1);">⏱️</div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div>
+                                <div class="stat-label">Clone Accuracy</div>
+                                <div class="stat-value">94%</div>
+                                <div class="stat-change">+2 this month</div>
+                            </div>
+                            <div class="stat-icon" style="background: rgba(20, 184, 166, 0.1);">🎯</div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div>
+                                <div class="stat-label">Active Clones</div>
+                                <div class="stat-value">3</div>
+                                <div class="stat-change">Updated today</div>
+                            </div>
+                            <div class="stat-icon" style="background: rgba(245, 158, 11, 0.1);">🤖</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="section-header">
+                        <h2 class="section-title">Upcoming Meetings</h2>
+                        <button class="btn btn-primary" onclick="showPage('meetings')">View All</button>
+                    </div>
+                    
+                    <div class="meeting-card">
+                        <div class="meeting-header">
+                            <div>
+                                <div class="meeting-title">Quarterly Business Review</div>
+                                <div class="meeting-time">Today at 2:00 PM - 3:00 PM</div>
+                            </div>
+                            <span class="meeting-status status-scheduled">Scheduled</span>
+                        </div>
+                        <p style="color: var(--text-secondary); font-size: 0.9rem;">Executive team meeting with stakeholders</p>
+                        <div class="meeting-actions">
+                            <button class="btn btn-primary">Join with AI Clone</button>
+                            <button class="btn btn-secondary">Reschedule</button>
+                        </div>
+                    </div>
+
+                    <div class="meeting-card">
+                        <div class="meeting-header">
+                            <div>
+                                <div class="meeting-title">Product Demo Session</div>
+                                <div class="meeting-time">Tomorrow at 10:00 AM - 11:00 AM</div>
+                            </div>
+                            <span class="meeting-status status-scheduled">Scheduled</span>
+                        </div>
+                        <p style="color: var(--text-secondary); font-size: 0.9rem;">Client presentation for new features</p>
+                        <div class="meeting-actions">
+                            <button class="btn btn-primary">Prepare Clone</button>
+                            <button class="btn btn-secondary">Edit Details</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid-2">
+                    <div class="section">
+                        <div class="section-header">
+                            <h2 class="section-title">Recent Activity</h2>
+                        </div>
+                        <div style="color: var(--text-secondary);">
+                            <p style="margin-bottom: 0.8rem;">✅ AI clone attended "Team Standup" - 2 hours ago</p>
+                            <p style="margin-bottom: 0.8rem;">📝 Meeting notes generated for "Client Call" - 4 hours ago</p>
+                            <p style="margin-bottom: 0.8rem;">🎤 Voice model updated - Yesterday</p>
+                            <p style="margin-bottom: 0.8rem;">📅 3 meetings scheduled for next week - 2 days ago</p>
+                        </div>
+                    </div>
+
+                    <div class="section">
+                        <div class="section-header">
+                            <h2 class="section-title">Quick Actions</h2>
+                        </div>
+                        <div style="display: flex; flex-direction: column; gap: 0.8rem;">
+                            <button class="btn btn-primary" onclick="showPage('clone')">Create New Clone</button>
+                            <button class="btn btn-secondary" onclick="showPage('meetings')">Schedule Meeting</button>
+                            <button class="btn btn-secondary" onclick="showPage('analytics')">View Reports</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="meetings-page" class="page-content">
+                <div class="section">
+                    <div class="section-header">
+                        <h2 class="section-title">All Meetings</h2>
+                        <button class="btn btn-primary">Schedule New Meeting</button>
+                    </div>
+
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Meeting Title</th>
+                                <th>Date & Time</th>
+                                <th>Type</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Quarterly Business Review</td>
+                                <td>Oct 19, 2025 2:00 PM</td>
+                                <td><span class="badge badge-primary">Executive</span></td>
+                                <td><span class="badge badge-warning">Scheduled</span></td>
+                                <td><button class="btn btn-secondary" style="padding: 0.4rem 1rem; font-size: 0.85rem;">Manage</button></td>
+                            </tr>
+                            <tr>
+                                <td>Product Demo Session</td>
+                                <td>Oct 20, 2025 10:00 AM</td>
+                                <td><span class="badge badge-primary">Client</span></td>
+                                <td><span class="badge badge-warning">Scheduled</span></td>
+                                <td><button class="btn btn-secondary" style="padding: 0.4rem 1rem; font-size: 0.85rem;">Manage</button></td>
+                            </tr>
+                            <tr>
+                                <td>Team Standup</td>
+                                <td>Oct 18, 2025 9:00 AM</td>
+                                <td><span class="badge badge-primary">Internal</span></td>
+                                <td><span class="badge badge-success">Completed</span></td>
+                                <td><button class="btn btn-secondary" style="padding: 0.4rem 1rem; font-size: 0.85rem;">View Notes</button></td>
+                            </tr>
+                            <tr>
+                                <td>Client Check-in</td>
+                                <td>Oct 17, 2025 3:00 PM</td>
+                                <td><span class="badge badge-primary">Client</span></td>
+                                <td><span class="badge badge-success">Completed</span></td>
+                                <td><button class="btn btn-secondary" style="padding: 0.4rem 1rem; font-size: 0.85rem;">View Notes</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
 
@@ -390,9 +741,9 @@
                         <h2 class="section-title">Create Your AI Clone</h2>
                     </div>
                     
-                    <div class="alert warning">
+                    <div class="alert info">
                         <strong>🔒 Secure Backend Integration</strong><br>
-                        API key is securely managed by backend. No keys needed in frontend!
+                        API key is securely managed by backend. No keys needed in frontend
                     </div>
                     
                     <form id="clone-form">
@@ -431,6 +782,195 @@
                         </div>
                     </form>
                 </div>
+
+                <div class="section">
+                    <div class="section-header">
+                        <h2 class="section-title">Your Clones</h2>
+                    </div>
+                    <div class="grid-2">
+                        <div class="card">
+                            <div class="feature-icon">🎭</div>
+                            <div class="card-title">Professional Clone</div>
+                            <p style="color: var(--text-secondary); margin-bottom: 1rem;">Executive meetings and presentations</p>
+                            <span class="badge badge-success">Active</span>
+                            <div style="margin-top: 1rem; display: flex; gap: 0.5rem;">
+                                <button class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.85rem;">Edit</button>
+                                <button class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.85rem;">Test</button>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="feature-icon">🤝</div>
+                            <div class="card-title">Casual Clone</div>
+                            <p style="color: var(--text-secondary); margin-bottom: 1rem;">Team meetings and informal chats</p>
+                            <span class="badge badge-success">Active</span>
+                            <div style="margin-top: 1rem; display: flex; gap: 0.5rem;">
+                                <button class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.85rem;">Edit</button>
+                                <button class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.85rem;">Test</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="analytics-page" class="page-content">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div>
+                                <div class="stat-label">Meeting Participation</div>
+                                <div class="stat-value">87%</div>
+                                <div class="stat-change">+5% from last month</div>
+                            </div>
+                            <div class="stat-icon" style="background: rgba(79, 70, 229, 0.1);">📊</div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div>
+                                <div class="stat-label">Average Response Time</div>
+                                <div class="stat-value">1.2s</div>
+                                <div class="stat-change">Improved by 0.3s</div>
+                            </div>
+                            <div class="stat-icon" style="background: rgba(16, 185, 129, 0.1);">⚡</div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div>
+                                <div class="stat-label">User Satisfaction</div>
+                                <div class="stat-value">4.8</div>
+                                <div class="stat-change">Out of 5.0</div>
+                            </div>
+                            <div class="stat-icon" style="background: rgba(245, 158, 11, 0.1);">⭐</div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div>
+                                <div class="stat-label">Cost Savings</div>
+                                <div class="stat-value">$2.4k</div>
+                                <div class="stat-change">This quarter</div>
+                            </div>
+                            <div class="stat-icon" style="background: rgba(20, 184, 166, 0.1);">💰</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="section-header">
+                        <h2 class="section-title">Performance Metrics</h2>
+                    </div>
+                    <div style="color: var(--text-secondary);">
+                        <p style="margin-bottom: 1rem;">📈 Meeting attendance improved by 23% since using AI clones</p>
+                        <p style="margin-bottom: 1rem;">⏰ Average meeting preparation time reduced from 15 minutes to 2 minutes</p>
+                        <p style="margin-bottom: 1rem;">🎯 Clone accuracy rating: 94% based on participant feedback</p>
+                        <p style="margin-bottom: 1rem;">💬 Average of 42 interactions per meeting handled by AI clone</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="settings-page" class="page-content">
+                <div class="section">
+                    <div class="section-header">
+                        <h2 class="section-title">Account Settings</h2>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Full Name</label>
+                        <input type="text" value="Bharath Kumar" placeholder="Enter your full name">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Email Address</label>
+                        <input type="email" value="bharathk9339@gmail.com" placeholder="Enter your email">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Time Zone</label>
+                        <select>
+                            <option>UTC-5:00 Eastern Time</option>
+                            <option>UTC-8:00 Pacific Time</option>
+                            <option>UTC+0:00 GMT</option>
+                            <option>UTC+5:30 India Standard Time</option>
+                        </select>
+                    </div>
+
+                    <button class="btn btn-primary">Save Changes</button>
+                </div>
+
+                <div class="section">
+                    <div class="section-header">
+                        <h2 class="section-title">Clone Preferences</h2>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Default Clone Behavior</label>
+                        <select>
+                            <option>Professional - Formal and structured responses</option>
+                            <option>Casual - Relaxed and conversational</option>
+                            <option>Technical - Detailed and precise</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Auto-Join Meetings</label>
+                        <select>
+                            <option>Enabled - Clone joins automatically</option>
+                            <option>Disabled - Manual approval required</option>
+                            <option>Selective - Based on meeting type</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Meeting Notes Format</label>
+                        <select>
+                            <option>Detailed Summary</option>
+                            <option>Key Points Only</option>
+                            <option>Action Items Focus</option>
+                        </select>
+                    </div>
+
+                    <button class="btn btn-primary">Update Preferences</button>
+                </div>
+
+                <div class="section">
+                    <div class="section-header">
+                        <h2 class="section-title">Integrations</h2>
+                    </div>
+                    <div class="grid-2">
+                        <div class="card">
+                            <div class="feature-icon">📅</div>
+                            <div class="card-title">Google Calendar</div>
+                            <p style="color: var(--text-secondary); margin-bottom: 1rem;">Sync meetings automatically</p>
+                            <span class="badge badge-success">Connected</span>
+                        </div>
+
+                        <div class="card">
+                            <div class="feature-icon">💼</div>
+                            <div class="card-title">Microsoft Teams</div>
+                            <p style="color: var(--text-secondary); margin-bottom: 1rem;">Join meetings seamlessly</p>
+                            <button class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.85rem;">Connect</button>
+                        </div>
+
+                        <div class="card">
+                            <div class="feature-icon">📹</div>
+                            <div class="card-title">Zoom</div>
+                            <p style="color: var(--text-secondary); margin-bottom: 1rem;">Video conferencing integration</p>
+                            <button class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.85rem;">Connect</button>
+                        </div>
+
+                        <div class="card">
+                            <div class="feature-icon">📧</div>
+                            <div class="card-title">Gmail</div>
+                            <p style="color: var(--text-secondary); margin-bottom: 1rem;">Email notifications and updates</p>
+                            <span class="badge badge-success">Connected</span>
+                        </div>
+                    </div>
+                </div>
             </div>
         </main>
     </div>
@@ -438,6 +978,29 @@
     <script>
         let voiceFile = null;
         let videoFile = null;
+
+        function showPage(pageName) {
+            document.querySelectorAll('.page-content').forEach(page => {
+                page.classList.remove('active');
+            });
+            document.querySelectorAll('.menu-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            document.getElementById(pageName + '-page').classList.add('active');
+            event.currentTarget.classList.add('active');
+            
+            const titles = {
+                'overview': { title: 'Overview', subtitle: 'Your AI meeting dashboard at a glance' },
+                'meetings': { title: 'Meetings', subtitle: 'Manage and schedule your meetings' },
+                'clone': { title: 'AI Clone', subtitle: 'Create and manage your AI clones' },
+                'analytics': { title: 'Analytics', subtitle: 'Track your meeting performance' },
+                'settings': { title: 'Settings', subtitle: 'Configure your account and preferences' }
+            };
+            
+            document.querySelector('.page-title h1').textContent = titles[pageName].title;
+            document.querySelector('.page-title p').textContent = titles[pageName].subtitle;
+        }
 
         function showAlert(containerId, message, type) {
             const container = document.getElementById(containerId);
@@ -551,10 +1114,6 @@
                 }, 3000);
             }
         });
-
-        function showPage(page) {
-            console.log('Showing page:', page);
-        }
     </script>
 </body>
 </html>
