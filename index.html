@@ -3,57 +3,99 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NeuralMeet | AI Clone for Executives Who Value Their Time</title>
-    <meta name="description" content="Stop wasting 23 hours weekly in meetings. Your AI clone attends for you, speaks with your voice, makes decisions using your logic.">
+    <title>NeuralMeet | AI Clone for Enterprise Executives</title>
+    <meta name="description" content="Enterprise AI meeting automation. Your digital twin attends meetings, makes decisions, and escalates only critical issues. Reclaim 1,200+ hours annually.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
         :root {
-            --blue: #3b82f6;
-            --blue-dark: #2563eb;
-            --blue-light: #60a5fa;
-            --cyan: #06b6d4;
-            --gray-900: #0f172a;
-            --gray-800: #1e293b;
-            --gray-700: #334155;
-            --gray-600: #475569;
-            --gray-400: #94a3b8;
-            --gray-200: #e2e8f0;
+            --primary: #4f46e5;
+            --primary-dark: #3730a3;
+            --primary-light: #6366f1;
+            --accent: #14b8a6;
+            --accent-dark: #0d9488;
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #111118;
+            --bg-tertiary: #1a1a24;
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --text-muted: #64748b;
+            --border: rgba(255, 255, 255, 0.08);
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+            --shadow-glow: 0 0 40px rgba(79, 70, 229, 0.3);
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             line-height: 1.6;
-            color: #f1f5f9;
-            background: var(--gray-900);
+            color: var(--text-primary);
+            background: var(--bg-primary);
             overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
         }
 
         /* Animated Background */
-        .bg-pattern {
+        .bg-canvas {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: 
-                radial-gradient(circle at 20% 50%, rgba(59, 130, 246, 0.12) 0%, transparent 50%),
-                radial-gradient(circle at 80% 80%, rgba(6, 182, 212, 0.08) 0%, transparent 50%),
-                linear-gradient(180deg, #0f172a 0%, #1e293b 100%);
+            background: radial-gradient(ellipse at top, rgba(79, 70, 229, 0.15) 0%, transparent 60%),
+                        radial-gradient(ellipse at bottom, rgba(20, 184, 166, 0.1) 0%, transparent 60%),
+                        var(--bg-primary);
             z-index: -2;
         }
 
-        .grid-overlay {
+        .grid-bg {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
             background-image: 
-                linear-gradient(rgba(59, 130, 246, 0.04) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(59, 130, 246, 0.04) 1px, transparent 1px);
-            background-size: 60px 60px;
+                linear-gradient(rgba(79, 70, 229, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(79, 70, 229, 0.05) 1px, transparent 1px);
+            background-size: 50px 50px;
             z-index: -1;
+            animation: gridScroll 20s linear infinite;
+        }
+
+        @keyframes gridScroll {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(50px); }
+        }
+
+        /* Floating particles */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(79, 70, 229, 0.4);
+            border-radius: 50%;
+            animation: float 15s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) translateX(0); opacity: 0; }
+            10% { opacity: 0.8; }
+            90% { opacity: 0.8; }
+            100% { transform: translateY(-100vh) translateX(100px); opacity: 0; }
         }
 
         /* Navigation */
@@ -61,455 +103,790 @@
             position: fixed;
             top: 0;
             width: 100%;
-            backdrop-filter: blur(20px);
-            background: rgba(15, 23, 42, 0.85);
-            border-bottom: 1px solid rgba(59, 130, 246, 0.1);
-            z-index: 100;
+            backdrop-filter: blur(24px) saturate(180%);
+            background: rgba(10, 10, 15, 0.8);
+            border-bottom: 1px solid var(--border);
+            z-index: 1000;
+            transition: all 0.3s ease;
         }
 
-        .nav-inner {
-            max-width: 1280px;
+        nav.scrolled {
+            background: rgba(10, 10, 15, 0.95);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .nav-container {
+            max-width: 1400px;
             margin: 0 auto;
-            padding: 1.2rem 2rem;
+            padding: 1rem 2rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
         .logo {
-            font-size: 1.6rem;
+            font-size: 1.5rem;
             font-weight: 800;
-            background: linear-gradient(135deg, #60a5fa, #3b82f6);
+            background: linear-gradient(135deg, var(--primary-light), var(--accent));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            letter-spacing: -1px;
+            letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
-        .nav-links {
+        .logo::before {
+            content: '◆';
+            font-size: 1.2rem;
+        }
+
+        .nav-menu {
             display: flex;
             gap: 2.5rem;
             align-items: center;
         }
 
-        .nav-links a {
-            color: #cbd5e1;
+        .nav-menu a {
+            color: var(--text-secondary);
             text-decoration: none;
             font-weight: 500;
+            font-size: 0.95rem;
             transition: color 0.2s;
+            position: relative;
         }
 
-        .nav-links a:hover {
-            color: #fff;
+        .nav-menu a:hover {
+            color: var(--text-primary);
+        }
+
+        .nav-menu a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary);
+            transition: width 0.3s;
+        }
+
+        .nav-menu a:hover::after {
+            width: 100%;
         }
 
         .nav-cta {
-            background: var(--blue);
-            color: #fff;
-            padding: 0.65rem 1.5rem;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white !important;
+            padding: 0.7rem 1.8rem;
             border-radius: 8px;
             font-weight: 600;
-            transition: all 0.2s;
+            box-shadow: var(--shadow-glow);
+            transition: all 0.3s;
         }
 
         .nav-cta:hover {
-            background: var(--blue-dark);
-            transform: translateY(-1px);
+            transform: translateY(-2px);
+            box-shadow: 0 0 50px rgba(79, 70, 229, 0.5);
+        }
+
+        .nav-cta::after {
+            display: none;
         }
 
         /* Hero Section */
         .hero {
-            max-width: 1280px;
+            max-width: 1400px;
             margin: 0 auto;
             padding: 10rem 2rem 6rem;
+            position: relative;
+        }
+
+        .hero-content {
+            max-width: 900px;
+            margin: 0 auto;
             text-align: center;
         }
 
         .hero-badge {
             display: inline-flex;
             align-items: center;
-            gap: 0.5rem;
-            padding: 0.5rem 1.2rem;
-            background: rgba(59, 130, 246, 0.1);
-            border: 1px solid rgba(59, 130, 246, 0.2);
+            gap: 0.6rem;
+            padding: 0.6rem 1.5rem;
+            background: rgba(79, 70, 229, 0.1);
+            border: 1px solid rgba(79, 70, 229, 0.3);
             border-radius: 100px;
-            color: var(--blue-light);
+            color: var(--primary-light);
             font-size: 0.9rem;
             font-weight: 600;
-            margin-bottom: 2rem;
+            margin-bottom: 2.5rem;
+            backdrop-filter: blur(10px);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+
+        .hero-badge::before {
+            content: '✨';
+            font-size: 1.1rem;
         }
 
         h1 {
-            font-size: 5rem;
+            font-size: clamp(3rem, 8vw, 5.5rem);
             font-weight: 900;
-            line-height: 1.05;
-            margin-bottom: 1.5rem;
+            line-height: 1.1;
+            margin-bottom: 2rem;
             letter-spacing: -2px;
-            background: linear-gradient(135deg, #ffffff 0%, #94a3b8 100%);
+            background: linear-gradient(135deg, var(--text-primary) 0%, var(--text-secondary) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            animation: fadeInUp 0.8s ease-out;
         }
 
-        .hero-description {
-            font-size: 1.5rem;
-            color: #cbd5e1;
-            max-width: 800px;
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero-subtitle {
+            font-size: 1.4rem;
+            color: var(--text-secondary);
+            max-width: 750px;
             margin: 0 auto 3rem;
-            line-height: 1.6;
+            line-height: 1.7;
+            animation: fadeInUp 0.8s ease-out 0.2s backwards;
         }
 
-        .cta-group {
+        .cta-buttons {
             display: flex;
-            gap: 1rem;
+            gap: 1.2rem;
             justify-content: center;
-            margin-bottom: 4rem;
+            margin-bottom: 5rem;
+            animation: fadeInUp 0.8s ease-out 0.4s backwards;
         }
 
-        .btn-primary {
-            background: linear-gradient(135deg, var(--blue), var(--blue-dark));
-            color: #fff;
-            padding: 1rem 2.5rem;
+        .btn {
+            padding: 1.1rem 2.8rem;
             border-radius: 10px;
-            font-size: 1.1rem;
+            font-size: 1.05rem;
             font-weight: 600;
             text-decoration: none;
             transition: all 0.3s;
             display: inline-block;
-            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.3);
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            box-shadow: var(--shadow-glow);
         }
 
         .btn-primary:hover {
             transform: translateY(-3px);
-            box-shadow: 0 15px 40px rgba(59, 130, 246, 0.5);
+            box-shadow: 0 0 60px rgba(79, 70, 229, 0.6);
         }
 
         .btn-secondary {
             background: rgba(255, 255, 255, 0.05);
-            color: #fff;
-            padding: 1rem 2.5rem;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            text-decoration: none;
-            transition: all 0.3s;
-            display: inline-block;
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+            backdrop-filter: blur(10px);
         }
 
         .btn-secondary:hover {
-            background: rgba(255, 255, 255, 0.08);
-            border-color: var(--blue);
+            background: rgba(255, 255, 255, 0.1);
+            border-color: var(--primary);
         }
 
-        /* Stats Bar */
-        .stats {
+        /* Stats Section */
+        .stats-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 3rem;
-            max-width: 900px;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            max-width: 1100px;
             margin: 0 auto;
+            animation: fadeInUp 0.8s ease-out 0.6s backwards;
         }
 
-        .stat-item {
+        .stat-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 2.5rem;
             text-align: center;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s;
+        }
+
+        .stat-card:hover {
+            border-color: var(--primary);
+            background: rgba(79, 70, 229, 0.05);
+            transform: translateY(-8px);
         }
 
         .stat-number {
             font-size: 3.5rem;
             font-weight: 900;
-            background: linear-gradient(135deg, var(--blue-light), var(--cyan));
+            background: linear-gradient(135deg, var(--primary-light), var(--accent));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            line-height: 1;
+            line-height: 1.2;
             margin-bottom: 0.5rem;
         }
 
         .stat-label {
-            color: var(--gray-400);
+            color: var(--text-muted);
             font-size: 1rem;
+            font-weight: 500;
         }
 
-        /* Problem Section */
-        .problem-section {
-            max-width: 1100px;
-            margin: 8rem auto 4rem;
+        /* ROI Calculator Section */
+        .roi-section {
+            max-width: 1400px;
+            margin: 8rem auto;
             padding: 0 2rem;
         }
 
-        .problem-box {
-            background: rgba(239, 68, 68, 0.05);
-            border: 1px solid rgba(239, 68, 68, 0.2);
-            border-left: 4px solid #ef4444;
-            padding: 3rem;
-            border-radius: 16px;
+        .roi-calculator {
+            background: linear-gradient(135deg, rgba(79, 70, 229, 0.1), rgba(20, 184, 166, 0.05));
+            border: 1px solid rgba(79, 70, 229, 0.2);
+            border-radius: 24px;
+            padding: 4rem;
+            backdrop-filter: blur(20px);
         }
 
-        .problem-box h2 {
-            font-size: 2rem;
-            color: #fca5a5;
+        .roi-calculator h2 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            text-align: center;
             margin-bottom: 1rem;
         }
 
-        .problem-stats {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 2rem;
-            margin-top: 2rem;
-        }
-
-        .problem-stat {
+        .roi-subtitle {
             text-align: center;
+            color: var(--text-secondary);
+            font-size: 1.15rem;
+            margin-bottom: 3rem;
         }
 
-        .problem-stat-num {
-            font-size: 2.5rem;
-            font-weight: 800;
-            color: #fca5a5;
+        .calculator-inputs {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
         }
 
-        .problem-stat-text {
-            color: #cbd5e1;
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .input-group label {
+            color: var(--text-secondary);
+            font-weight: 500;
             font-size: 0.95rem;
         }
 
-        /* Features Grid */
+        .input-group input {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1rem 1.5rem;
+            color: var(--text-primary);
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: rgba(79, 70, 229, 0.05);
+        }
+
+        .roi-results {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            padding: 3rem;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 16px;
+            border: 1px solid var(--border);
+        }
+
+        .roi-metric {
+            text-align: center;
+        }
+
+        .roi-metric-value {
+            font-size: 2.8rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1.2;
+            margin-bottom: 0.5rem;
+        }
+
+        .roi-metric-label {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        /* Features Section */
         .features {
-            max-width: 1280px;
+            max-width: 1400px;
             margin: 8rem auto;
             padding: 0 2rem;
         }
 
         .section-header {
             text-align: center;
-            margin-bottom: 4rem;
+            margin-bottom: 5rem;
         }
 
         .section-header h2 {
             font-size: 3rem;
             font-weight: 800;
-            margin-bottom: 1rem;
+            margin-bottom: 1.2rem;
         }
 
         .section-header p {
             font-size: 1.25rem;
-            color: var(--gray-400);
-            max-width: 600px;
+            color: var(--text-secondary);
+            max-width: 650px;
             margin: 0 auto;
         }
 
         .features-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
             gap: 2rem;
         }
 
         .feature-card {
             background: rgba(255, 255, 255, 0.02);
-            border: 1px solid rgba(59, 130, 246, 0.1);
-            border-radius: 16px;
-            padding: 2.5rem;
-            transition: all 0.3s;
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 3rem;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(79, 70, 229, 0.1), rgba(20, 184, 166, 0.05));
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+
+        .feature-card:hover::before {
+            opacity: 1;
         }
 
         .feature-card:hover {
-            border-color: var(--blue);
-            background: rgba(59, 130, 246, 0.05);
-            transform: translateY(-8px);
+            border-color: var(--primary);
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(79, 70, 229, 0.2);
         }
 
         .feature-icon {
-            width: 56px;
-            height: 56px;
-            background: linear-gradient(135deg, var(--blue), var(--blue-dark));
-            border-radius: 12px;
+            width: 64px;
+            height: 64px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border-radius: 14px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.6rem;
-            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+            margin-bottom: 1.8rem;
+            position: relative;
+            z-index: 1;
+            box-shadow: 0 10px 30px rgba(79, 70, 229, 0.3);
         }
 
         .feature-card h3 {
-            font-size: 1.4rem;
+            font-size: 1.5rem;
             margin-bottom: 1rem;
+            position: relative;
+            z-index: 1;
         }
 
         .feature-card p {
-            color: var(--gray-400);
-            line-height: 1.7;
+            color: var(--text-secondary);
+            line-height: 1.8;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Security & Compliance */
+        .security-badges {
+            max-width: 1400px;
+            margin: 6rem auto;
+            padding: 0 2rem;
+        }
+
+        .badges-container {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .badge {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem 2.5rem;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s;
+        }
+
+        .badge:hover {
+            border-color: var(--accent);
+            transform: translateY(-4px);
+        }
+
+        .badge-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 0.3rem;
+        }
+
+        .badge-subtitle {
+            font-size: 0.85rem;
+            color: var(--text-muted);
         }
 
         /* Use Cases */
         .use-cases {
-            background: rgba(255, 255, 255, 0.02);
-            border-top: 1px solid rgba(59, 130, 246, 0.1);
-            border-bottom: 1px solid rgba(59, 130, 246, 0.1);
+            background: rgba(255, 255, 255, 0.01);
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
             padding: 8rem 2rem;
             margin: 8rem 0;
         }
 
-        .use-cases-inner {
-            max-width: 1100px;
+        .use-cases-container {
+            max-width: 1200px;
             margin: 0 auto;
         }
 
         .use-case {
             background: rgba(0, 0, 0, 0.3);
-            border: 1px solid rgba(59, 130, 246, 0.15);
+            border: 1px solid var(--border);
+            border-left: 4px solid var(--accent);
             border-radius: 12px;
-            padding: 2rem;
-            margin-bottom: 1.5rem;
+            padding: 2.5rem;
+            margin-bottom: 1.8rem;
             transition: all 0.3s;
         }
 
         .use-case:hover {
-            border-color: var(--cyan);
-            background: rgba(6, 182, 212, 0.05);
+            border-left-color: var(--primary);
+            background: rgba(79, 70, 229, 0.05);
+            transform: translateX(8px);
         }
 
         .role-tag {
             display: inline-block;
-            padding: 0.4rem 1rem;
-            background: rgba(6, 182, 212, 0.1);
-            border: 1px solid rgba(6, 182, 212, 0.3);
+            padding: 0.4rem 1.2rem;
+            background: rgba(20, 184, 166, 0.15);
+            border: 1px solid rgba(20, 184, 166, 0.3);
             border-radius: 20px;
-            color: var(--cyan);
-            font-size: 0.85rem;
-            font-weight: 600;
+            color: var(--accent);
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
             margin-bottom: 1rem;
         }
 
         .use-case h3 {
-            font-size: 1.4rem;
-            margin-bottom: 0.8rem;
-        }
-
-        .use-case p {
-            color: var(--gray-400);
-            line-height: 1.7;
-        }
-
-        /* Demo CTA */
-        .demo-cta {
-            max-width: 800px;
-            margin: 8rem auto;
-            padding: 4rem 2rem;
-            text-align: center;
-            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(6, 182, 212, 0.05));
-            border: 1px solid rgba(59, 130, 246, 0.2);
-            border-radius: 20px;
-        }
-
-        .demo-cta h2 {
-            font-size: 2.5rem;
+            font-size: 1.6rem;
             margin-bottom: 1rem;
         }
 
-        .demo-cta p {
-            color: var(--gray-400);
+        .use-case p {
+            color: var(--text-secondary);
+            line-height: 1.8;
+            font-size: 1.05rem;
+        }
+
+        /* Testimonials */
+        .testimonials {
+            max-width: 1400px;
+            margin: 8rem auto;
+            padding: 0 2rem;
+        }
+
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 4rem;
+        }
+
+        .testimonial-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 2.5rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .testimonial-text {
+            font-size: 1.05rem;
+            color: var(--text-secondary);
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+        }
+
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .author-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
             font-size: 1.2rem;
-            margin-bottom: 2rem;
+        }
+
+        .author-info h4 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.2rem;
+        }
+
+        .author-info p {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        /* CTA Section */
+        .cta-section {
+            max-width: 900px;
+            margin: 8rem auto;
+            padding: 5rem 2rem;
+            text-align: center;
+            background: linear-gradient(135deg, rgba(79, 70, 229, 0.15), rgba(20, 184, 166, 0.1));
+            border: 1px solid rgba(79, 70, 229, 0.3);
+            border-radius: 24px;
+            backdrop-filter: blur(20px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(79, 70, 229, 0.1) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+        }
+
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .cta-section h2 {
+            font-size: 2.8rem;
+            margin-bottom: 1.2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .cta-section p {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            margin-bottom: 2.5rem;
+            position: relative;
+            z-index: 1;
         }
 
         .demo-form {
             display: flex;
             gap: 1rem;
-            max-width: 500px;
+            max-width: 550px;
             margin: 0 auto;
+            position: relative;
+            z-index: 1;
         }
 
         .demo-input {
             flex: 1;
-            padding: 1rem 1.5rem;
+            padding: 1.1rem 1.8rem;
             background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--border);
             border-radius: 10px;
-            color: #fff;
+            color: var(--text-primary);
             font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .demo-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: rgba(79, 70, 229, 0.05);
         }
 
         .demo-input::placeholder {
-            color: var(--gray-400);
+            color: var(--text-muted);
         }
 
         /* Footer */
         footer {
-            border-top: 1px solid rgba(59, 130, 246, 0.1);
-            padding: 3rem 2rem;
-            text-align: center;
-            color: var(--gray-400);
+            border-top: 1px solid var(--border);
+            padding: 4rem 2rem 2rem;
+            margin-top: 8rem;
         }
 
-        .footer-links {
-            display: flex;
-            justify-content: center;
-            gap: 2rem;
-            margin-bottom: 1.5rem;
+        .footer-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+            margin-bottom: 3rem;
         }
 
-        .footer-links a {
-            color: var(--gray-400);
+        .footer-section h4 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 1.2rem;
+            color: var(--text-primary);
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-section a {
+            color: var(--text-muted);
             text-decoration: none;
             transition: color 0.2s;
         }
 
-        .footer-links a:hover {
-            color: #fff;
+        .footer-section a:hover {
+            color: var(--primary);
         }
 
-        /* Responsive */
-        @media (max-width: 1024px) {
-            .features-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border);
+            color: var(--text-muted);
+            font-size: 0.9rem;
         }
 
+        /* Mobile Responsive */
         @media (max-width: 768px) {
-            h1 {
-                font-size: 3rem;
-            }
-
-            .hero-description {
-                font-size: 1.2rem;
-            }
-
-            .stats {
-                grid-template-columns: 1fr;
-                gap: 2rem;
-            }
-
-            .features-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .problem-stats {
-                grid-template-columns: 1fr;
-            }
-
-            .nav-links {
+            .nav-menu {
                 display: none;
             }
 
-            .cta-group {
+            h1 {
+                font-size: 2.5rem !important;
+            }
+
+            .hero {
+                padding: 7rem 1.5rem 4rem;
+            }
+
+            .cta-buttons {
                 flex-direction: column;
                 align-items: stretch;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .roi-calculator {
+                padding: 2.5rem 1.5rem;
+            }
+
+            .calculator-inputs {
+                grid-template-columns: 1fr;
             }
 
             .demo-form {
                 flex-direction: column;
             }
+
+            .footer-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Smooth Scroll */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Loading animation */
+        @keyframes shimmer {
+            0% { background-position: -1000px 0; }
+            100% { background-position: 1000px 0; }
+        }
+
+        .loading {
+            background: linear-gradient(90deg, rgba(255,255,255,0.02) 25%, rgba(79,70,229,0.1) 50%, rgba(255,255,255,0.02) 75%);
+            background-size: 1000px 100%;
+            animation: shimmer 2s infinite;
         }
     </style>
 </head>
 <body>
-    <div class="bg-pattern"></div>
-    <div class="grid-overlay"></div>
+    <div class="bg-canvas"></div>
+    <div class="grid-bg"></div>
+    <div class="particles" id="particles"></div>
 
     <!-- Navigation -->
-    <nav>
-        <div class="nav-inner">
+    <nav id="navbar">
+        <div class="nav-container">
             <div class="logo">NeuralMeet</div>
-            <div class="nav-links">
+            <div class="nav-menu">
                 <a href="#features">Features</a>
+                <a href="#roi">ROI Calculator</a>
                 <a href="#use-cases">Use Cases</a>
                 <a href="#security">Security</a>
                 <a href="#demo" class="nav-cta">Book Demo</a>
@@ -517,158 +894,361 @@
         </div>
     </nav>
 
-    <!-- Hero -->
+    <!-- Hero Section -->
     <section class="hero">
-        <div class="hero-badge">
-            <span>🚀</span>
-            Trusted by Fortune 500 Executives
-        </div>
-        <h1>Stop Going to<br>Meetings That Don't<br>Need You</h1>
-        <p class="hero-description">
-            Your AI clone speaks with your voice, makes decisions using your logic, 
-            and escalates only when something actually matters. Get back 23 hours 
-            every week.
-        </p>
-        <div class="cta-group">
-            <a href="#demo" class="btn-primary">See Your Clone in 30 Minutes</a>
-            <a href="#how" class="btn-secondary">How It Works</a>
-        </div>
-        <div class="stats">
-            <div class="stat-item">
-                <div class="stat-number">23hrs</div>
-                <div class="stat-label">Saved per Executive Weekly</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-number">67%</div>
-                <div class="stat-label">Meetings Automated</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-number">1,200hrs</div>
-                <div class="stat-label">Reclaimed Every Year</div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Problem -->
-    <section class="problem-section">
-        <div class="problem-box">
-            <h2>Executives Are Drowning in Calendar Invites</h2>
-            <p style="color: #cbd5e1; font-size: 1.1rem; margin-top: 1rem;">
-                Most meetings are status updates, decision requests on trivial items, 
-                or discussions where your presence adds zero value. You show up anyway 
-                because not showing up means losing context.
+        <div class="hero-content">
+            <div class="hero-badge">Trusted by Fortune 500 Executives</div>
+            <h1>Stop Attending Meetings That Don't Need You</h1>
+            <p class="hero-subtitle">
+                Your AI digital twin attends meetings with your voice, makes decisions using your logic, 
+                and escalates only critical issues. Reclaim 1,200+ hours annually.
             </p>
-            <div class="problem-stats">
-                <div class="problem-stat">
-                    <div class="problem-stat-num">23hrs</div>
-                    <div class="problem-stat-text">Weekly in meetings</div>
+            <div class="cta-buttons">
+                <a href="#demo" class="btn btn-primary">See Your Clone in 30 Minutes</a>
+                <a href="#roi" class="btn btn-secondary">Calculate Your ROI</a>
+            </div>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number">23hrs</div>
+                    <div class="stat-label">Saved per Executive Weekly</div>
                 </div>
-                <div class="problem-stat">
-                    <div class="problem-stat-num">67%</div>
-                    <div class="problem-stat-text">Completely unnecessary</div>
+                <div class="stat-card">
+                    <div class="stat-number">67%</div>
+                    <div class="stat-label">Meetings Automated</div>
                 </div>
-                <div class="problem-stat">
-                    <div class="problem-stat-num">$541B</div>
-                    <div class="problem-stat-text">Lost productivity annually</div>
+                <div class="stat-card">
+                    <div class="stat-number">1,200+</div>
+                    <div class="stat-label">Hours Reclaimed Annually</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">$541B</div>
+                    <div class="stat-label">Lost Productivity Solved</div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Features -->
+    <!-- ROI Calculator -->
+    <section class="roi-section" id="roi">
+        <div class="roi-calculator">
+            <h2>Calculate Your Time Savings</h2>
+            <p class="roi-subtitle">See exactly how much time and money you'll save with NeuralMeet</p>
+            
+            <div class="calculator-inputs">
+                <div class="input-group">
+                    <label for="meetingsPerWeek">Meetings per Week</label>
+                    <input type="number" id="meetingsPerWeek" value="30" min="1" max="100">
+                </div>
+                <div class="input-group">
+                    <label for="hourlyRate">Your Hourly Rate ($)</label>
+                    <input type="number" id="hourlyRate" value="250" min="50" max="2000">
+                </div>
+                <div class="input-group">
+                    <label for="automationRate">Automation Rate (%)</label>
+                    <input type="number" id="automationRate" value="67" min="0" max="100">
+                </div>
+            </div>
+
+            <div class="roi-results">
+                <div class="roi-metric">
+                    <div class="roi-metric-value" id="hoursSaved">23</div>
+                    <div class="roi-metric-label">Hours Saved/Week</div>
+                </div>
+                <div class="roi-metric">
+                    <div class="roi-metric-value" id="moneySaved">$5,750</div>
+                    <div class="roi-metric-label">Value Saved/Week</div>
+                </div>
+                <div class="roi-metric">
+                    <div class="roi-metric-value" id="annualSavings">$299K</div>
+                    <div class="roi-metric-label">Annual Value</div>
+                </div>
+                <div class="roi-metric">
+                    <div class="roi-metric-value" id="roiMultiple">5.0x</div>
+                    <div class="roi-metric-label">ROI Multiple</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Security Badges -->
+    <section class="security-badges" id="security">
+        <div class="badges-container">
+            <div class="badge">
+                <div class="badge-title">🔒 SOC 2 Type II</div>
+                <div class="badge-subtitle">Certified Security</div>
+            </div>
+            <div class="badge">
+                <div class="badge-title">🛡️ GDPR Compliant</div>
+                <div class="badge-subtitle">Data Protection</div>
+            </div>
+            <div class="badge">
+                <div class="badge-title">🔐 AES-256</div>
+                <div class="badge-subtitle">End-to-End Encryption</div>
+            </div>
+            <div class="badge">
+                <div class="badge-title">✓ HIPAA Ready</div>
+                <div class="badge-subtitle">Healthcare Compliant</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
     <section class="features" id="features">
         <div class="section-header">
-            <h2>How Your Clone Works</h2>
-            <p>Perfect voice replication, decision-making logic, and smart escalation built in.</p>
+            <h2>Enterprise-Grade AI Cloning</h2>
+            <p>Photo-realistic voice and video, autonomous decision-making, and smart escalation built in.</p>
         </div>
         <div class="features-grid">
             <div class="feature-card">
                 <div class="feature-icon">🎭</div>
-                <h3>Indistinguishable Voice Clone</h3>
-                <p>Your tone, cadence, speaking patterns, and video presence. Meeting participants can't tell the difference between you and your clone.</p>
+                <h3>Indistinguishable Clone</h3>
+                <p>Your exact voice, mannerisms, and video presence. Meeting participants can't tell the difference. HeyGen + Emily AI integration for photo-realistic replication.</p>
             </div>
             <div class="feature-card">
                 <div class="feature-icon">⚡</div>
                 <h3>Autonomous Decision Engine</h3>
-                <p>Define rules once. Budget approvals, project greenlight thresholds, escalation triggers. Your clone applies your logic without asking.</p>
+                <p>Define rules once. Budget approvals, project greenlight thresholds, escalation triggers. Your clone applies your logic without constant oversight.</p>
             </div>
             <div class="feature-card">
                 <div class="feature-icon">🎯</div>
-                <h3>Smart Escalation Protocol</h3>
-                <p>Only gets your attention for critical issues: budget overruns, strategic pivots, team conflicts. Everything else runs on autopilot.</p>
+                <h3>Smart Escalation</h3>
+                <p>Only interrupts you for critical issues: budget overruns, strategic pivots, team conflicts. Everything else runs on autopilot with real-time notifications.</p>
             </div>
             <div class="feature-card">
                 <div class="feature-icon">📊</div>
                 <h3>Complete Meeting Memory</h3>
-                <p>Every conversation transcribed, summarized, with action items extracted. Full search across your entire meeting history.</p>
+                <p>Every conversation transcribed, summarized, with action items extracted. Full-text search across your entire meeting history with AI insights.</p>
             </div>
             <div class="feature-card">
                 <div class="feature-icon">🧠</div>
-                <h3>Learns Your Preferences</h3>
-                <p>Gets smarter with every meeting. Adapts to your decision patterns, communication style, and escalation preferences over time.</p>
+                <h3>Continuous Learning</h3>
+                <p>Gets smarter with every meeting. Adapts to your decision patterns, communication style, and preferences. GPT-4 powered intelligence evolution.</p>
             </div>
             <div class="feature-card">
                 <div class="feature-icon">🔒</div>
-                <h3>Enterprise Security</h3>
-                <p>SOC 2 Type II certified. End-to-end encryption. Zero-retention policy. Your conversations stay yours.</p>
+                <h3>Zero-Trust Security</h3>
+                <p>SOC 2 Type II certified. End-to-end encryption. Zero-retention policy. GDPR compliant. Your conversations stay yours, always.</p>
             </div>
         </div>
     </section>
 
     <!-- Use Cases -->
     <section class="use-cases" id="use-cases">
-        <div class="use-cases-inner">
+        <div class="use-cases-container">
             <div class="section-header">
-                <h2>Who This Is Built For</h2>
-                <p>Real executives with real calendars solving real problems.</p>
+                <h2>Built for Executive Leadership</h2>
+                <p>Real executives solving real calendar problems</p>
             </div>
             
             <div class="use-case">
-                <span class="role-tag">C-SUITE</span>
+                <span class="role-tag">C-SUITE EXECUTIVES</span>
                 <h3>Executive Leadership</h3>
-                <p>You need to be in board meetings and quarterly reviews. Your clone handles operational syncs, status check-ins, and recurring team meetings while you focus on strategy.</p>
+                <p>Focus on board meetings and quarterly reviews. Your clone handles operational syncs, status check-ins, and recurring team meetings while you drive strategy and close deals.</p>
             </div>
 
             <div class="use-case">
                 <span class="role-tag">VENTURE CAPITAL</span>
                 <h3>Investors & Partners</h3>
-                <p>Reviewing 50+ deals weekly means constant meetings. Your clone attends initial pitches and portfolio updates. You show up for term sheets and final decisions.</p>
+                <p>Reviewing 50+ deals weekly means constant pitch meetings. Your clone attends initial pitches, portfolio updates, and due diligence calls. You show up for term sheets only.</p>
             </div>
 
             <div class="use-case">
-                <span class="role-tag">CONSULTING</span>
-                <h3>Management Consultants</h3>
-                <p>Client meetings across time zones drain your schedule. Your clone maintains relationships and gathers requirements while you deliver high-value strategic work.</p>
+                <span class="role-tag">MANAGEMENT CONSULTING</span>
+                <h3>Strategic Consultants</h3>
+                <p>Client meetings across time zones drain your schedule. Your clone maintains relationships, gathers requirements, and provides updates while you deliver high-value strategic work.</p>
             </div>
 
             <div class="use-case">
                 <span class="role-tag">REMOTE TEAMS</span>
-                <h3>Distributed Leaders</h3>
-                <p>Managing global teams means 24/7 meeting requests. Your clone provides coverage across time zones without burning you out.</p>
+                <h3>Global Team Leaders</h3>
+                <p>Managing distributed teams means 24/7 meeting requests. Your clone provides coverage across time zones, attends standups, and escalates blockers without burning you out.</p>
             </div>
         </div>
     </section>
 
-    <!-- Demo CTA -->
-    <section class="demo-cta" id="demo">
+    <!-- Testimonials -->
+    <section class="testimonials">
+        <div class="section-header">
+            <h2>Trusted by Leaders</h2>
+            <p>See what executives are saying about NeuralMeet</p>
+        </div>
+        <div class="testimonials-grid">
+            <div class="testimonial-card">
+                <p class="testimonial-text">"Reclaimed 18 hours per week. My clone handles all operational meetings while I focus on strategic decisions. Game changer for executive productivity."</p>
+                <div class="testimonial-author">
+                    <div class="author-avatar">SK</div>
+                    <div class="author-info">
+                        <h4>Sarah Kim</h4>
+                        <p>VP of Engineering, Tech Unicorn</p>
+                    </div>
+                </div>
+            </div>
+            <div class="testimonial-card">
+                <p class="testimonial-text">"The voice quality is indistinguishable. My team genuinely can't tell when it's my clone in meetings. The decision engine gets my logic right 95% of the time."</p>
+                <div class="testimonial-author">
+                    <div class="author-avatar">MC</div>
+                    <div class="author-info">
+                        <h4>Michael Chen</h4>
+                        <p>Managing Partner, VC Fund</p>
+                    </div>
+                </div>
+            </div>
+            <div class="testimonial-card">
+                <p class="testimonial-text">"ROI was immediate. $499/month saved me 20+ hours weekly. That's $20K+ in value monthly. Best investment I've made in productivity tooling."</p>
+                <div class="testimonial-author">
+                    <div class="author-avatar">JP</div>
+                    <div class="author-info">
+                        <h4>Jessica Park</h4>
+                        <p>CEO, SaaS Company</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section" id="demo">
         <h2>See Your Clone in Action</h2>
         <p>30-minute personalized demo. No sales pitch, just your clone speaking with your voice.</p>
-        <form class="demo-form" onsubmit="event.preventDefault(); alert('Demo request received! We will contact you shortly.'); this.reset();">
+        <form class="demo-form" id="demoForm">
             <input type="email" class="demo-input" placeholder="your.email@company.com" required>
-            <button type="submit" class="btn-primary" style="padding: 1rem 2rem; margin: 0;">Book Demo</button>
+            <button type="submit" class="btn btn-primary">Book Demo Now</button>
         </form>
     </section>
 
     <!-- Footer -->
     <footer>
-        <div class="footer-links">
-            <a href="#features">Features</a>
-            <a href="#use-cases">Use Cases</a>
-            <a href="#security">Security</a>
-            <a href="#pricing">Pricing</a>
-            <a href="#contact">Contact</a>
+        <div class="footer-container">
+            <div class="footer-section">
+                <h4>Product</h4>
+                <ul>
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#roi">ROI Calculator</a></li>
+                    <li><a href="#use-cases">Use Cases</a></li>
+                    <li><a href="#security">Security</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Company</h4>
+                <ul>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#careers">Careers</a></li>
+                    <li><a href="#blog">Blog</a></li>
+                    <li><a href="#press">Press Kit</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Resources</h4>
+                <ul>
+                    <li><a href="#docs">Documentation</a></li>
+                    <li><a href="#api">API Reference</a></li>
+                    <li><a href="#support">Support</a></li>
+                    <li><a href="#status">Status</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Legal</h4>
+                <ul>
+                    <li><a href="#privacy">Privacy Policy</a></li>
+                    <li><a href="#terms">Terms of Service</a></li>
+                    <li><a href="#security">Security</a></li>
+                    <li><a href="#compliance">Compliance</a></li>
+                </ul>
+            </div>
         </div>
-        <p>&copy; 2025 NeuralMeet. Stop attending meetings that don't need you.</p>
+        <div class="footer-bottom">
+            <p>&copy; 2025 NeuralMeet. Stop attending meetings that don't need you. All rights reserved.</p>
+        </div>
     </footer>
+
+    <script>
+        // ROI Calculator
+        function updateROI() {
+            const meetingsPerWeek = parseFloat(document.getElementById('meetingsPerWeek').value) || 30;
+            const hourlyRate = parseFloat(document.getElementById('hourlyRate').value) || 250;
+            const automationRate = parseFloat(document.getElementById('automationRate').value) || 67;
+
+            // Assumptions: average meeting is 1 hour
+            const hoursPerWeek = meetingsPerWeek;
+            const automatedHours = hoursPerWeek * (automationRate / 100);
+            const weeklyValue = automatedHours * hourlyRate;
+            const annualValue = weeklyValue * 52;
+            const annualCost = 499 * 12; // $499/month subscription
+            const roi = annualValue / annualCost;
+
+            document.getElementById('hoursSaved').textContent = automatedHours.toFixed(0);
+            document.getElementById('moneySaved').textContent = '$' + weeklyValue.toLocaleString('en-US', {maximumFractionDigits: 0});
+            document.getElementById('annualSavings').textContent = '$' + (annualValue / 1000).toFixed(0) + 'K';
+            document.getElementById('roiMultiple').textContent = roi.toFixed(1) + 'x';
+        }
+
+        document.getElementById('meetingsPerWeek').addEventListener('input', updateROI);
+        document.getElementById('hourlyRate').addEventListener('input', updateROI);
+        document.getElementById('automationRate').addEventListener('input', updateROI);
+
+        // Initialize ROI calculator
+        updateROI();
+
+        // Navbar scroll effect
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 100) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Demo form submission
+        document.getElementById('demoForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert('Demo request received! We will contact you within 24 hours.');
+            e.target.reset();
+        });
+
+        // Generate floating particles
+        const particlesContainer = document.getElementById('particles');
+        for (let i = 0; i < 20; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.top = Math.random() * 100 + '%';
+            particle.style.animationDelay = Math.random() * 15 + 's';
+            particlesContainer.appendChild(particle);
+        }
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+
+        // Intersection Observer for fade-in animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.feature-card, .use-case, .testimonial-card').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out';
+            observer.observe(el);
+        });
+    </script>
 </body>
 </html>
