@@ -1,0 +1,429 @@
+<!-- Avatar Management UI Components -->
+<!-- Add this to dashboard.html -->
+
+<!-- 1. ADD NEW MENU ITEM in sidebar -->
+<li class="menu-item" onclick="showPage('avatars')">
+    <span class="menu-icon">🎭</span>
+    <span>My Avatars</span>
+</li>
+
+<!-- 2. ADD AVATARS PAGE (after clone-page) -->
+<div id="avatars-page" class="page-content" style="display: none;">
+    <div id="avatar-alert"></div>
+    
+    <div class="section">
+        <div class="section-header">
+            <h2 class="section-title">My AI Avatars</h2>
+            <button class="btn btn-primary" onclick="showPage('clone')">
+                + Create New Avatar
+            </button>
+        </div>
+        
+        <!-- Active Avatar Preview -->
+        <div id="active-avatar-preview" class="active-avatar-section">
+            <!-- Populated by JavaScript -->
+        </div>
+        
+        <!-- Avatar Gallery -->
+        <div id="avatar-gallery" class="avatar-gallery-container">
+            <div class="loading-spinner">
+                <div class="spinner"></div>
+                <p>Loading avatars...</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 3. ADD AVATAR PREVIEW MODAL (before closing </body>) -->
+<div id="avatar-modal" class="modal" style="display: none;" onclick="if(event.target === this) closeAvatarModal()">
+    <div class="modal-content avatar-modal-content">
+        <div class="modal-header">
+            <h3 id="modal-avatar-title">Avatar Preview</h3>
+            <button class="modal-close" onclick="closeAvatarModal()">×</button>
+        </div>
+        <div class="modal-body">
+            <video 
+                id="modal-avatar-video" 
+                controls 
+                autoplay
+                style="width: 100%; max-width: 800px; border-radius: 12px;"
+            >
+            </video>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" onclick="closeAvatarModal()">Close</button>
+            <button class="btn btn-primary" onclick="downloadAvatar()">Download</button>
+        </div>
+    </div>
+</div>
+
+<!-- 4. ADD SCRIPT TAG (before closing </body>) -->
+<script src="js/avatar-management.js"></script>
+
+<!-- 5. ADD CSS STYLES -->
+<style>
+/* Avatar Gallery Grid */
+.avatar-gallery-container {
+    margin-top: 2rem;
+}
+
+.avatar-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+}
+
+.avatar-card {
+    background: var(--bg-card);
+    border: 2px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+    transition: all 0.3s;
+    position: relative;
+}
+
+.avatar-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(79, 70, 229, 0.2);
+    border-color: var(--primary);
+}
+
+.avatar-card.active {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.2);
+}
+
+.avatar-preview {
+    position: relative;
+    aspect-ratio: 16/9;
+    background: rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+}
+
+.avatar-thumbnail {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    cursor: pointer;
+}
+
+.avatar-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, rgba(79, 70, 229, 0.1), rgba(20, 184, 166, 0.1));
+}
+
+.avatar-placeholder .status-icon {
+    font-size: 4rem;
+}
+
+.play-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.3);
+    opacity: 0;
+    transition: opacity 0.3s;
+    cursor: pointer;
+}
+
+.avatar-card:hover .play-overlay {
+    opacity: 1;
+}
+
+.play-icon {
+    font-size: 3rem;
+    filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.5));
+}
+
+.active-badge {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: var(--accent);
+    color: white;
+    padding: 0.4rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    box-shadow: 0 2px 8px rgba(20, 184, 166, 0.4);
+}
+
+.avatar-info {
+    padding: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.avatar-status {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.status-dot.completed {
+    background: var(--success);
+    box-shadow: 0 0 8px var(--success);
+}
+
+.status-dot.training {
+    background: var(--warning);
+    animation: pulse 2s infinite;
+}
+
+.status-dot.processing {
+    background: var(--primary);
+    animation: pulse 2s infinite;
+}
+
+.status-dot.failed {
+    background: var(--error);
+}
+
+.status-dot.pending {
+    background: var(--text-muted);
+}
+
+.avatar-date {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.avatar-actions {
+    padding: 0 1rem 1rem;
+    display: flex;
+    gap: 0.5rem;
+}
+
+.btn-sm {
+    padding: 0.5rem 1rem;
+    font-size: 0.85rem;
+}
+
+.btn-ghost {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-secondary);
+}
+
+.btn-ghost:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--error);
+}
+
+.btn-success {
+    background: var(--success);
+    color: white;
+    cursor: default;
+}
+
+.btn-error {
+    background: var(--error);
+    color: white;
+}
+
+.progress-bar-mini {
+    flex: 1;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.progress-bar-mini .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary), var(--accent));
+    transition: width 0.3s;
+}
+
+/* Empty State */
+.empty-state {
+    text-align: center;
+    padding: 4rem 2rem;
+}
+
+.empty-icon {
+    font-size: 5rem;
+    margin-bottom: 1rem;
+    opacity: 0.5;
+}
+
+.empty-state h3 {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.empty-state p {
+    color: var(--text-secondary);
+    margin-bottom: 2rem;
+}
+
+/* Active Avatar Section */
+.active-avatar-section {
+    background: linear-gradient(135deg, rgba(79, 70, 229, 0.1), rgba(20, 184, 166, 0.1));
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+}
+
+.active-avatar-widget {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: 2rem;
+    align-items: center;
+}
+
+.active-avatar-video {
+    width: 100%;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.active-avatar-info h4 {
+    font-size: 1.3rem;
+    margin-bottom: 0.5rem;
+}
+
+.active-avatar-info p {
+    color: var(--text-secondary);
+    margin-bottom: 1rem;
+}
+
+.no-active-avatar {
+    text-align: center;
+    padding: 2rem;
+}
+
+.no-active-avatar p {
+    color: var(--text-secondary);
+    margin-bottom: 1rem;
+}
+
+/* Modal */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.85);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    backdrop-filter: blur(8px);
+}
+
+.modal-content {
+    background: var(--bg-card);
+    border-radius: 20px;
+    max-width: 90vw;
+    max-height: 90vh;
+    overflow: auto;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+.avatar-modal-content {
+    max-width: 900px;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem 2rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.modal-header h3 {
+    font-size: 1.3rem;
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    font-size: 2rem;
+    color: var(--text-secondary);
+    cursor: pointer;
+    padding: 0;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    transition: all 0.3s;
+}
+
+.modal-close:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-primary);
+}
+
+.modal-body {
+    padding: 2rem;
+    text-align: center;
+}
+
+.modal-footer {
+    padding: 1.5rem 2rem;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+}
+
+/* Loading Spinner */
+.loading-spinner {
+    text-align: center;
+    padding: 3rem;
+}
+
+.spinner {
+    width: 50px;
+    height: 50px;
+    border: 4px solid rgba(255, 255, 255, 0.1);
+    border-top: 4px solid var(--primary);
+    border-radius: 50%;
+    margin: 0 auto 1rem;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .avatar-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .active-avatar-widget {
+        grid-template-columns: 1fr;
+    }
+    
+    .modal-content {
+        max-width: 95vw;
+    }
+}
+</style>
