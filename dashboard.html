@@ -714,9 +714,9 @@
                             <div class="upload-area" id="voice-upload" onclick="document.getElementById('voice-file').click()">
                                 <div class="upload-icon">🎤</div>
                                 <div class="upload-text">Upload voice recordings 5 minutes or more</div>
-                                <div class="upload-hint">MP3, WAV, or M4A files Max 100MB</div>
+                                <div class="upload-hint">MP3, WAV, M4A, or MOV files Max 100MB</div>
                             </div>
-                            <input type="file" id="voice-file" accept="audio/*" style="display: none" multiple onchange="handleVoiceUpload(event)">
+                            <input type="file" id="voice-file" accept="audio/*,video/quicktime,.mov" style="display: none" multiple onchange="handleVoiceUpload(event)">
                             <div id="voice-file-list"></div>
                         </div>
 
