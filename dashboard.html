@@ -451,19 +451,59 @@
             color: var(--text-muted);
         }
 
+        .progress-container {
+            margin-top: 1rem;
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .progress-label {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .progress-percentage {
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--accent), var(--primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
         .progress-bar {
             width: 100%;
-            height: 8px;
+            height: 12px;
             background: rgba(255, 255, 255, 0.05);
             border-radius: 10px;
             overflow: hidden;
-            margin-top: 1rem;
         }
 
         .progress-fill {
             height: 100%;
             background: linear-gradient(90deg, var(--primary), var(--accent));
             transition: width 0.3s;
+            position: relative;
+        }
+
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
         }
 
         .alert {
@@ -742,8 +782,15 @@
                         </div>
 
                         <button type="submit" class="btn btn-primary" id="train-btn">Train AI Clone</button>
-                        <div class="progress-bar" id="upload-progress" style="display: none;">
-                            <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+                        
+                        <div class="progress-container" id="progress-container" style="display: none;">
+                            <div class="progress-header">
+                                <span class="progress-label">Upload Progress</span>
+                                <span class="progress-percentage" id="progress-percentage">0%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+                            </div>
                         </div>
                     </form>
                 </div>
@@ -789,6 +836,16 @@
             setTimeout(() => {
                 container.innerHTML = '';
             }, 5000);
+        }
+
+        function updateProgress(percentage) {
+            const container = document.getElementById('progress-container');
+            const fill = document.getElementById('progress-fill');
+            const text = document.getElementById('progress-percentage');
+            
+            if (container) container.style.display = 'block';
+            if (fill) fill.style.width = Math.round(percentage) + '%';
+            if (text) text.textContent = Math.round(percentage) + '%';
         }
 
         function handleVoiceUpload(event) {
@@ -871,12 +928,10 @@
             }
 
             const trainBtn = document.getElementById('train-btn');
-            const progressBar = document.getElementById('upload-progress');
-            const progressFill = document.getElementById('progress-fill');
             
             trainBtn.disabled = true;
             trainBtn.textContent = 'Uploading...';
-            progressBar.style.display = 'block';
+            updateProgress(0);
 
             try {
                 const communicationStyle = document.getElementById('communication-style').value;
@@ -918,9 +973,8 @@
                     });
 
                     uploadedFiles++;
-                    const progress = (uploadedFiles / totalFiles) * 100;
-                    progressFill.style.width = progress + '%';
-                    console.log('Upload progress:', progress.toFixed(0) + '%');
+                    updateProgress((uploadedFiles / totalFiles) * 100);
+                    console.log('Upload progress:', Math.round((uploadedFiles / totalFiles) * 100) + '%');
                 }
 
                 for (const file of videoFiles) {
@@ -937,9 +991,8 @@
                     });
 
                     uploadedFiles++;
-                    const progress = (uploadedFiles / totalFiles) * 100;
-                    progressFill.style.width = progress + '%';
-                    console.log('Upload progress:', progress.toFixed(0) + '%');
+                    updateProgress((uploadedFiles / totalFiles) * 100);
+                    console.log('Upload progress:', Math.round((uploadedFiles / totalFiles) * 100) + '%');
                 }
 
                 await supabase
@@ -947,8 +1000,12 @@
                     .update({ training_status: 'processing' })
                     .eq('id', cloneData.id);
 
+                updateProgress(100);
                 console.log('All files uploaded successfully!');
-                showAlert('clone-alert', 'Files uploaded successfully! Your AI clone is being trained. This usually takes 10-15 minutes.', 'success');
+                
+                setTimeout(() => {
+                    showAlert('clone-alert', '✅ Upload complete! Your AI clone is being trained. This usually takes 10-15 minutes.', 'success');
+                }, 500);
                 
                 document.getElementById('clone-form').reset();
                 voiceFiles = [];
@@ -965,8 +1022,10 @@
             } finally {
                 trainBtn.disabled = false;
                 trainBtn.textContent = 'Train AI Clone';
-                progressBar.style.display = 'none';
-                progressFill.style.width = '0%';
+                setTimeout(() => {
+                    document.getElementById('progress-container').style.display = 'none';
+                    updateProgress(0);
+                }, 3000);
             }
         });
 
