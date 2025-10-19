@@ -423,6 +423,23 @@
             color: var(--text-muted);
         }
 
+        .status-badge {
+            padding: 0.4rem 0.9rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .status-badge.connected {
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--success);
+        }
+
+        .status-badge.disconnected {
+            background: rgba(148, 163, 184, 0.15);
+            color: var(--text-muted);
+        }
+
         .meeting-actions {
             display: flex;
             gap: 0.5rem;
@@ -471,6 +488,54 @@
             justify-content: center;
             font-size: 1.5rem;
             margin-bottom: 1rem;
+        }
+
+        .integration-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            transition: all 0.3s;
+            margin-bottom: 1rem;
+        }
+
+        .integration-card:hover {
+            border-color: var(--primary);
+            background: rgba(79, 70, 229, 0.05);
+        }
+
+        .integration-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+        }
+
+        .integration-info {
+            flex: 1;
+        }
+
+        .integration-info h3 {
+            font-size: 1.1rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .integration-info p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .integration-status {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
         .table {
@@ -542,13 +607,21 @@
                     <span class="menu-icon">📊</span>
                     <span>Overview</span>
                 </li>
-                <li class="menu-item" onclick="showPage('meetings')">
+                <li class="menu-item" onclick="showPage('calendar')">
                     <span class="menu-icon">📅</span>
-                    <span>Meetings</span>
+                    <span>Calendar Setup</span>
                 </li>
                 <li class="menu-item" onclick="showPage('clone')">
                     <span class="menu-icon">🎭</span>
                     <span>AI Clone</span>
+                </li>
+                <li class="menu-item" onclick="showPage('meetings')">
+                    <span class="menu-icon">💼</span>
+                    <span>Meetings</span>
+                </li>
+                <li class="menu-item" onclick="showPage('rules')">
+                    <span class="menu-icon">⚙️</span>
+                    <span>Decision Rules</span>
                 </li>
                 <li class="menu-item" onclick="showPage('analytics')">
                     <span class="menu-icon">📈</span>
@@ -557,6 +630,10 @@
                 <li class="menu-item" onclick="showPage('settings')">
                     <span class="menu-icon">⚙️</span>
                     <span>Settings</span>
+                </li>
+                <li class="menu-item" onclick="logout()">
+                    <span class="menu-icon">🚪</span>
+                    <span>Logout</span>
                 </li>
             </ul>
         </aside>
@@ -682,6 +759,47 @@
                 </div>
             </div>
 
+            <div id="calendar-page" class="page-content">
+                <div class="section">
+                    <div class="section-header">
+                        <h2 class="section-title">Calendar Integrations</h2>
+                    </div>
+                    <div class="integration-card">
+                        <div class="integration-icon">📧</div>
+                        <div class="integration-info">
+                            <h3>Google Calendar</h3>
+                            <p>Sync meetings from your Google workspace</p>
+                        </div>
+                        <div class="integration-status">
+                            <span class="status-badge disconnected">Not Connected</span>
+                            <button class="btn btn-primary" onclick="alert('OAuth integration coming soon')">Connect</button>
+                        </div>
+                    </div>
+                    <div class="integration-card">
+                        <div class="integration-icon">💼</div>
+                        <div class="integration-info">
+                            <h3>Microsoft Outlook</h3>
+                            <p>Integrate with Office 365 and Outlook calendar</p>
+                        </div>
+                        <div class="integration-status">
+                            <span class="status-badge disconnected">Not Connected</span>
+                            <button class="btn btn-primary" onclick="alert('OAuth integration coming soon')">Connect</button>
+                        </div>
+                    </div>
+                    <div class="integration-card">
+                        <div class="integration-icon">🔗</div>
+                        <div class="integration-info">
+                            <h3>Zoom</h3>
+                            <p>Auto-join Zoom meetings on your behalf</p>
+                        </div>
+                        <div class="integration-status">
+                            <span class="status-badge disconnected">Not Connected</span>
+                            <button class="btn btn-primary" onclick="alert('OAuth integration coming soon')">Connect</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div id="meetings-page" class="page-content">
                 <div class="section">
                     <div class="section-header">
@@ -743,7 +861,7 @@
                     
                     <div class="alert info">
                         <strong>🔒 Secure Backend Integration</strong><br>
-                        API key is securely managed by backend. No keys needed in frontend
+                        API key is securely managed by backend. No keys needed in frontend!
                     </div>
                     
                     <form id="clone-form">
@@ -808,6 +926,59 @@
                                 <button class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.85rem;">Edit</button>
                                 <button class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.85rem;">Test</button>
                             </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="rules-page" class="page-content">
+                <div class="section">
+                    <div class="section-header">
+                        <h2 class="section-title">Decision Rules</h2>
+                    </div>
+                    
+                    <div class="alert info">
+                        <strong>🤖 Autonomous Decision Making</strong><br>
+                        Define rules for how your AI clone should handle different meeting scenarios
+                    </div>
+
+                    <div class="form-group">
+                        <label>Meeting Auto-Join Rules</label>
+                        <select>
+                            <option>Join all scheduled meetings automatically</option>
+                            <option>Only join meetings with specific keywords</option>
+                            <option>Require approval for all meetings</option>
+                            <option>Join based on attendee list</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Escalation Threshold</label>
+                        <textarea placeholder="Define when your AI clone should escalate to you (e.g., critical decisions, budget approvals over $X, contract negotiations...)"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Response Style</label>
+                        <select>
+                            <option>Conservative - Defer most decisions</option>
+                            <option>Balanced - Handle routine matters autonomously</option>
+                            <option>Assertive - Take initiative on most topics</option>
+                        </select>
+                    </div>
+
+                    <button class="btn btn-primary">Save Decision Rules</button>
+                </div>
+
+                <div class="section">
+                    <div class="section-header">
+                        <h2 class="section-title">Active Rules</h2>
+                    </div>
+                    <div class="card">
+                        <div class="card-title">✅ Budget Approval Rule</div>
+                        <p style="color: var(--text-secondary);">Escalate any budget discussions over $10,000 to owner</p>
+                        <div style="margin-top: 1rem;">
+                            <button class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.85rem;">Edit</button>
+                            <button class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.85rem; margin-left: 0.5rem;">Delete</button>
                         </div>
                     </div>
                 </div>
@@ -992,14 +1163,24 @@
             
             const titles = {
                 'overview': { title: 'Overview', subtitle: 'Your AI meeting dashboard at a glance' },
+                'calendar': { title: 'Calendar Setup', subtitle: 'Connect your calendars and meeting platforms' },
                 'meetings': { title: 'Meetings', subtitle: 'Manage and schedule your meetings' },
                 'clone': { title: 'AI Clone', subtitle: 'Create and manage your AI clones' },
+                'rules': { title: 'Decision Rules', subtitle: 'Configure autonomous decision-making logic' },
                 'analytics': { title: 'Analytics', subtitle: 'Track your meeting performance' },
                 'settings': { title: 'Settings', subtitle: 'Configure your account and preferences' }
             };
             
-            document.querySelector('.page-title h1').textContent = titles[pageName].title;
-            document.querySelector('.page-title p').textContent = titles[pageName].subtitle;
+            if (titles[pageName]) {
+                document.querySelector('.page-title h1').textContent = titles[pageName].title;
+                document.querySelector('.page-title p').textContent = titles[pageName].subtitle;
+            }
+        }
+
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                window.location.href = 'auth.html';
+            }
         }
 
         function showAlert(containerId, message, type) {
