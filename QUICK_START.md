@@ -1,16 +1,42 @@
 # Quick Start - 3 Steps
 
-## Step 1: Add API Key to GitHub Secrets
+## Step 1: Regenerate Your API Key First
 
-**This is required for GitHub Actions and production deployments.**
+**CRITICAL: Your API key was exposed in this repository.**
+
+1. Go to: https://studio.d-id.com/account-settings
+2. Click **Regenerate API Key** or **Create New Key**
+3. Copy your NEW key
+
+## Step 2: Add New API Key to GitHub Secrets
+
+**For production deployments:**
 
 1. Go to: https://github.com/bharathk2498/neuralmeet/settings/secrets/actions
 2. Click **New repository secret**
 3. Name: `DID_API_KEY`
-4. Value: `YmhhcmF0aGs5MzM5QGdtYWlsLmNvbQ:zWYAra20UOvpw-tvt5mxm`
+4. Value: Paste your NEW regenerated key
 5. Click **Add secret**
 
-## Step 2: Run Setup Script
+## Step 3: Create Local .env File
+
+**For local development:**
+
+```bash
+cd backend
+touch .env
+```
+
+Add this content with your NEW key:
+
+```
+DID_API_KEY=paste_your_new_key_here
+PORT=3000
+NODE_ENV=development
+FRONTEND_URL=http://localhost:3000
+```
+
+## Step 4: Run Setup Script
 
 **Linux/Mac:**
 ```bash
@@ -23,7 +49,7 @@ chmod +x setup.sh
 setup.bat
 ```
 
-## Step 3: Test Backend
+## Step 5: Test Backend
 
 Open browser or use curl:
 
@@ -72,6 +98,14 @@ async function createClone(audioFile, imageFile) {
 }
 ```
 
+## Security Reminder
+
+- Never commit .env files
+- Never share API keys in chat or code
+- Rotate keys immediately if exposed
+- Use GitHub Secrets for production
+- Keep separate keys for dev/staging/prod
+
 ## Troubleshooting
 
 **Port already in use:**
@@ -87,7 +121,4 @@ npm install
 ```
 
 **API key error:**
-Check backend/.env file exists and contains:
-```
-DID_API_KEY=YmhhcmF0aGs5MzM5QGdtYWlsLmNvbQ:zWYAra20UOvpw-tvt5mxm
-```
+Ensure backend/.env file exists with your NEW regenerated key.
