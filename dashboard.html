@@ -1,11 +1,1002 @@
-The file content is too long to paste here again - but the key changes you need to test are:
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | NeuralMeet</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        :root {
+            --primary: #4f46e5;
+            --primary-dark: #3730a3;
+            --accent: #14b8a6;
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #111118;
+            --bg-card: #1a1a24;
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --text-muted: #64748b;
+            --border: rgba(255, 255, 255, 0.08);
+            --success: #10b981;
+            --warning: #f59e0b;
+            --error: #ef4444;
+        }
 
-1. Open browser console (F12)
-2. Click "Train AI Clone"  
-3. Look for error messages in console
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
 
-The error will tell you exactly what's missing - either:
-- "Database error" = Need to run SQL in Supabase
-- "Storage error" = Need to create storage buckets
+        .dashboard-container {
+            display: flex;
+            min-height: 100vh;
+        }
 
-Can you open the console (F12) and tell me what error you see?
+        .sidebar {
+            width: 260px;
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border);
+            padding: 2rem 0;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .sidebar-logo {
+            padding: 0 1.5rem;
+            margin-bottom: 3rem;
+            font-size: 1.4rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+        }
+
+        .menu-item {
+            padding: 0.8rem 1.5rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        .menu-item:hover {
+            background: rgba(79, 70, 229, 0.1);
+            color: var(--text-primary);
+        }
+
+        .menu-item.active {
+            background: rgba(79, 70, 229, 0.15);
+            color: var(--primary);
+            border-left: 3px solid var(--primary);
+        }
+
+        .menu-icon {
+            font-size: 1.2rem;
+        }
+
+        .main-content {
+            flex: 1;
+            margin-left: 260px;
+            padding: 2rem;
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .page-title h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.3rem;
+        }
+
+        .page-title p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .btn {
+            padding: 0.7rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(79, 70, 229, 0.4);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.8rem;
+            transition: all 0.3s;
+        }
+
+        .stat-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-4px);
+        }
+
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .stat-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+        }
+
+        .stat-value {
+            font-size: 2.2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.3rem;
+        }
+
+        .stat-change {
+            font-size: 0.85rem;
+            color: var(--success);
+        }
+
+        .section {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+        }
+
+        .calendar-setup {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .integration-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            transition: all 0.3s;
+        }
+
+        .integration-card:hover {
+            border-color: var(--primary);
+            background: rgba(79, 70, 229, 0.05);
+        }
+
+        .integration-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+        }
+
+        .integration-info {
+            flex: 1;
+        }
+
+        .integration-info h3 {
+            font-size: 1.1rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .integration-info p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .integration-status {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .status-badge {
+            padding: 0.4rem 0.9rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .status-badge.connected {
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--success);
+        }
+
+        .status-badge.disconnected {
+            background: rgba(148, 163, 184, 0.15);
+            color: var(--text-muted);
+        }
+
+        .clone-setup {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .setup-step {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border);
+            border-left: 3px solid var(--accent);
+            border-radius: 8px;
+            padding: 1.5rem;
+        }
+
+        .step-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .step-number {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent), var(--primary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+
+        .step-header h3 {
+            font-size: 1.1rem;
+        }
+
+        .step-content p {
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            color: var(--text-secondary);
+            font-weight: 500;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            transition: all 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: rgba(79, 70, 229, 0.05);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .upload-area {
+            border: 2px dashed var(--border);
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .upload-area:hover {
+            border-color: var(--primary);
+            background: rgba(79, 70, 229, 0.05);
+        }
+
+        .upload-area.active {
+            border-color: var(--accent);
+            background: rgba(20, 184, 166, 0.05);
+        }
+
+        .upload-area.uploading {
+            border-color: var(--warning);
+            background: rgba(245, 158, 11, 0.05);
+        }
+
+        .upload-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .upload-text {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        .upload-hint {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
+        }
+
+        .file-list {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+        }
+
+        .file-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem;
+            margin-bottom: 0.5rem;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 6px;
+        }
+
+        .file-name {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .file-size {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 1rem;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            transition: width 0.3s;
+        }
+
+        .alert {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .alert.success {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: var(--success);
+        }
+
+        .alert.error {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: var(--error);
+        }
+
+        .alert.warning {
+            background: rgba(245, 158, 11, 0.1);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            color: var(--warning);
+        }
+
+        @media (max-width: 1024px) {
+            .sidebar {
+                width: 70px;
+            }
+
+            .sidebar-logo,
+            .menu-item span {
+                display: none;
+            }
+
+            .main-content {
+                margin-left: 70px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                display: none;
+            }
+
+            .main-content {
+                margin-left: 0;
+                padding: 1.5rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <aside class="sidebar">
+            <div class="sidebar-logo">◆ NeuralMeet</div>
+            <ul class="sidebar-menu">
+                <li class="menu-item active" onclick="showPage('overview')">
+                    <span class="menu-icon">📊</span>
+                    <span>Overview</span>
+                </li>
+                <li class="menu-item" onclick="showPage('calendar')">
+                    <span class="menu-icon">📅</span>
+                    <span>Calendar Setup</span>
+                </li>
+                <li class="menu-item" onclick="showPage('clone')">
+                    <span class="menu-icon">🎭</span>
+                    <span>AI Clone</span>
+                </li>
+                <li class="menu-item" onclick="showPage('meetings')">
+                    <span class="menu-icon">💼</span>
+                    <span>Meetings</span>
+                </li>
+                <li class="menu-item" onclick="showPage('rules')">
+                    <span class="menu-icon">⚙️</span>
+                    <span>Decision Rules</span>
+                </li>
+                <li class="menu-item" onclick="showPage('analytics')">
+                    <span class="menu-icon">📈</span>
+                    <span>Analytics</span>
+                </li>
+                <li class="menu-item" onclick="showPage('settings')">
+                    <span class="menu-icon">⚙️</span>
+                    <span>Settings</span>
+                </li>
+                <li class="menu-item" onclick="logout()">
+                    <span class="menu-icon">🚪</span>
+                    <span>Logout</span>
+                </li>
+            </ul>
+        </aside>
+
+        <main class="main-content">
+            <div class="top-bar">
+                <div class="page-title">
+                    <h1>Welcome back, <span id="user-name">Executive</span></h1>
+                    <p>Your AI clone is ready to handle your meetings</p>
+                </div>
+                <div class="user-menu">
+                    <button class="btn btn-primary" onclick="showPage('clone')">Setup Clone</button>
+                    <div class="user-avatar" id="user-avatar">E</div>
+                </div>
+            </div>
+
+            <div id="overview-page" class="page-content">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div>
+                                <div class="stat-label">Hours Saved This Week</div>
+                                <div class="stat-value">0</div>
+                                <div class="stat-change">Get started to see results</div>
+                            </div>
+                            <div class="stat-icon" style="background: rgba(79, 70, 229, 0.1); color: var(--primary);">⏱️</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div>
+                                <div class="stat-label">Meetings Automated</div>
+                                <div class="stat-value">0</div>
+                                <div class="stat-change">Start by connecting calendar</div>
+                            </div>
+                            <div class="stat-icon" style="background: rgba(20, 184, 166, 0.1); color: var(--accent);">🤖</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div>
+                                <div class="stat-label">Clone Accuracy</div>
+                                <div class="stat-value">-</div>
+                                <div class="stat-change">Training needed</div>
+                            </div>
+                            <div class="stat-icon" style="background: rgba(16, 185, 129, 0.1); color: var(--success);">🎯</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div>
+                                <div class="stat-label">Setup Progress</div>
+                                <div class="stat-value" id="setup-progress">0%</div>
+                                <div class="stat-change">Complete setup to begin</div>
+                            </div>
+                            <div class="stat-icon" style="background: rgba(245, 158, 11, 0.1); color: var(--warning);">📊</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="section-header">
+                        <h2 class="section-title">Quick Start Guide</h2>
+                    </div>
+                    <div class="clone-setup">
+                        <div class="setup-step">
+                            <div class="step-header">
+                                <div class="step-number">1</div>
+                                <h3>Connect Your Calendar</h3>
+                            </div>
+                            <div class="step-content">
+                                <p>Link Google Calendar, Outlook, or any calendar service to start intercepting meetings.</p>
+                                <button class="btn btn-primary" onclick="showPage('calendar')">Connect Calendar</button>
+                            </div>
+                        </div>
+                        <div class="setup-step">
+                            <div class="step-header">
+                                <div class="step-number">2</div>
+                                <h3>Create Your AI Clone</h3>
+                            </div>
+                            <div class="step-content">
+                                <p>Upload voice samples and photos to create your photo-realistic digital twin.</p>
+                                <button class="btn btn-primary" onclick="showPage('clone')">Setup Clone</button>
+                            </div>
+                        </div>
+                        <div class="setup-step">
+                            <div class="step-header">
+                                <div class="step-number">3</div>
+                                <h3>Define Decision Rules</h3>
+                            </div>
+                            <div class="step-content">
+                                <p>Set up autonomous decision-making logic and escalation thresholds.</p>
+                                <button class="btn btn-primary" onclick="showPage('rules')">Configure Rules</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="calendar-page" class="page-content" style="display: none;">
+                <div class="section">
+                    <div class="section-header">
+                        <h2 class="section-title">Calendar Integrations</h2>
+                    </div>
+                    <div class="calendar-setup">
+                        <div class="integration-card">
+                            <div class="integration-icon">📧</div>
+                            <div class="integration-info">
+                                <h3>Google Calendar</h3>
+                                <p>Sync meetings from your Google workspace</p>
+                            </div>
+                            <div class="integration-status">
+                                <span class="status-badge disconnected">Not Connected</span>
+                                <button class="btn btn-primary" onclick="connectCalendar('google')">Connect</button>
+                            </div>
+                        </div>
+                        <div class="integration-card">
+                            <div class="integration-icon">💼</div>
+                            <div class="integration-info">
+                                <h3>Microsoft Outlook</h3>
+                                <p>Integrate with Office 365 and Outlook calendar</p>
+                            </div>
+                            <div class="integration-status">
+                                <span class="status-badge disconnected">Not Connected</span>
+                                <button class="btn btn-primary" onclick="connectCalendar('outlook')">Connect</button>
+                            </div>
+                        </div>
+                        <div class="integration-card">
+                            <div class="integration-icon">🔗</div>
+                            <div class="integration-info">
+                                <h3>Zoom</h3>
+                                <p>Auto-join Zoom meetings on your behalf</p>
+                            </div>
+                            <div class="integration-status">
+                                <span class="status-badge disconnected">Not Connected</span>
+                                <button class="btn btn-primary" onclick="connectCalendar('zoom')">Connect</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="clone-page" class="page-content" style="display: none;">
+                <div id="clone-alert"></div>
+                
+                <div class="section">
+                    <div class="section-header">
+                        <h2 class="section-title">Create Your AI Clone</h2>
+                    </div>
+                    
+                    <form id="clone-form">
+                        <div class="form-group">
+                            <label>Voice Training Audio Samples</label>
+                            <div class="upload-area" id="voice-upload" onclick="document.getElementById('voice-file').click()">
+                                <div class="upload-icon">🎤</div>
+                                <div class="upload-text">Upload voice recordings 5 minutes or more</div>
+                                <div class="upload-hint">MP3, WAV, M4A, MOV files Max 100MB</div>
+                            </div>
+                            <input type="file" id="voice-file" accept="audio/*,video/quicktime,.mov" style="display: none" multiple onchange="handleVoiceUpload(event)">
+                            <div id="voice-file-list"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Video Avatar Photos and Video</label>
+                            <div class="upload-area" id="video-upload" onclick="document.getElementById('video-file').click()">
+                                <div class="upload-icon">📹</div>
+                                <div class="upload-text">Upload photos or short video 2 minutes or more</div>
+                                <div class="upload-hint">JPG, PNG, MP4, MOV Clear front-facing shots</div>
+                            </div>
+                            <input type="file" id="video-file" accept="image/*,video/*,video/quicktime,.mov" style="display: none" multiple onchange="handleVideoUpload(event)">
+                            <div id="video-file-list"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Communication Style</label>
+                            <textarea placeholder="Describe your speaking style, common phrases, tone preferences..." id="communication-style"></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Decision-Making Approach</label>
+                            <textarea placeholder="How do you typically make decisions? What factors do you prioritize?" id="decision-style"></textarea>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary" id="train-btn">Train AI Clone</button>
+                        <div class="progress-bar" id="upload-progress" style="display: none;">
+                            <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        const SUPABASE_URL = 'https://axzvvnqasdsnopbzjqrq.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF4enZ2bnFhc2Rzbm9wYnpqcXJxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA4MTc5MjQsImV4cCI6MjA3NjM5MzkyNH0.Yw5PYzGAwOeTj0mgXQ5zYg_He045qO2j2c-Z40n5WIM';
+        
+        let supabase;
+        let currentUser = null;
+        let voiceFiles = [];
+        let videoFiles = [];
+
+        if (SUPABASE_URL && SUPABASE_ANON_KEY) {
+            supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        }
+
+        function showPage(page) {
+            document.querySelectorAll('.page-content').forEach(p => p.style.display = 'none');
+            document.querySelectorAll('.menu-item').forEach(m => m.classList.remove('active'));
+            
+            const pageElement = document.getElementById(page + '-page');
+            if (pageElement) {
+                pageElement.style.display = 'block';
+            }
+            
+            event.target.closest('.menu-item').classList.add('active');
+        }
+
+        function connectCalendar(provider) {
+            showAlert('clone-alert', 'Connecting to ' + provider + '. This will initiate OAuth flow in production.', 'warning');
+        }
+
+        function showAlert(containerId, message, type) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+            
+            container.innerHTML = '<div class="alert ' + type + '">' + message + '</div>';
+            setTimeout(() => {
+                container.innerHTML = '';
+            }, 5000);
+        }
+
+        function handleVoiceUpload(event) {
+            const files = event.target.files;
+            if (files.length > 0) {
+                voiceFiles = Array.from(files);
+                const uploadArea = document.getElementById('voice-upload');
+                uploadArea.classList.add('active');
+                uploadArea.querySelector('.upload-text').textContent = files.length + ' file(s) selected';
+                
+                displayFileList('voice-file-list', voiceFiles);
+            }
+        }
+
+        function handleVideoUpload(event) {
+            const files = event.target.files;
+            if (files.length > 0) {
+                videoFiles = Array.from(files);
+                const uploadArea = document.getElementById('video-upload');
+                uploadArea.classList.add('active');
+                uploadArea.querySelector('.upload-text').textContent = files.length + ' file(s) selected';
+                
+                displayFileList('video-file-list', videoFiles);
+            }
+        }
+
+        function displayFileList(containerId, files) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+            
+            let html = '<div class="file-list">';
+            files.forEach(file => {
+                const sizeInMB = (file.size / 1024 / 1024).toFixed(2);
+                html += '<div class="file-item">';
+                html += '<span class="file-name">' + file.name + '</span>';
+                html += '<span class="file-size">' + sizeInMB + ' MB</span>';
+                html += '</div>';
+            });
+            html += '</div>';
+            
+            container.innerHTML = html;
+        }
+
+        async function uploadToSupabase(file, bucket, path) {
+            console.log('Uploading to bucket:', bucket, 'path:', path);
+            try {
+                const { data, error } = await supabase.storage
+                    .from(bucket)
+                    .upload(path, file, {
+                        cacheControl: '3600',
+                        upsert: false
+                    });
+                
+                if (error) {
+                    console.error('Storage upload error:', error);
+                    throw new Error('Storage bucket ' + bucket + ' not found. Create it in Supabase Dashboard > Storage.');
+                }
+                console.log('Upload successful:', data);
+                return data;
+            } catch (error) {
+                console.error('Upload error:', error);
+                throw error;
+            }
+        }
+
+        document.getElementById('clone-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            console.log('Form submitted - starting clone training');
+            
+            if (!currentUser) {
+                console.error('No user logged in');
+                showAlert('clone-alert', 'Please log in first', 'error');
+                return;
+            }
+
+            if (voiceFiles.length === 0 && videoFiles.length === 0) {
+                console.error('No files selected');
+                showAlert('clone-alert', 'Please upload at least one voice or video file', 'error');
+                return;
+            }
+
+            const trainBtn = document.getElementById('train-btn');
+            const progressBar = document.getElementById('upload-progress');
+            const progressFill = document.getElementById('progress-fill');
+            
+            trainBtn.disabled = true;
+            trainBtn.textContent = 'Uploading...';
+            progressBar.style.display = 'block';
+
+            try {
+                const communicationStyle = document.getElementById('communication-style').value;
+                const decisionStyle = document.getElementById('decision-style').value;
+
+                console.log('Creating clone record in database...');
+                const { data: cloneData, error: cloneError } = await supabase
+                    .from('user_clones')
+                    .insert({
+                        user_id: currentUser.id,
+                        communication_style: communicationStyle,
+                        decision_style: decisionStyle,
+                        training_status: 'uploading'
+                    })
+                    .select()
+                    .single();
+
+                if (cloneError) {
+                    console.error('Database error:', cloneError);
+                    throw new Error('Database table user_clones not found. Run the SQL setup in Supabase SQL Editor.');
+                }
+
+                console.log('Clone record created:', cloneData.id);
+
+                const totalFiles = voiceFiles.length + videoFiles.length;
+                let uploadedFiles = 0;
+
+                for (const file of voiceFiles) {
+                    console.log('Uploading voice file:', file.name);
+                    const filePath = currentUser.id + '/voice/' + Date.now() + '-' + file.name;
+                    await uploadToSupabase(file, 'voice-samples', filePath);
+                    
+                    await supabase.from('voice_samples').insert({
+                        user_id: currentUser.id,
+                        clone_id: cloneData.id,
+                        file_path: filePath,
+                        file_name: file.name,
+                        file_size: file.size
+                    });
+
+                    uploadedFiles++;
+                    const progress = (uploadedFiles / totalFiles) * 100;
+                    progressFill.style.width = progress + '%';
+                    console.log('Upload progress:', progress.toFixed(0) + '%');
+                }
+
+                for (const file of videoFiles) {
+                    console.log('Uploading video file:', file.name);
+                    const filePath = currentUser.id + '/video/' + Date.now() + '-' + file.name;
+                    await uploadToSupabase(file, 'video-samples', filePath);
+                    
+                    await supabase.from('video_samples').insert({
+                        user_id: currentUser.id,
+                        clone_id: cloneData.id,
+                        file_path: filePath,
+                        file_name: file.name,
+                        file_size: file.size
+                    });
+
+                    uploadedFiles++;
+                    const progress = (uploadedFiles / totalFiles) * 100;
+                    progressFill.style.width = progress + '%';
+                    console.log('Upload progress:', progress.toFixed(0) + '%');
+                }
+
+                await supabase
+                    .from('user_clones')
+                    .update({ training_status: 'processing' })
+                    .eq('id', cloneData.id);
+
+                console.log('All files uploaded successfully!');
+                showAlert('clone-alert', 'Files uploaded successfully! Your AI clone is being trained. This usually takes 10-15 minutes.', 'success');
+                
+                document.getElementById('clone-form').reset();
+                voiceFiles = [];
+                videoFiles = [];
+                document.getElementById('voice-file-list').innerHTML = '';
+                document.getElementById('video-file-list').innerHTML = '';
+                
+                const uploadAreas = document.querySelectorAll('.upload-area');
+                uploadAreas.forEach(area => area.classList.remove('active'));
+
+            } catch (error) {
+                console.error('Clone training error:', error);
+                showAlert('clone-alert', 'Upload failed: ' + error.message, 'error');
+            } finally {
+                trainBtn.disabled = false;
+                trainBtn.textContent = 'Train AI Clone';
+                progressBar.style.display = 'none';
+                progressFill.style.width = '0%';
+            }
+        });
+
+        async function logout() {
+            if (supabase) {
+                await supabase.auth.signOut();
+            }
+            window.location.href = 'auth.html';
+        }
+
+        window.addEventListener('load', async () => {
+            console.log('Dashboard loading...');
+            
+            if (!supabase) {
+                console.error('Supabase client not initialized');
+                return;
+            }
+
+            const { data: { session } } = await supabase.auth.getSession();
+            if (!session) {
+                console.log('No active session, redirecting to login');
+                window.location.href = 'auth.html';
+            } else {
+                currentUser = session.user;
+                console.log('User logged in:', currentUser.email);
+                const userName = session.user.user_metadata?.full_name || session.user.email.split('@')[0];
+                document.getElementById('user-name').textContent = userName;
+                document.getElementById('user-avatar').textContent = userName.charAt(0).toUpperCase();
+            }
+        });
+    </script>
+</body>
+</html>
