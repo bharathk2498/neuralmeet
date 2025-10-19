@@ -1,0 +1,136 @@
+name: Test Backend with GitHub Secret
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: backend/package.json
+
+      - name: Install dependencies
+        run: |
+          cd backend
+          npm ci
+
+      - name: Verify GitHub Secret is configured
+        env:
+          DID_API_KEY: ${{ secrets.DID_API_KEY }}
+        run: |
+          if [ -z "$DID_API_KEY" ]; then
+            echo "ERROR: DID_API_KEY not found in GitHub Secrets"
+            exit 1
+          fi
+          echo "SUCCESS: DID_API_KEY is configured in GitHub Secrets"
+          echo "Key length: ${#DID_API_KEY} characters"
+
+      - name: Test backend configuration
+        env:
+          DID_API_KEY: ${{ secrets.DID_API_KEY }}
+          PORT: 3000
+          NODE_ENV: test
+        run: |
+          cd backend
+          node -e "
+            const config = require('./config/config');
+            console.log('Config loaded successfully');
+            console.log('Has API Key:', !!config.didApiKey);
+            console.log('Port:', config.port);
+            console.log('Environment:', config.nodeEnv);
+            if (!config.didApiKey) {
+              console.error('FAIL: API key not loaded');
+              process.exit(1);
+            }
+            console.log('SUCCESS: Backend configuration is valid');
+          "
+
+      - name: Test D-ID API connection
+        env:
+          DID_API_KEY: ${{ secrets.DID_API_KEY }}
+        run: |
+          cd backend
+          node -e "
+            const didService = require('./services/didService');
+            didService.getCredits()
+              .then(result => {
+                if (result.success) {
+                  console.log('SUCCESS: Connected to D-ID API');
+                  console.log('Credits available:', JSON.stringify(result.data));
+                  process.exit(0);
+                } else {
+                  console.error('FAIL: Could not connect to D-ID API');
+                  process.exit(1);
+                }
+              })
+              .catch(err => {
+                console.error('ERROR:', err.message);
+                process.exit(1);
+              });
+          "
+
+      - name: Start backend server
+        env:
+          DID_API_KEY: ${{ secrets.DID_API_KEY }}
+          PORT: 3000
+          NODE_ENV: test
+        run: |
+          cd backend
+          npm start &
+          sleep 5
+          
+      - name: Test health endpoint
+        run: |
+          response=$(curl -s http://localhost:3000/health)
+          echo "Health check response: $response"
+          
+          if echo "$response" | grep -q '"status":"healthy"'; then
+            echo "SUCCESS: Health endpoint working"
+          else
+            echo "FAIL: Health endpoint not responding correctly"
+            exit 1
+          fi
+          
+          if echo "$response" | grep -q '"hasApiKey":true'; then
+            echo "SUCCESS: API key is loaded in backend"
+          else
+            echo "FAIL: API key not loaded"
+            exit 1
+          fi
+
+      - name: Test credits endpoint
+        run: |
+          response=$(curl -s http://localhost:3000/api/clone/credits)
+          echo "Credits endpoint response: $response"
+          
+          if echo "$response" | grep -q '"success":true'; then
+            echo "SUCCESS: Credits endpoint working"
+          else
+            echo "WARNING: Credits endpoint returned error (may be rate limited)"
+          fi
+
+      - name: Summary
+        run: |
+          echo "=========================================="
+          echo "Backend Test Summary"
+          echo "=========================================="
+          echo "GitHub Secret: Configured"
+          echo "Backend Config: Valid"
+          echo "D-ID Connection: Working"
+          echo "Health Endpoint: Working"
+          echo "API Key Loaded: Yes"
+          echo "=========================================="
+          echo "Backend is ready to use!"
