@@ -1,12 +1,30 @@
+# Dependencies
 node_modules
+package-lock.json
+yarn.lock
+
+# Environment Variables - NEVER COMMIT THESE
 .env
 .env.local
-.env.production
 .env.development
+.env.production
+.env.test
+backend/.env
+backend/.env.local
+backend/.env.production
+
+# Uploads and Build
 uploads/
 dist/
 build/
 logs/
+
+# OS Files
 .DS_Store
-package-lock.json
-yarn.lock
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
