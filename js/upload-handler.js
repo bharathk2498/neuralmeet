@@ -1,5 +1,5 @@
 /**
- * Secure Upload Handler with validation and error recovery
+ * Secure Upload Handler with validation, progress tracking, and error recovery
  */
 
 class SecureUploadHandler {
@@ -23,11 +23,42 @@ class SecureUploadHandler {
       // Track upload
       this.activeUploads.set(uploadId, { file, bucket, path: filePath });
 
+      // Notify upload started
+      if (progressCallback) {
+        progressCallback({
+          progress: 0,
+          fileName: file.name,
+          status: 'starting'
+        });
+      }
+
       // Upload with retry logic
-      const { data, error } = await this.uploadWithRetry(bucket, filePath, file, progressCallback);
+      const { data, error } = await this.uploadWithRetry(
+        bucket, 
+        filePath, 
+        file, 
+        (progress) => {
+          if (progressCallback) {
+            progressCallback({
+              progress,
+              fileName: file.name,
+              status: 'uploading'
+            });
+          }
+        }
+      );
 
       if (error) {
         throw new Error(`Storage error: ${error.message}`);
+      }
+
+      // Notify completion
+      if (progressCallback) {
+        progressCallback({
+          progress: 100,
+          fileName: file.name,
+          status: 'complete'
+        });
       }
 
       console.log(`[Upload ${uploadId}] Complete:`, data);
@@ -37,6 +68,17 @@ class SecureUploadHandler {
 
     } catch (error) {
       console.error(`[Upload ${uploadId}] Failed:`, error);
+      
+      // Notify failure
+      if (progressCallback) {
+        progressCallback({
+          progress: 0,
+          fileName: file.name,
+          status: 'error',
+          error: error.message
+        });
+      }
+      
       this.activeUploads.delete(uploadId);
       throw new Error(`Upload failed: ${error.message}`);
     }
@@ -49,12 +91,31 @@ class SecureUploadHandler {
       try {
         console.log(`[Upload] Attempt ${attempt}/${maxRetries}`);
 
-        const { data, error } = await this.supabase.storage
+        // Simulate chunked upload progress
+        const chunkSize = file.size / 10; // Simulate 10 chunks
+        let uploadedSize = 0;
+
+        // Start upload
+        const uploadPromise = this.supabase.storage
           .from(bucket)
           .upload(path, file, {
             cacheControl: '3600',
             upsert: false
           });
+
+        // Simulate progress (real implementation would use XMLHttpRequest for actual progress)
+        const progressInterval = setInterval(() => {
+          if (uploadedSize < file.size) {
+            uploadedSize += chunkSize;
+            const progress = Math.min(95, (uploadedSize / file.size) * 100);
+            if (progressCallback) {
+              progressCallback(Math.round(progress));
+            }
+          }
+        }, 200);
+
+        const { data, error } = await uploadPromise;
+        clearInterval(progressInterval);
 
         if (error) {
           lastError = error;
@@ -67,6 +128,7 @@ class SecureUploadHandler {
           continue;
         }
 
+        // Complete progress
         if (progressCallback) {
           progressCallback(100);
         }
