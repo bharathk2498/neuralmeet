@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard | NeuralMeet</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="js/backend-config.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
@@ -235,169 +236,6 @@
             font-weight: 700;
         }
 
-        .my-clone-section {
-            background: linear-gradient(135deg, rgba(79, 70, 229, 0.1), rgba(20, 184, 166, 0.1));
-            border: 2px solid var(--accent);
-            padding: 2rem;
-            border-radius: 16px;
-            margin-bottom: 2rem;
-            display: none;
-        }
-
-        .my-clone-section.active {
-            display: block;
-        }
-
-        .clone-display {
-            display: flex;
-            gap: 2rem;
-            align-items: center;
-        }
-
-        .clone-video-container {
-            flex: 1;
-            max-width: 400px;
-        }
-
-        .clone-video-preview {
-            width: 100%;
-            border-radius: 12px;
-            border: 2px solid var(--accent);
-        }
-
-        .clone-info {
-            flex: 1;
-        }
-
-        .clone-info h3 {
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
-            color: var(--accent);
-        }
-
-        .clone-stats {
-            display: grid;
-            gap: 0.8rem;
-            margin-top: 1rem;
-        }
-
-        .clone-stat-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 0.5rem 0;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .calendar-setup {
-            display: grid;
-            gap: 1.5rem;
-        }
-
-        .integration-card {
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 1.5rem;
-            display: flex;
-            align-items: center;
-            gap: 1.5rem;
-            transition: all 0.3s;
-        }
-
-        .integration-card:hover {
-            border-color: var(--primary);
-            background: rgba(79, 70, 229, 0.05);
-        }
-
-        .integration-icon {
-            width: 60px;
-            height: 60px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2rem;
-            background: linear-gradient(135deg, var(--primary), var(--accent));
-        }
-
-        .integration-info {
-            flex: 1;
-        }
-
-        .integration-info h3 {
-            font-size: 1.1rem;
-            margin-bottom: 0.3rem;
-        }
-
-        .integration-info p {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-        }
-
-        .integration-status {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .status-badge {
-            padding: 0.4rem 0.9rem;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 600;
-        }
-
-        .status-badge.connected {
-            background: rgba(16, 185, 129, 0.15);
-            color: var(--success);
-        }
-
-        .status-badge.disconnected {
-            background: rgba(148, 163, 184, 0.15);
-            color: var(--text-muted);
-        }
-
-        .clone-setup {
-            display: grid;
-            gap: 1.5rem;
-        }
-
-        .setup-step {
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid var(--border);
-            border-left: 3px solid var(--accent);
-            border-radius: 8px;
-            padding: 1.5rem;
-        }
-
-        .step-header {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            margin-bottom: 1rem;
-        }
-
-        .step-number {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--accent), var(--primary));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            font-size: 0.9rem;
-        }
-
-        .step-header h3 {
-            font-size: 1.1rem;
-        }
-
-        .step-content p {
-            color: var(--text-secondary);
-            margin-bottom: 1rem;
-        }
-
         .form-group {
             margin-bottom: 1.5rem;
         }
@@ -411,8 +249,7 @@
         }
 
         .form-group input,
-        .form-group textarea,
-        .form-group select {
+        .form-group textarea {
             width: 100%;
             padding: 0.8rem 1rem;
             background: rgba(255, 255, 255, 0.05);
@@ -424,8 +261,7 @@
         }
 
         .form-group input:focus,
-        .form-group textarea:focus,
-        .form-group select:focus {
+        .form-group textarea:focus {
             outline: none;
             border-color: var(--primary);
             background: rgba(79, 70, 229, 0.05);
@@ -472,88 +308,6 @@
             margin-top: 0.5rem;
         }
 
-        .file-list {
-            margin-top: 1rem;
-            padding: 1rem;
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 8px;
-        }
-
-        .file-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0.5rem;
-            margin-bottom: 0.5rem;
-            background: rgba(255, 255, 255, 0.02);
-            border-radius: 6px;
-        }
-
-        .file-name {
-            font-size: 0.9rem;
-            color: var(--text-secondary);
-        }
-
-        .file-size {
-            font-size: 0.8rem;
-            color: var(--text-muted);
-        }
-
-        .progress-container {
-            margin-top: 1rem;
-        }
-
-        .progress-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 0.5rem;
-        }
-
-        .progress-label {
-            font-size: 0.9rem;
-            color: var(--text-secondary);
-        }
-
-        .progress-percentage {
-            font-size: 1.5rem;
-            font-weight: 800;
-            background: linear-gradient(135deg, var(--accent), var(--primary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .progress-bar {
-            width: 100%;
-            height: 12px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 10px;
-            overflow: hidden;
-        }
-
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, var(--primary), var(--accent));
-            transition: width 0.3s;
-            position: relative;
-        }
-
-        .progress-fill::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            bottom: 0;
-            right: 0;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-            animation: shimmer 2s infinite;
-        }
-
-        @keyframes shimmer {
-            0% { transform: translateX(-100%); }
-            100% { transform: translateX(100%); }
-        }
-
         .alert {
             padding: 1rem;
             border-radius: 8px;
@@ -579,210 +333,31 @@
             color: var(--warning);
         }
 
-        .avatar-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
+        .progress-container {
+            margin-top: 1rem;
+        }
+
+        .progress-bar {
             width: 100%;
+            height: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
             height: 100%;
-            background: rgba(0, 0, 0, 0.95);
-            z-index: 9999;
-            align-items: center;
-            justify-content: center;
-            overflow-y: auto;
-            padding: 2rem;
-        }
-
-        .avatar-modal.active {
-            display: flex;
-        }
-
-        .avatar-container {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            padding: 2.5rem;
-            max-width: 1200px;
-            width: 100%;
-            max-height: 90vh;
-            overflow-y: auto;
-            position: relative;
-        }
-
-        .avatar-header {
-            text-align: center;
-            margin-bottom: 2rem;
-        }
-
-        .avatar-header h2 {
-            font-size: 1.8rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .avatar-header p {
-            color: var(--text-secondary);
-            font-size: 0.95rem;
-        }
-
-        .close-modal {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: rgba(255, 255, 255, 0.1);
-            border: none;
-            color: white;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            cursor: pointer;
-            font-size: 1.5rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .close-modal:hover {
-            background: rgba(255, 255, 255, 0.2);
-        }
-
-        .avatar-gallery {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-
-        .avatar-option {
-            background: rgba(255, 255, 255, 0.02);
-            border: 2px solid var(--border);
-            border-radius: 12px;
-            padding: 1rem;
-            cursor: pointer;
-            transition: all 0.3s;
-            position: relative;
-        }
-
-        .avatar-option:hover {
-            border-color: var(--accent);
-            transform: translateY(-4px);
-        }
-
-        .avatar-option.selected {
-            border-color: var(--success);
-            background: rgba(16, 185, 129, 0.1);
-        }
-
-        .avatar-option.selected::after {
-            content: '✓ SELECTED';
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: var(--success);
-            color: white;
-            padding: 0.3rem 0.8rem;
-            border-radius: 20px;
-            font-size: 0.7rem;
-            font-weight: 700;
-        }
-
-        .avatar-option video {
-            width: 100%;
-            border-radius: 8px;
-            margin-bottom: 1rem;
-        }
-
-        .avatar-option-title {
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-            text-align: center;
-        }
-
-        .avatar-option-desc {
-            color: var(--text-secondary);
-            font-size: 0.85rem;
-            text-align: center;
-        }
-
-        .avatar-loading {
-            text-align: center;
-            padding: 3rem;
-        }
-
-        .avatar-spinner {
-            width: 60px;
-            height: 60px;
-            border: 4px solid var(--border);
-            border-top-color: var(--primary);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 1.5rem;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        .generating-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
-            margin-top: 2rem;
-        }
-
-        .generating-item {
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 1.5rem;
-            text-align: center;
-        }
-
-        .generating-spinner {
-            width: 40px;
-            height: 40px;
-            border: 3px solid var(--border);
-            border-top-color: var(--accent);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 1rem;
-        }
-
-        @media (max-width: 1024px) {
-            .sidebar {
-                width: 70px;
-            }
-
-            .sidebar-logo,
-            .menu-item span {
-                display: none;
-            }
-
-            .main-content {
-                margin-left: 70px;
-            }
-
-            .clone-display {
-                flex-direction: column;
-            }
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            transition: width 0.3s;
         }
 
         @media (max-width: 768px) {
             .sidebar {
                 display: none;
             }
-
             .main-content {
                 margin-left: 0;
                 padding: 1.5rem;
-            }
-
-            .stats-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .avatar-gallery {
-                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -792,37 +367,9 @@
         <aside class="sidebar">
             <div class="sidebar-logo">◆ NeuralMeet</div>
             <ul class="sidebar-menu">
-                <li class="menu-item active" onclick="showPage('overview')">
-                    <span class="menu-icon">📊</span>
-                    <span>Overview</span>
-                </li>
-                <li class="menu-item" onclick="showPage('calendar')">
-                    <span class="menu-icon">📅</span>
-                    <span>Calendar Setup</span>
-                </li>
-                <li class="menu-item" onclick="showPage('clone')">
+                <li class="menu-item active" onclick="showPage('clone')">
                     <span class="menu-icon">🎭</span>
                     <span>AI Clone</span>
-                </li>
-                <li class="menu-item" onclick="showPage('meetings')">
-                    <span class="menu-icon">💼</span>
-                    <span>Meetings</span>
-                </li>
-                <li class="menu-item" onclick="showPage('rules')">
-                    <span class="menu-icon">⚙️</span>
-                    <span>Decision Rules</span>
-                </li>
-                <li class="menu-item" onclick="showPage('analytics')">
-                    <span class="menu-icon">📈</span>
-                    <span>Analytics</span>
-                </li>
-                <li class="menu-item" onclick="showPage('settings')">
-                    <span class="menu-icon">⚙️</span>
-                    <span>Settings</span>
-                </li>
-                <li class="menu-item" onclick="logout()">
-                    <span class="menu-icon">🚪</span>
-                    <span>Logout</span>
                 </li>
             </ul>
         </aside>
@@ -830,176 +377,12 @@
         <main class="main-content">
             <div class="top-bar">
                 <div class="page-title">
-                    <h1>Welcome back, <span id="user-name">Executive</span></h1>
+                    <h1>Welcome back, Bharath</h1>
                     <p>Your AI clone is ready to handle your meetings</p>
                 </div>
-                <div class="user-menu">
-                    <button class="btn btn-primary" onclick="showPage('clone')">Setup Clone</button>
-                    <div class="user-avatar" id="user-avatar">E</div>
-                </div>
             </div>
 
-            <div id="overview-page" class="page-content">
-                <div class="my-clone-section" id="myCloneSection">
-                    <div class="section-header">
-                        <h2 class="section-title">✨ My AI Clone</h2>
-                        <button class="btn btn-primary" onclick="showPage('clone')">Edit Clone</button>
-                    </div>
-                    <div class="clone-display">
-                        <div class="clone-video-container">
-                            <video id="selectedCloneVideo" class="clone-video-preview" controls></video>
-                        </div>
-                        <div class="clone-info">
-                            <h3>Your Digital Twin</h3>
-                            <p class="upload-hint">This clone will represent you in meetings</p>
-                            <div class="clone-stats">
-                                <div class="clone-stat-item">
-                                    <span>Status</span>
-                                    <span class="status-badge connected">Active</span>
-                                </div>
-                                <div class="clone-stat-item">
-                                    <span>Voice Match</span>
-                                    <span>95% Accuracy</span>
-                                </div>
-                                <div class="clone-stat-item">
-                                    <span>Visual Quality</span>
-                                    <span>HD Ready</span>
-                                </div>
-                                <div class="clone-stat-item">
-                                    <span>Created</span>
-                                    <span id="cloneCreatedDate">Today</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-header">
-                            <div>
-                                <div class="stat-label">Hours Saved This Week</div>
-                                <div class="stat-value">0</div>
-                                <div class="stat-change">Get started to see results</div>
-                            </div>
-                            <div class="stat-icon" style="background: rgba(79, 70, 229, 0.1); color: var(--primary);">⏱️</div>
-                        </div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-header">
-                            <div>
-                                <div class="stat-label">Meetings Automated</div>
-                                <div class="stat-value">0</div>
-                                <div class="stat-change">Start by connecting calendar</div>
-                            </div>
-                            <div class="stat-icon" style="background: rgba(20, 184, 166, 0.1); color: var(--accent);">🤖</div>
-                        </div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-header">
-                            <div>
-                                <div class="stat-label">Clone Accuracy</div>
-                                <div class="stat-value">-</div>
-                                <div class="stat-change">Training needed</div>
-                            </div>
-                            <div class="stat-icon" style="background: rgba(16, 185, 129, 0.1); color: var(--success);">🎯</div>
-                        </div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-header">
-                            <div>
-                                <div class="stat-label">Setup Progress</div>
-                                <div class="stat-value" id="setup-progress">0%</div>
-                                <div class="stat-change">Complete setup to begin</div>
-                            </div>
-                            <div class="stat-icon" style="background: rgba(245, 158, 11, 0.1); color: var(--warning);">📊</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="section">
-                    <div class="section-header">
-                        <h2 class="section-title">Quick Start Guide</h2>
-                    </div>
-                    <div class="clone-setup">
-                        <div class="setup-step">
-                            <div class="step-header">
-                                <div class="step-number">1</div>
-                                <h3>Connect Your Calendar</h3>
-                            </div>
-                            <div class="step-content">
-                                <p>Link Google Calendar, Outlook, or any calendar service to start intercepting meetings.</p>
-                                <button class="btn btn-primary" onclick="showPage('calendar')">Connect Calendar</button>
-                            </div>
-                        </div>
-                        <div class="setup-step">
-                            <div class="step-header">
-                                <div class="step-number">2</div>
-                                <h3>Create Your AI Clone</h3>
-                            </div>
-                            <div class="step-content">
-                                <p>Upload voice samples and photos to create your photo-realistic digital twin.</p>
-                                <button class="btn btn-primary" onclick="showPage('clone')">Setup Clone</button>
-                            </div>
-                        </div>
-                        <div class="setup-step">
-                            <div class="step-header">
-                                <div class="step-number">3</div>
-                                <h3>Define Decision Rules</h3>
-                            </div>
-                            <div class="step-content">
-                                <p>Set up autonomous decision-making logic and escalation thresholds.</p>
-                                <button class="btn btn-primary" onclick="showPage('rules')">Configure Rules</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div id="calendar-page" class="page-content" style="display: none;">
-                <div class="section">
-                    <div class="section-header">
-                        <h2 class="section-title">Calendar Integrations</h2>
-                    </div>
-                    <div class="calendar-setup">
-                        <div class="integration-card">
-                            <div class="integration-icon">📧</div>
-                            <div class="integration-info">
-                                <h3>Google Calendar</h3>
-                                <p>Sync meetings from your Google workspace</p>
-                            </div>
-                            <div class="integration-status">
-                                <span class="status-badge disconnected">Not Connected</span>
-                                <button class="btn btn-primary" onclick="connectCalendar('google')">Connect</button>
-                            </div>
-                        </div>
-                        <div class="integration-card">
-                            <div class="integration-icon">💼</div>
-                            <div class="integration-info">
-                                <h3>Microsoft Outlook</h3>
-                                <p>Integrate with Office 365 and Outlook calendar</p>
-                            </div>
-                            <div class="integration-status">
-                                <span class="status-badge disconnected">Not Connected</span>
-                                <button class="btn btn-primary" onclick="connectCalendar('outlook')">Connect</button>
-                            </div>
-                        </div>
-                        <div class="integration-card">
-                            <div class="integration-icon">🔗</div>
-                            <div class="integration-info">
-                                <h3>Zoom</h3>
-                                <p>Auto-join Zoom meetings on your behalf</p>
-                            </div>
-                            <div class="integration-status">
-                                <span class="status-badge disconnected">Not Connected</span>
-                                <button class="btn btn-primary" onclick="connectCalendar('zoom')">Connect</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div id="clone-page" class="page-content" style="display: none;">
+            <div id="clone-page" class="page-content">
                 <div id="clone-alert"></div>
                 
                 <div class="section">
@@ -1007,54 +390,44 @@
                         <h2 class="section-title">Create Your AI Clone</h2>
                     </div>
                     
+                    <div class="alert warning">
+                        <strong>🔒 Secure Backend Integration</strong><br>
+                        API key is securely managed by backend. No keys needed in frontend!
+                    </div>
+                    
                     <form id="clone-form">
                         <div class="form-group">
-                            <label>D-ID API Key (Free at studio.d-id.com)</label>
-                            <input type="password" id="did-api-key" placeholder="Enter your D-ID API key for avatar testing">
-                        </div>
-
-                        <div class="form-group">
-                            <label>Voice Training Audio Samples</label>
+                            <label>Voice Training Audio Sample</label>
                             <div class="upload-area" id="voice-upload" onclick="document.getElementById('voice-file').click()">
                                 <div class="upload-icon">🎤</div>
-                                <div class="upload-text">Upload voice recordings 5 minutes or more</div>
+                                <div class="upload-text">Upload voice recording</div>
                                 <div class="upload-hint">MP3, WAV, M4A, MOV files Max 100MB</div>
                             </div>
-                            <input type="file" id="voice-file" accept="audio/*,video/quicktime,.mov" style="display: none" multiple onchange="handleVoiceUpload(event)">
-                            <div id="voice-file-list"></div>
+                            <input type="file" id="voice-file" accept="audio/*,video/quicktime,.mov" style="display: none" onchange="handleVoiceUpload(event)">
                         </div>
 
                         <div class="form-group">
-                            <label>Video Avatar Photos and Video</label>
+                            <label>Video Avatar Photo</label>
                             <div class="upload-area" id="video-upload" onclick="document.getElementById('video-file').click()">
                                 <div class="upload-icon">📹</div>
-                                <div class="upload-text">Upload photos or short video 2 minutes or more</div>
-                                <div class="upload-hint">JPG, PNG, MP4, MOV Clear front-facing shots</div>
+                                <div class="upload-text">Upload photo or video</div>
+                                <div class="upload-hint">JPG, PNG, MP4 Clear front-facing shot</div>
                             </div>
-                            <input type="file" id="video-file" accept="image/*,video/*,video/quicktime,.mov" style="display: none" multiple onchange="handleVideoUpload(event)">
-                            <div id="video-file-list"></div>
+                            <input type="file" id="video-file" accept="image/*,video/*" style="display: none" onchange="handleVideoUpload(event)">
                         </div>
 
-                        <div class="form-group">
-                            <label>Communication Style</label>
-                            <textarea placeholder="Describe your speaking style, common phrases, tone preferences..." id="communication-style"></textarea>
-                        </div>
-
-                        <div class="form-group">
-                            <label>Decision-Making Approach</label>
-                            <textarea placeholder="How do you typically make decisions? What factors do you prioritize?" id="decision-style"></textarea>
-                        </div>
-
-                        <button type="submit" class="btn btn-primary" id="train-btn">Generate Avatar Options</button>
+                        <button type="submit" class="btn btn-primary" id="train-btn">Generate AI Clone</button>
                         
                         <div class="progress-container" id="progress-container" style="display: none;">
-                            <div class="progress-header">
-                                <span class="progress-label">Upload Progress</span>
-                                <span class="progress-percentage" id="progress-percentage">0%</span>
-                            </div>
                             <div class="progress-bar">
                                 <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
                             </div>
+                            <p id="status-text" style="margin-top: 1rem; color: var(--text-secondary);"></p>
+                        </div>
+                        
+                        <div id="result-container" style="display: none; margin-top: 2rem;">
+                            <h3>Your AI Clone</h3>
+                            <video id="result-video" controls style="width: 100%; max-width: 600px; border-radius: 12px; margin-top: 1rem;"></video>
                         </div>
                     </form>
                 </div>
@@ -1062,257 +435,62 @@
         </main>
     </div>
 
-    <div class="avatar-modal" id="avatarModal">
-        <div class="avatar-container">
-            <button class="close-modal" onclick="closeAvatarModal()">×</button>
-            
-            <div class="avatar-header">
-                <h2>Choose Your AI Clone</h2>
-                <p>Select the avatar that best represents you</p>
-            </div>
-
-            <div id="avatarLoading" class="avatar-loading" style="display: none;">
-                <div class="avatar-spinner"></div>
-                <div class="progress-label" id="avatarLoadingText">Generating avatar variations...</div>
-                <div class="upload-hint">Creating 3 different clone options for you</div>
-                
-                <div class="generating-grid">
-                    <div class="generating-item">
-                        <div class="generating-spinner"></div>
-                        <div class="upload-hint">Clone A: Professional</div>
-                    </div>
-                    <div class="generating-item">
-                        <div class="generating-spinner"></div>
-                        <div class="upload-hint">Clone B: Casual</div>
-                    </div>
-                    <div class="generating-item">
-                        <div class="generating-spinner"></div>
-                        <div class="upload-hint">Clone C: Confident</div>
-                    </div>
-                </div>
-            </div>
-
-            <div id="avatarGallery" class="avatar-gallery" style="display: none;">
-            </div>
-
-            <div id="selectionActions" style="display: none; text-align: center; margin-top: 2rem;">
-                <button class="btn btn-primary" onclick="confirmCloneSelection()" id="confirmBtn">Confirm Selection</button>
-            </div>
-        </div>
-    </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
-        const SUPABASE_URL = 'https://axzvvnqasdsnopbzjqrq.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF4enZ2bnFhc2Rzbm9wYnpqcXJxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA4MTc5MjQsImV4cCI6MjA3NjM5MzkyNH0.Yw5PYzGAwOeTj0mgXQ5zYg_He045qO2j2c-Z40n5WIM';
-        
-        let supabase;
-        let currentUser = null;
-        let voiceFiles = [];
-        let videoFiles = [];
-        let uploadedImage = null;
-        let generatedAvatars = [];
-        let selectedAvatarIndex = null;
-
-        const avatarVariations = [
-            {
-                title: 'Professional Clone',
-                script: 'Hello, I am your professional AI clone. I am ready to attend meetings on your behalf with a confident and executive presence.',
-                voice: 'en-US-GuyNeural'
-            },
-            {
-                title: 'Friendly Clone',
-                script: 'Hi there! I am your friendly AI clone, ready to engage with colleagues in a warm and approachable manner.',
-                voice: 'en-US-JennyNeural'
-            },
-            {
-                title: 'Confident Clone',
-                script: 'Greetings. I am your confident AI clone, prepared to make decisive contributions and lead discussions effectively.',
-                voice: 'en-GB-RyanNeural'
-            }
-        ];
-
-        if (SUPABASE_URL && SUPABASE_ANON_KEY) {
-            supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-        }
-
-        function showPage(page) {
-            document.querySelectorAll('.page-content').forEach(p => p.style.display = 'none');
-            document.querySelectorAll('.menu-item').forEach(m => m.classList.remove('active'));
-            
-            const pageElement = document.getElementById(page + '-page');
-            if (pageElement) {
-                pageElement.style.display = 'block';
-            }
-            
-            event.target.closest('.menu-item').classList.add('active');
-        }
-
-        function connectCalendar(provider) {
-            showAlert('clone-alert', 'Connecting to ' + provider + '. This will initiate OAuth flow in production.', 'warning');
-        }
+        let voiceFile = null;
+        let videoFile = null;
 
         function showAlert(containerId, message, type) {
             const container = document.getElementById(containerId);
             if (!container) return;
-            
-            container.innerHTML = '<div class="alert ' + type + '">' + message + '</div>';
-            setTimeout(() => {
-                container.innerHTML = '';
-            }, 5000);
+            container.innerHTML = `<div class="alert ${type}">${message}</div>`;
+            setTimeout(() => container.innerHTML = '', 5000);
         }
 
-        function updateProgress(percentage) {
+        function updateProgress(percentage, text) {
             const container = document.getElementById('progress-container');
             const fill = document.getElementById('progress-fill');
-            const text = document.getElementById('progress-percentage');
+            const statusText = document.getElementById('status-text');
             
-            if (container) container.style.display = 'block';
-            if (fill) fill.style.width = Math.round(percentage) + '%';
-            if (text) text.textContent = Math.round(percentage) + '%';
+            container.style.display = 'block';
+            fill.style.width = Math.round(percentage) + '%';
+            if (statusText && text) statusText.textContent = text;
         }
 
         function handleVoiceUpload(event) {
-            const files = event.target.files;
-            if (files.length > 0) {
-                voiceFiles = Array.from(files);
+            const file = event.target.files[0];
+            if (file) {
+                voiceFile = file;
                 const uploadArea = document.getElementById('voice-upload');
                 uploadArea.classList.add('active');
-                uploadArea.querySelector('.upload-text').textContent = files.length + ' file(s) selected';
-                
-                displayFileList('voice-file-list', voiceFiles);
+                uploadArea.querySelector('.upload-text').textContent = file.name;
             }
         }
 
         function handleVideoUpload(event) {
-            const files = event.target.files;
-            if (files.length > 0) {
-                videoFiles = Array.from(files);
+            const file = event.target.files[0];
+            if (file) {
+                videoFile = file;
                 const uploadArea = document.getElementById('video-upload');
                 uploadArea.classList.add('active');
-                uploadArea.querySelector('.upload-text').textContent = files.length + ' file(s) selected';
-                
-                displayFileList('video-file-list', videoFiles);
-                
-                if (files[0].type.startsWith('image/')) {
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        uploadedImage = e.target.result;
-                    };
-                    reader.readAsDataURL(files[0]);
-                }
+                uploadArea.querySelector('.upload-text').textContent = file.name;
             }
         }
 
-        function displayFileList(containerId, files) {
-            const container = document.getElementById(containerId);
-            if (!container) return;
-            
-            let html = '<div class="file-list">';
-            files.forEach(file => {
-                const sizeInMB = (file.size / 1024 / 1024).toFixed(2);
-                html += '<div class="file-item">';
-                html += '<span class="file-name">' + file.name + '</span>';
-                html += '<span class="file-size">' + sizeInMB + ' MB</span>';
-                html += '</div>';
-            });
-            html += '</div>';
-            
-            container.innerHTML = html;
-        }
-
-        function showAvatarModal() {
-            const modal = document.getElementById('avatarModal');
-            modal.classList.add('active');
-        }
-
-        function closeAvatarModal() {
-            const modal = document.getElementById('avatarModal');
-            modal.classList.remove('active');
-        }
-
-        async function generateMultipleAvatars() {
-            const apiKey = document.getElementById('did-api-key').value;
-            
-            if (!apiKey) {
-                showAlert('clone-alert', 'Please enter your D-ID API key first', 'error');
-                return;
-            }
-            
-            if (!uploadedImage) {
-                showAlert('clone-alert', 'Please upload an image first', 'error');
-                return;
-            }
-
-            showAvatarModal();
-            document.getElementById('avatarLoading').style.display = 'block';
-            generatedAvatars = [];
-
-            try {
-                for (let i = 0; i < avatarVariations.length; i++) {
-                    const variation = avatarVariations[i];
-                    
-                    const response = await fetch('https://api.d-id.com/talks', {
-                        method: 'POST',
-                        headers: {
-                            'Authorization': 'Basic ' + apiKey,
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            script: {
-                                type: 'text',
-                                input: variation.script,
-                                provider: {
-                                    type: 'microsoft',
-                                    voice_id: variation.voice
-                                }
-                            },
-                            source_url: uploadedImage
-                        })
-                    });
-                    
-                    if (!response.ok) {
-                        throw new Error('Failed to create avatar. Check your API key.');
-                    }
-                    
-                    const data = await response.json();
-                    const videoUrl = await pollForVideoCompletion(data.id, apiKey);
-                    
-                    generatedAvatars.push({
-                        title: variation.title,
-                        videoUrl: videoUrl,
-                        index: i
-                    });
-                }
-
-                displayAvatarGallery();
-                
-            } catch (error) {
-                console.error('Avatar generation error:', error);
-                showAlert('clone-alert', 'Failed to generate avatars: ' + error.message, 'error');
-                closeAvatarModal();
-            }
-        }
-
-        async function pollForVideoCompletion(talkId, apiKey) {
+        async function pollForCompletion(talkId) {
             const maxAttempts = 60;
             let attempts = 0;
             
             while (attempts < maxAttempts) {
                 try {
-                    const response = await fetch('https://api.d-id.com/talks/' + talkId, {
-                        headers: {
-                            'Authorization': 'Basic ' + apiKey
-                        }
-                    });
+                    updateProgress(50 + (attempts * 0.8), `Processing... (${attempts + 1}/${maxAttempts})`);
                     
-                    const data = await response.json();
+                    const result = await API.getCloneStatus(talkId);
                     
-                    if (data.status === 'done') {
-                        return data.result_url;
+                    if (result.success && result.data.status === 'done') {
+                        return result.data.result_url;
                     }
                     
-                    if (data.status === 'error') {
+                    if (result.data.status === 'error') {
                         throw new Error('Video generation failed');
                     }
                     
@@ -1328,72 +506,11 @@
             throw new Error('Video generation timeout');
         }
 
-        function displayAvatarGallery() {
-            document.getElementById('avatarLoading').style.display = 'none';
-            
-            const gallery = document.getElementById('avatarGallery');
-            gallery.style.display = 'grid';
-            gallery.innerHTML = '';
-
-            generatedAvatars.forEach((avatar, index) => {
-                const optionDiv = document.createElement('div');
-                optionDiv.className = 'avatar-option';
-                optionDiv.onclick = () => selectAvatar(index);
-                
-                optionDiv.innerHTML = `
-                    <video src="${avatar.videoUrl}" controls></video>
-                    <div class="avatar-option-title">${avatar.title}</div>
-                    <div class="avatar-option-desc">Click to select this clone</div>
-                `;
-                
-                gallery.appendChild(optionDiv);
-            });
-
-            document.getElementById('selectionActions').style.display = 'block';
-        }
-
-        function selectAvatar(index) {
-            selectedAvatarIndex = index;
-            
-            document.querySelectorAll('.avatar-option').forEach(opt => {
-                opt.classList.remove('selected');
-            });
-            
-            document.querySelectorAll('.avatar-option')[index].classList.add('selected');
-        }
-
-        function confirmCloneSelection() {
-            if (selectedAvatarIndex === null) {
-                alert('Please select an avatar first');
-                return;
-            }
-
-            const selectedAvatar = generatedAvatars[selectedAvatarIndex];
-            
-            const cloneSection = document.getElementById('myCloneSection');
-            cloneSection.classList.add('active');
-            
-            const videoElement = document.getElementById('selectedCloneVideo');
-            videoElement.src = selectedAvatar.videoUrl;
-            
-            localStorage.setItem('selectedClone', JSON.stringify({
-                videoUrl: selectedAvatar.videoUrl,
-                title: selectedAvatar.title,
-                date: new Date().toLocaleDateString()
-            }));
-
-            document.getElementById('cloneCreatedDate').textContent = new Date().toLocaleDateString();
-            
-            closeAvatarModal();
-            showPage('overview');
-            showAlert('clone-alert', '✅ Your AI clone has been activated!', 'success');
-        }
-
         document.getElementById('clone-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             
-            if (voiceFiles.length === 0 && videoFiles.length === 0) {
-                showAlert('clone-alert', 'Please upload at least one voice or video file', 'error');
+            if (!voiceFile || !videoFile) {
+                showAlert('clone-alert', 'Please upload both audio and image files', 'error');
                 return;
             }
 
@@ -1402,58 +519,42 @@
             trainBtn.textContent = 'Processing...';
 
             try {
-                updateProgress(50);
+                updateProgress(10, 'Uploading files to backend...');
                 
-                await new Promise(resolve => setTimeout(resolve, 1000));
+                const result = await API.createClone(voiceFile, videoFile);
                 
-                updateProgress(100);
+                if (!result.success) {
+                    throw new Error(result.error || 'Failed to create clone');
+                }
+
+                updateProgress(30, 'Files uploaded! Generating AI clone...');
+                showAlert('clone-alert', 'Clone creation started! This may take 2-3 minutes.', 'success');
                 
-                await generateMultipleAvatars();
+                const videoUrl = await pollForCompletion(result.talkId);
+                
+                updateProgress(100, 'Complete!');
+                
+                document.getElementById('result-video').src = videoUrl;
+                document.getElementById('result-container').style.display = 'block';
+                
+                showAlert('clone-alert', '✅ Your AI clone is ready!', 'success');
                 
             } catch (error) {
                 console.error('Error:', error);
                 showAlert('clone-alert', 'Error: ' + error.message, 'error');
             } finally {
                 trainBtn.disabled = false;
-                trainBtn.textContent = 'Generate Avatar Options';
+                trainBtn.textContent = 'Generate AI Clone';
                 setTimeout(() => {
                     document.getElementById('progress-container').style.display = 'none';
-                    updateProgress(0);
-                }, 2000);
+                    updateProgress(0, '');
+                }, 3000);
             }
         });
 
-        async function logout() {
-            if (supabase) {
-                await supabase.auth.signOut();
-            }
-            window.location.href = 'auth.html';
+        function showPage(page) {
+            console.log('Showing page:', page);
         }
-
-        window.addEventListener('load', async () => {
-            const savedClone = localStorage.getItem('selectedClone');
-            if (savedClone) {
-                const cloneData = JSON.parse(savedClone);
-                document.getElementById('myCloneSection').classList.add('active');
-                document.getElementById('selectedCloneVideo').src = cloneData.videoUrl;
-                document.getElementById('cloneCreatedDate').textContent = cloneData.date;
-            }
-
-            if (!supabase) {
-                console.error('Supabase client not initialized');
-                return;
-            }
-
-            const { data: { session } } = await supabase.auth.getSession();
-            if (!session) {
-                window.location.href = 'auth.html';
-            } else {
-                currentUser = session.user;
-                const userName = session.user.user_metadata?.full_name || session.user.email.split('@')[0];
-                document.getElementById('user-name').textContent = userName;
-                document.getElementById('user-avatar').textContent = userName.charAt(0).toUpperCase();
-            }
-        });
     </script>
 </body>
 </html>
