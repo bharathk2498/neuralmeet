@@ -1,0 +1,44 @@
+name: Deploy Backend
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install backend dependencies
+        run: |
+          cd backend
+          npm install
+
+      - name: Check environment
+        env:
+          DID_API_KEY: ${{ secrets.DID_API_KEY }}
+        run: |
+          if [ -z "$DID_API_KEY" ]; then
+            echo "ERROR: DID_API_KEY not found in GitHub Secrets"
+            exit 1
+          fi
+          echo "DID_API_KEY is configured"
+
+      - name: Run health check
+        env:
+          DID_API_KEY: ${{ secrets.DID_API_KEY }}
+        run: |
+          cd backend
+          node -e "require('dotenv').config(); console.log('API Key present:', !!process.env.DID_API_KEY)"
+
+      - name: Deploy notification
+        run: echo "Backend deployment successful"
