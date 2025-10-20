@@ -885,6 +885,16 @@
                             <input type="file" id="video-file" accept="image/*,video/*" style="display: none" onchange="handleVideoUpload(event)">
                         </div>
 
+                        <div class="form-group">
+                            <label>Communication Style</label>
+                            <textarea placeholder="Describe your speaking style, common phrases, tone preferences..." id="communication-style"></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Decision-Making Approach</label>
+                            <textarea placeholder="How do you typically make decisions? What factors do you prioritize?" id="decision-style"></textarea>
+                        </div>
+
                         <button type="submit" class="btn btn-primary" id="train-btn">Generate AI Clone</button>
                         
                         <div class="progress-container" id="progress-container" style="display: none;">
