@@ -3,148 +3,598 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Clones - NeuralMeet</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Clone Vault - NeuralMeet</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <script src="js/backend-config.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        :root {
+            --primary: #4f46e5;
+            --primary-dark: #3730a3;
+            --accent: #14b8a6;
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #111118;
+            --bg-card: #1a1a24;
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --text-muted: #64748b;
+            --border: rgba(255, 255, 255, 0.08);
+            --success: #10b981;
+            --warning: #f59e0b;
+            --error: #ef4444;
+            --neon-blue: #00d4ff;
+            --neon-purple: #b537f2;
+            --neon-pink: #ff2e97;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .animated-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: radial-gradient(circle at 20% 50%, rgba(79, 70, 229, 0.15) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 80%, rgba(20, 184, 166, 0.15) 0%, transparent 50%),
+                        radial-gradient(circle at 40% 90%, rgba(181, 55, 242, 0.1) 0%, transparent 50%);
+            animation: bgShift 15s ease infinite;
+        }
+
+        @keyframes bgShift {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(1.1); }
+        }
+
+        .dashboard-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 280px;
+            background: linear-gradient(135deg, rgba(17, 17, 24, 0.95), rgba(26, 26, 36, 0.95));
+            backdrop-filter: blur(20px);
+            border-right: 1px solid var(--border);
+            padding: 2rem 0;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            box-shadow: 5px 0 30px rgba(79, 70, 229, 0.1);
+        }
+
+        .sidebar-logo {
+            padding: 0 1.5rem;
+            margin-bottom: 3rem;
+            font-size: 1.5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple), var(--neon-pink));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            cursor: pointer;
+            animation: logoGlow 3s ease-in-out infinite;
+        }
+
+        @keyframes logoGlow {
+            0%, 100% { filter: drop-shadow(0 0 10px rgba(79, 70, 229, 0.5)); }
+            50% { filter: drop-shadow(0 0 20px rgba(20, 184, 166, 0.8)); }
+        }
+
+        .sidebar-menu {
+            list-style: none;
+        }
+
+        .menu-item {
+            padding: 1rem 1.5rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-size: 0.95rem;
+            font-weight: 600;
+            position: relative;
+            text-decoration: none;
+        }
+
+        .menu-item:hover {
+            background: rgba(79, 70, 229, 0.1);
+            color: var(--text-primary);
+            transform: translateX(5px);
+        }
+
+        .menu-item.active {
+            background: linear-gradient(90deg, rgba(79, 70, 229, 0.3), rgba(20, 184, 166, 0.1));
+            color: var(--neon-blue);
+            border-left: 4px solid var(--neon-blue);
+            box-shadow: 0 0 20px rgba(79, 70, 229, 0.3);
+        }
+
+        .main-content {
+            flex: 1;
+            margin-left: 280px;
+            padding: 2rem;
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2.5rem;
+            padding: 1.5rem;
+            background: linear-gradient(135deg, rgba(26, 26, 36, 0.8), rgba(17, 17, 24, 0.8));
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .page-title h1 {
+            font-size: 2.2rem;
+            font-weight: 900;
+            margin-bottom: 0.3rem;
+            background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .page-title p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 0.9rem 2rem;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            text-decoration: none;
+            display: inline-block;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            transform: translate(-50%, -50%);
+            transition: width 0.5s, height 0.5s;
+        }
+
+        .btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn-quantum {
+            background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
+            color: white;
+            box-shadow: 0 8px 30px rgba(79, 70, 229, 0.4);
+        }
+
+        .btn-quantum:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 50px rgba(0, 212, 255, 0.6);
+        }
+
+        .btn-neural {
+            background: linear-gradient(135deg, var(--neon-purple), var(--neon-pink));
+            color: white;
+            box-shadow: 0 8px 30px rgba(181, 55, 242, 0.4);
+        }
+
+        .btn-neural:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 50px rgba(255, 46, 151, 0.6);
+        }
+
+        .loading-state {
+            text-align: center;
+            padding: 4rem;
+        }
+
+        .spinner {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 2rem;
+            border: 4px solid var(--border);
+            border-top: 4px solid var(--neon-blue);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 4rem;
+            background: linear-gradient(135deg, rgba(26, 26, 36, 0.9), rgba(17, 17, 24, 0.9));
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .empty-state-icon {
+            font-size: 5rem;
+            margin-bottom: 1.5rem;
+            filter: drop-shadow(0 0 20px rgba(79, 70, 229, 0.5));
+        }
+
+        .clones-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 2rem;
+        }
+
+        .clone-card {
+            background: linear-gradient(135deg, rgba(26, 26, 36, 0.9), rgba(17, 17, 24, 0.9));
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            overflow: hidden;
+            transition: all 0.4s;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .clone-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple), var(--neon-pink));
+            transform: scaleX(0);
+            transition: transform 0.4s;
+        }
+
+        .clone-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 60px rgba(79, 70, 229, 0.4);
+            border-color: var(--neon-blue);
+        }
+
+        .clone-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .clone-thumbnail {
+            aspect-ratio: 16/9;
+            background: rgba(0, 0, 0, 0.5);
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .clone-thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .clone-placeholder {
+            font-size: 4rem;
+            filter: drop-shadow(0 0 10px rgba(0, 212, 255, 0.5));
+        }
+
+        .clone-duration {
+            position: absolute;
+            bottom: 0.75rem;
+            right: 0.75rem;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 0.25rem 0.75rem;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            color: var(--neon-blue);
+            font-weight: 600;
+        }
+
+        .clone-info {
+            padding: 1.5rem;
+        }
+
+        .clone-name {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--text-primary), var(--text-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .clone-stats {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 1rem;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        .clone-actions {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .btn-small {
+            padding: 0.625rem 1.25rem;
+            font-size: 0.875rem;
+            flex: 1;
+        }
+
+        .modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 2rem;
+        }
+
+        .modal.hidden {
+            display: none;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, rgba(26, 26, 36, 0.95), rgba(17, 17, 24, 0.95));
+            backdrop-filter: blur(30px);
+            border: 2px solid var(--neon-blue);
+            border-radius: 24px;
+            padding: 2.5rem;
+            max-width: 900px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 0 60px rgba(0, 212, 255, 0.4);
+            position: relative;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 2rem;
+        }
+
+        .modal-title {
+            font-size: 2rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 2rem;
+            cursor: pointer;
+            padding: 0;
+            line-height: 1;
+            transition: all 0.3s;
+        }
+
+        .modal-close:hover {
+            color: var(--text-primary);
+            transform: scale(1.2);
+        }
+
+        .modal-body {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        .modal-video {
+            width: 100%;
+            border-radius: 16px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border);
+        }
+
+        .modal-details {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .detail-item {
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+        }
+
+        .detail-label {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .detail-value {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .modal-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-top: auto;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            .main-content {
+                margin-left: 0;
+                padding: 1rem;
+            }
+            .clones-grid {
+                grid-template-columns: 1fr;
+            }
+            .modal-body {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
-<body class="bg-gray-900 text-white">
-    <div class="flex h-screen">
-        <!-- Sidebar -->
-        <aside class="w-64 bg-gray-800 border-r border-gray-700">
-            <div class="p-6">
-                <h1 class="text-2xl font-bold text-blue-500 cursor-pointer" onclick="window.location.href='index.html'">◆ NeuralMeet</h1>
-            </div>
-            <nav class="mt-6">
-                <a href="dashboard.html" class="flex items-center px-6 py-3 text-gray-300 hover:bg-gray-700">
-                    <span class="mr-3">📊</span> Overview
+<body>
+    <div class="animated-bg"></div>
+    
+    <div class="dashboard-container">
+        <aside class="sidebar">
+            <div class="sidebar-logo" onclick="window.location.href='dashboard.html'">NEURALMEET PRIME</div>
+            
+            <ul class="sidebar-menu">
+                <a href="dashboard.html" class="menu-item">
+                    <span>Quantum Hub</span>
                 </a>
-                <a href="dashboard.html#calendar" class="flex items-center px-6 py-3 text-gray-300 hover:bg-gray-700">
-                    <span class="mr-3">📅</span> Calendar Setup
+                <a href="dashboard.html#neural" class="menu-item">
+                    <span>Neural Command</span>
                 </a>
-                <a href="dashboard.html#clone" class="flex items-center px-6 py-3 text-gray-300 hover:bg-gray-700">
-                    <span class="mr-3">🤖</span> AI Clone
+                <a href="dashboard.html#dimension" class="menu-item">
+                    <span>Dimension Portal</span>
                 </a>
-                <a href="clones-gallery.html" class="flex items-center px-6 py-3 bg-gray-700 text-white">
-                    <span class="mr-3">📁</span> My Clones
+                <a href="dashboard.html#consciousness" class="menu-item">
+                    <span>AI Consciousness</span>
                 </a>
-                <a href="dashboard.html#meetings" class="flex items-center px-6 py-3 text-gray-300 hover:bg-gray-700">
-                    <span class="mr-3">📹</span> Meetings
+                <a href="dashboard.html#biometric" class="menu-item">
+                    <span>Biometric Sync</span>
                 </a>
-                <a href="dashboard.html#rules" class="flex items-center px-6 py-3 text-gray-300 hover:bg-gray-700">
-                    <span class="mr-3">⚙️</span> Decision Rules
+                <a href="dashboard.html#holographic" class="menu-item">
+                    <span>Holographic Lab</span>
                 </a>
-                <a href="dashboard.html#analytics" class="flex items-center px-6 py-3 text-gray-300 hover:bg-gray-700">
-                    <span class="mr-3">📈</span> Analytics
+                <a href="dashboard.html#autopilot" class="menu-item">
+                    <span>AI Autopilot</span>
                 </a>
-                <a href="dashboard.html#settings" class="flex items-center px-6 py-3 text-gray-300 hover:bg-gray-700">
-                    <span class="mr-3">⚙️</span> Settings
+                <a href="dashboard.html#clone" class="menu-item">
+                    <span>Clone Factory</span>
                 </a>
-                <a href="#" onclick="handleLogout(); return false;" class="flex items-center px-6 py-3 text-gray-300 hover:bg-gray-700">
-                    <span class="mr-3">🚪</span> Logout
+                <a href="clones-gallery.html" class="menu-item active">
+                    <span>Clone Vault</span>
                 </a>
-            </nav>
+                <a href="dashboard.html#timemachine" class="menu-item">
+                    <span>Time Machine</span>
+                </a>
+                <a href="dashboard.html#settings" class="menu-item">
+                    <span>Settings</span>
+                </a>
+                <a href="#" onclick="handleLogout(); return false;" class="menu-item">
+                    <span>Logout</span>
+                </a>
+            </ul>
         </aside>
 
-        <!-- Main Content -->
-        <main class="flex-1 overflow-y-auto">
-            <div class="p-8">
-                <div class="flex justify-between items-center mb-8 flex-wrap gap-4">
-                    <div>
-                        <h2 class="text-3xl font-bold">My AI Clones</h2>
-                        <p class="text-gray-400 mt-2">Manage and use your saved clones in meetings</p>
-                    </div>
-                    <div class="flex gap-3">
-                        <a href="manual-upload.html" class="bg-gray-700 hover:bg-gray-600 text-white px-6 py-3 rounded-lg font-semibold transition flex items-center gap-2">
-                            📤 Import Clone
-                        </a>
-                        <a href="dashboard.html#clone" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold transition flex items-center gap-2">
-                            + Create New
-                        </a>
-                    </div>
+        <main class="main-content">
+            <div class="top-bar">
+                <div class="page-title">
+                    <h1>Clone Vault</h1>
+                    <p>Manage your quantum AI replicas</p>
                 </div>
+                <div class="action-buttons">
+                    <a href="dashboard.html#clone" class="btn btn-quantum">+ Create New</a>
+                </div>
+            </div>
 
-                <!-- Loading State -->
-                <div id="loading" class="text-center py-12">
-                    <div class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
-                    <p class="mt-4 text-gray-400">Loading your clones...</p>
-                </div>
+            <!-- Loading State -->
+            <div id="loading" class="loading-state">
+                <div class="spinner"></div>
+                <p style="color: var(--text-secondary); font-size: 1.125rem;">Accessing quantum vault...</p>
+            </div>
 
-                <!-- Empty State -->
-                <div id="empty-state" class="hidden text-center py-12">
-                    <div class="text-6xl mb-4">🤖</div>
-                    <h3 class="text-2xl font-semibold mb-2">No Clones Yet</h3>
-                    <p class="text-gray-400 mb-6">Create your first AI clone or import an existing one</p>
-                    <div class="flex gap-4 justify-center flex-wrap">
-                        <a href="dashboard.html#clone" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg inline-block font-semibold transition">
-                            Create Your First Clone
-                        </a>
-                        <a href="manual-upload.html" class="bg-gray-700 hover:bg-gray-600 text-white px-6 py-3 rounded-lg inline-block font-semibold transition">
-                            Import Existing Clone
-                        </a>
-                    </div>
-                </div>
+            <!-- Empty State -->
+            <div id="empty-state" class="empty-state hidden">
+                <div class="empty-state-icon">🔮</div>
+                <h3 style="font-size: 1.875rem; font-weight: 700; margin-bottom: 1rem;">Vault is Empty</h3>
+                <p style="color: var(--text-secondary); margin-bottom: 2rem;">Create your first quantum clone to begin</p>
+                <a href="dashboard.html#clone" class="btn btn-quantum">Create Your First Clone</a>
+            </div>
 
-                <!-- Clones Grid -->
-                <div id="clones-grid" class="hidden grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <!-- Clone cards will be inserted here -->
-                </div>
+            <!-- Clones Grid -->
+            <div id="clones-grid" class="clones-grid hidden">
+                <!-- Clone cards will be inserted here -->
             </div>
         </main>
     </div>
 
     <!-- Clone Details Modal -->
-    <div id="clone-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-        <div class="bg-gray-800 rounded-lg p-8 max-w-4xl w-full mx-4 max-h-[90vh] overflow-y-auto">
-            <div class="flex justify-between items-start mb-6">
-                <h3 id="modal-clone-name" class="text-2xl font-bold"></h3>
-                <button onclick="closeModal()" class="text-gray-400 hover:text-white text-2xl">×</button>
+    <div id="clone-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modal-clone-name" class="modal-title"></h3>
+                <button onclick="closeModal()" class="modal-close">×</button>
             </div>
             
-            <div class="grid md:grid-cols-2 gap-6">
-                <!-- Video Player -->
+            <div class="modal-body">
                 <div>
-                    <video id="modal-video" controls class="w-full rounded-lg bg-gray-900">
+                    <video id="modal-video" controls class="modal-video">
                         Your browser does not support the video tag.
                     </video>
                 </div>
 
-                <!-- Clone Details -->
-                <div class="space-y-4">
-                    <div>
-                        <h4 class="text-sm text-gray-400 mb-1">Created</h4>
-                        <p id="modal-created-at" class="text-white"></p>
+                <div class="modal-details">
+                    <div class="detail-item">
+                        <div class="detail-label">Created</div>
+                        <div id="modal-created-at" class="detail-value"></div>
                     </div>
-                    <div>
-                        <h4 class="text-sm text-gray-400 mb-1">Duration</h4>
-                        <p id="modal-duration" class="text-white"></p>
+                    <div class="detail-item">
+                        <div class="detail-label">Duration</div>
+                        <div id="modal-duration" class="detail-value"></div>
                     </div>
-                    <div>
-                        <h4 class="text-sm text-gray-400 mb-1">Usage Count</h4>
-                        <p id="modal-usage-count" class="text-white"></p>
+                    <div class="detail-item">
+                        <div class="detail-label">Usage Count</div>
+                        <div id="modal-usage-count" class="detail-value"></div>
                     </div>
-                    <div>
-                        <h4 class="text-sm text-gray-400 mb-1">Last Used</h4>
-                        <p id="modal-last-used" class="text-white"></p>
+                    <div class="detail-item">
+                        <div class="detail-label">Last Used</div>
+                        <div id="modal-last-used" class="detail-value"></div>
                     </div>
                     
-                    <!-- Communication Style -->
-                    <div id="modal-comm-style-container" class="hidden">
-                        <h4 class="text-sm text-gray-400 mb-1">Communication Style</h4>
-                        <p id="modal-comm-style" class="text-sm text-gray-300"></p>
+                    <div id="modal-comm-style-container" class="detail-item hidden">
+                        <div class="detail-label">Communication Style</div>
+                        <div id="modal-comm-style" class="detail-value"></div>
                     </div>
 
-                    <!-- Actions -->
-                    <div class="pt-4 space-y-3">
-                        <button onclick="useClone()" class="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-3 rounded-lg font-semibold transition">
-                            Use in Meeting
-                        </button>
-                        <button onclick="downloadClone()" class="w-full bg-gray-700 hover:bg-gray-600 text-white px-4 py-3 rounded-lg font-semibold transition">
-                            Download Video
-                        </button>
-                        <button onclick="deleteClone()" class="w-full bg-red-600 hover:bg-red-700 text-white px-4 py-3 rounded-lg font-semibold transition">
-                            Delete Clone
-                        </button>
+                    <div class="modal-actions">
+                        <button onclick="useClone()" class="btn btn-quantum">Use in Meeting</button>
+                        <button onclick="downloadClone()" class="btn btn-neural">Download Video</button>
+                        <button onclick="deleteClone()" class="btn" style="background: var(--error); color: white;">Delete Clone</button>
                     </div>
                 </div>
             </div>
@@ -162,16 +612,13 @@
         }
 
         async function handleLogout() {
-            if (confirm('Are you sure you want to logout?')) {
+            if (confirm('Exit the Neural Matrix?')) {
                 try {
                     if (supabase) {
                         await supabase.auth.signOut();
                     }
                     localStorage.clear();
                     sessionStorage.clear();
-                    document.cookie.split(";").forEach((c) => {
-                        document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
-                    });
                     window.location.href = 'auth.html';
                 } catch (error) {
                     console.error('Logout error:', error);
