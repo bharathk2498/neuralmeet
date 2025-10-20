@@ -53,12 +53,16 @@ const MOCK_API = {
     // Simulate API delay
     await new Promise(r => setTimeout(r, 2000));
     
+    // Generate unique talk ID
+    const talkId = 'mock-talk-' + Date.now();
+    
     return {
       success: true,
+      talkId: talkId,
       data: {
-        talk_id: 'mock-talk-' + Date.now(),
+        talk_id: talkId,
         status: 'created',
-        result_url: 'https://via.placeholder.com/400x300/6366f1/ffffff?text=Mock+AI+Clone',
+        result_url: 'https://via.placeholder.com/600x400/6366f1/ffffff?text=Mock+AI+Clone+Created',
         message: '✅ Mock clone created! Backend not deployed yet.'
       }
     };
@@ -72,7 +76,7 @@ const MOCK_API = {
       success: true,
       data: {
         status: 'done',
-        result_url: 'https://via.placeholder.com/400x300/6366f1/ffffff?text=Clone+Ready',
+        result_url: 'https://via.placeholder.com/600x400/10b981/ffffff?text=Clone+Generation+Complete',
         created_at: new Date().toISOString()
       }
     };
