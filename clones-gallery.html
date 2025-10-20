@@ -39,14 +39,19 @@
         <!-- Main Content -->
         <main class="flex-1 overflow-y-auto">
             <div class="p-8">
-                <div class="flex justify-between items-center mb-8">
+                <div class="flex justify-between items-center mb-8 flex-wrap gap-4">
                     <div>
                         <h2 class="text-3xl font-bold">My AI Clones</h2>
                         <p class="text-gray-400 mt-2">Manage and use your saved clones in meetings</p>
                     </div>
-                    <a href="dashboard.html" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold transition">
-                        + Create New Clone
-                    </a>
+                    <div class="flex gap-3">
+                        <a href="manual-upload.html" class="bg-gray-700 hover:bg-gray-600 text-white px-6 py-3 rounded-lg font-semibold transition flex items-center gap-2">
+                            📤 Import Clone
+                        </a>
+                        <a href="dashboard.html" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold transition flex items-center gap-2">
+                            + Create New
+                        </a>
+                    </div>
                 </div>
 
                 <!-- Loading State -->
@@ -59,10 +64,15 @@
                 <div id="empty-state" class="hidden text-center py-12">
                     <div class="text-6xl mb-4">🤖</div>
                     <h3 class="text-2xl font-semibold mb-2">No Clones Yet</h3>
-                    <p class="text-gray-400 mb-6">Create your first AI clone to get started</p>
-                    <a href="dashboard.html" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg inline-block font-semibold transition">
-                        Create Your First Clone
-                    </a>
+                    <p class="text-gray-400 mb-6">Create your first AI clone or import an existing one</p>
+                    <div class="flex gap-4 justify-center flex-wrap">
+                        <a href="dashboard.html" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg inline-block font-semibold transition">
+                            Create Your First Clone
+                        </a>
+                        <a href="manual-upload.html" class="bg-gray-700 hover:bg-gray-600 text-white px-6 py-3 rounded-lg inline-block font-semibold transition">
+                            Import Existing Clone
+                        </a>
+                    </div>
                 </div>
 
                 <!-- Clones Grid -->
