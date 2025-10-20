@@ -27,23 +27,23 @@ const upload = multer({
     fileSize: 100 * 1024 * 1024
   },
   fileFilter: (req, file, cb) => {
-    const allowedAudioTypes = /mp3|wav|m4a|mov/;
+    const allowedAudioTypes = /mp3|wav|m4a|flac|mp4/;
     const allowedImageTypes = /jpeg|jpg|png/;
 
     const extname = path.extname(file.originalname).toLowerCase();
     const mimetype = file.mimetype;
 
     if (file.fieldname === 'audio') {
-      if (allowedAudioTypes.test(extname) || mimetype.startsWith('audio') || mimetype.startsWith('video')) {
+      if (allowedAudioTypes.test(extname) || mimetype.startsWith('audio')) {
         cb(null, true);
       } else {
-        cb(new Error('Only audio files are allowed for audio field'));
+        cb(new Error('Only audio files are allowed (mp3, wav, m4a, flac, mp4)'));
       }
     } else if (file.fieldname === 'image') {
       if (allowedImageTypes.test(extname) || mimetype.startsWith('image')) {
         cb(null, true);
       } else {
-        cb(new Error('Only image files are allowed for image field'));
+        cb(new Error('Only image files are allowed (jpg, jpeg, png)'));
       }
     } else {
       cb(new Error('Invalid field name'));
@@ -73,8 +73,17 @@ router.post('/create',
         image: imageFile.filename
       });
 
-      const audioUrl = `${req.protocol}://${req.get('host')}/uploads/${audioFile.filename}`;
-      const imageUrl = `${req.protocol}://${req.get('host')}/uploads/${imageFile.filename}`;
+      // Force HTTPS for production URLs (Render uses reverse proxy)
+      const protocol = process.env.NODE_ENV === 'production' ? 'https' : req.protocol;
+      const host = req.get('host');
+      
+      const audioUrl = `${protocol}://${host}/uploads/${audioFile.filename}`;
+      const imageUrl = `${protocol}://${host}/uploads/${imageFile.filename}`;
+
+      console.log('File URLs:', {
+        audio: audioUrl,
+        image: imageUrl
+      });
 
       const result = await didService.createTalk(audioUrl, imageUrl);
 
