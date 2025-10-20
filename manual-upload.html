@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Import Clone Video | NeuralMeet</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="js/backend-config.js"></script>
+</head>
+<body class="bg-gray-900 text-white min-h-screen">
+    <div class="max-w-4xl mx-auto p-8">
+        <!-- Header -->
+        <div class="mb-8">
+            <a href="dashboard.html" class="text-blue-500 hover:text-blue-400 flex items-center gap-2 mb-4">
+                ← Back to Dashboard
+            </a>
+            <h1 class="text-4xl font-bold mb-2">📤 Import Existing Clone Video</h1>
+            <p class="text-gray-400">Upload a clone video you already have to save it to your gallery</p>
+        </div>
+
+        <!-- Alert Container -->
+        <div id="alert-container"></div>
+
+        <!-- Info Box -->
+        <div class="bg-blue-900/20 border border-blue-500/30 rounded-lg p-4 mb-8">
+            <h3 class="font-semibold mb-2">💡 When to use this:</h3>
+            <ul class="text-sm text-gray-300 space-y-1">
+                <li>• You generated a clone before and downloaded the video</li>
+                <li>• You created a clone video using D-ID directly</li>
+                <li>• You want to re-upload a clone you previously saved</li>
+                <li>• You edited a clone video externally and want to import it</li>
+            </ul>
+        </div>
+
+        <!-- Upload Form -->
+        <div class="bg-gray-800 rounded-lg p-8 border border-gray-700">
+            <form id="manual-upload-form">
+                <!-- Video Upload -->
+                <div class="mb-6">
+                    <label class="block text-sm font-semibold mb-2">Clone Video File *</label>
+                    <div class="border-2 border-dashed border-gray-600 rounded-lg p-8 text-center hover:border-blue-500 transition cursor-pointer" id="video-drop-zone" onclick="document.getElementById('video-file-input').click()">
+                        <div class="text-6xl mb-4">🎬</div>
+                        <p class="text-gray-300 mb-2" id="video-upload-text">Click to upload or drag video here</p>
+                        <p class="text-sm text-gray-500">MP4, MOV, AVI - Max 100MB</p>
+                    </div>
+                    <input 
+                        type="file" 
+                        id="video-file-input" 
+                        accept="video/*" 
+                        style="display: none" 
+                        required
+                        onchange="handleVideoSelect(event)">
+                    <div id="video-preview" class="mt-4 hidden">
+                        <video id="preview-player" controls class="w-full max-w-2xl mx-auto rounded-lg"></video>
+                    </div>
+                </div>
+
+                <!-- Clone Name -->
+                <div class="mb-6">
+                    <label class="block text-sm font-semibold mb-2">Clone Name *</label>
+                    <input 
+                        type="text" 
+                        id="clone-name-input" 
+                        class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-3 focus:outline-none focus:border-blue-500" 
+                        placeholder="e.g., Professional Clone, Meeting Clone"
+                        required>
+                    <p class="text-sm text-gray-500 mt-1">Choose a descriptive name for easy identification</p>
+                </div>
+
+                <!-- Communication Style -->
+                <div class="mb-6">
+                    <label class="block text-sm font-semibold mb-2">Communication Style (Optional)</label>
+                    <textarea 
+                        id="comm-style-input" 
+                        class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-3 focus:outline-none focus:border-blue-500 h-24 resize-none" 
+                        placeholder="Describe the communication style of this clone..."></textarea>
+                </div>
+
+                <!-- Decision Making -->
+                <div class="mb-6">
+                    <label class="block text-sm font-semibold mb-2">Decision-Making Approach (Optional)</label>
+                    <textarea 
+                        id="decision-style-input" 
+                        class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-3 focus:outline-none focus:border-blue-500 h-24 resize-none" 
+                        placeholder="Describe the decision-making approach..."></textarea>
+                </div>
+
+                <!-- Buttons -->
+                <div class="flex gap-4">
+                    <button 
+                        type="submit" 
+                        id="upload-btn" 
+                        class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition">
+                        📤 Upload to Gallery
+                    </button>
+                    <button 
+                        type="button" 
+                        onclick="resetForm()" 
+                        class="bg-gray-700 hover:bg-gray-600 text-white font-semibold py-3 px-6 rounded-lg transition">
+                        Reset
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Success Message -->
+        <div id="success-message" class="hidden mt-8 bg-green-900/20 border border-green-500 rounded-lg p-6 text-center">
+            <div class="text-5xl mb-4">✅</div>
+            <h3 class="text-2xl font-bold mb-2">Clone Uploaded Successfully!</h3>
+            <p class="text-gray-300 mb-4">Your clone video has been saved to your gallery</p>
+            <div class="flex gap-4 justify-center">
+                <a href="clones-gallery.html" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-lg transition">
+                    View Gallery
+                </a>
+                <button onclick="uploadAnother()" class="bg-gray-700 hover:bg-gray-600 text-white font-semibold py-2 px-6 rounded-lg transition">
+                    Upload Another
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let selectedVideo = null;
+        let uploadedVideoUrl = null;
+
+        function showAlert(message, type) {
+            const container = document.getElementById('alert-container');
+            const alertClass = type === 'error' ? 'bg-red-900/20 border-red-500' : 'bg-green-900/20 border-green-500';
+            container.innerHTML = `
+                <div class="${alertClass} border rounded-lg p-4 mb-6">
+                    <p class="text-sm">${message}</p>
+                </div>
+            `;
+            setTimeout(() => container.innerHTML = '', 5000);
+        }
+
+        function handleVideoSelect(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            selectedVideo = file;
+
+            // Update UI
+            document.getElementById('video-upload-text').textContent = file.name;
+            document.getElementById('video-drop-zone').classList.add('border-green-500', 'bg-green-900/10');
+
+            // Show preview
+            const preview = document.getElementById('video-preview');
+            const player = document.getElementById('preview-player');
+            preview.classList.remove('hidden');
+            player.src = URL.createObjectURL(file);
+        }
+
+        async function uploadToBackend(videoFile) {
+            const formData = new FormData();
+            formData.append('video', videoFile);
+
+            try {
+                const response = await fetch(`${BACKEND_CONFIG.url}/api/clone/upload-video`, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    throw new Error('Upload failed');
+                }
+
+                const data = await response.json();
+                return data;
+            } catch (error) {
+                console.error('Upload error:', error);
+                throw error;
+            }
+        }
+
+        document.getElementById('manual-upload-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            if (!selectedVideo) {
+                showAlert('Please select a video file', 'error');
+                return;
+            }
+
+            const cloneName = document.getElementById('clone-name-input').value.trim();
+            if (!cloneName) {
+                showAlert('Please enter a clone name', 'error');
+                return;
+            }
+
+            const uploadBtn = document.getElementById('upload-btn');
+            const originalText = uploadBtn.textContent;
+            uploadBtn.disabled = true;
+            uploadBtn.textContent = 'Uploading...';
+
+            try {
+                // For now, create a local URL. In production, you'd upload to backend first.
+                const videoUrl = URL.createObjectURL(selectedVideo);
+                
+                // Get video duration
+                const video = document.createElement('video');
+                video.src = videoUrl;
+                await new Promise(resolve => {
+                    video.onloadedmetadata = resolve;
+                });
+                const duration = Math.floor(video.duration);
+
+                // Save to backend
+                const response = await fetch(`${BACKEND_CONFIG.url}/api/clone/save`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        name: cloneName,
+                        talkId: 'manual-' + Date.now(),
+                        videoUrl: videoUrl,
+                        duration: duration,
+                        communicationStyle: document.getElementById('comm-style-input').value,
+                        decisionMaking: document.getElementById('decision-style-input').value,
+                        source: 'manual-upload'
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    document.getElementById('manual-upload-form').classList.add('hidden');
+                    document.getElementById('success-message').classList.remove('hidden');
+                } else {
+                    throw new Error(data.error || 'Failed to save clone');
+                }
+
+            } catch (error) {
+                console.error('Error:', error);
+                showAlert('Error uploading clone: ' + error.message, 'error');
+                uploadBtn.disabled = false;
+                uploadBtn.textContent = originalText;
+            }
+        });
+
+        function resetForm() {
+            document.getElementById('manual-upload-form').reset();
+            document.getElementById('video-preview').classList.add('hidden');
+            document.getElementById('video-drop-zone').classList.remove('border-green-500', 'bg-green-900/10');
+            document.getElementById('video-upload-text').textContent = 'Click to upload or drag video here';
+            selectedVideo = null;
+        }
+
+        function uploadAnother() {
+            document.getElementById('success-message').classList.add('hidden');
+            document.getElementById('manual-upload-form').classList.remove('hidden');
+            resetForm();
+        }
+
+        // Drag and drop support
+        const dropZone = document.getElementById('video-drop-zone');
+
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropZone.classList.add('border-blue-500', 'bg-blue-900/10');
+        });
+
+        dropZone.addEventListener('dragleave', () => {
+            dropZone.classList.remove('border-blue-500', 'bg-blue-900/10');
+        });
+
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('border-blue-500', 'bg-blue-900/10');
+            
+            const file = e.dataTransfer.files[0];
+            if (file && file.type.startsWith('video/')) {
+                document.getElementById('video-file-input').files = e.dataTransfer.files;
+                handleVideoSelect({ target: { files: [file] } });
+            } else {
+                showAlert('Please drop a video file', 'error');
+            }
+        });
+    </script>
+</body>
+</html>
