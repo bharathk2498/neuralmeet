@@ -632,7 +632,6 @@
     </div>
 
     <script>
-        // Initialize Supabase
         const SUPABASE_URL = 'https://axzvvnqasdsnopbzjqrq.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF4enZ2bnFhc2Rzbm9wYnpqcXJxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA4MTc5MjQsImV4cCI6MjA3NjM5MzkyNH0.Yw5PYzGAwOeTj0mgXQ5zYg_He045qO2j2c-Z40n5WIM';
         
@@ -646,13 +645,11 @@
         let currentVideoUrl = null;
         let currentTalkId = null;
 
-        // Navigate to page and update URL hash
         function navigateToPage(pageName) {
             showPage(pageName);
             window.location.hash = pageName;
         }
 
-        // Show specific page
         function showPage(pageName) {
             document.querySelectorAll('.page-content').forEach(page => {
                 page.classList.remove('active');
@@ -663,7 +660,6 @@
             
             document.getElementById(pageName + '-page').classList.add('active');
             
-            // Highlight active menu item
             const menuItem = document.querySelector(`[data-page="${pageName}"]`);
             if (menuItem) {
                 menuItem.classList.add('active');
@@ -685,15 +681,13 @@
             }
         }
 
-        // Detect hash on page load
         window.addEventListener('load', function() {
-            const hash = window.location.hash.substring(1); // Remove # symbol
+            const hash = window.location.hash.substring(1);
             if (hash && document.getElementById(hash + '-page')) {
                 showPage(hash);
             }
         });
 
-        // Detect hash changes (browser back/forward)
         window.addEventListener('hashchange', function() {
             const hash = window.location.hash.substring(1);
             if (hash && document.getElementById(hash + '-page')) {
@@ -765,8 +759,7 @@
                 try {
                     updateProgress(50 + (attempts * 0.8), `Processing... (${attempts + 1}/${maxAttempts})`);
                     
-                    const response = await fetch(`${BACKEND_CONFIG.url}/api/clone/status/${talkId}`);
-                    const result = await response.json();
+                    const result = await API.getCloneStatus(talkId);
                     
                     if (result.success && result.data.status === 'done') {
                         return result.data.result_url;
@@ -882,16 +875,7 @@
             try {
                 updateProgress(10, 'Uploading files...');
                 
-                const formData = new FormData();
-                formData.append('audio', voiceFile);
-                formData.append('image', videoFile);
-
-                const response = await fetch(`${BACKEND_CONFIG.url}/api/clone/create`, {
-                    method: 'POST',
-                    body: formData
-                });
-
-                const result = await response.json();
+                const result = await API.createClone(voiceFile, videoFile);
                 
                 if (!result.success) {
                     throw new Error(result.error || 'Failed to create clone');
