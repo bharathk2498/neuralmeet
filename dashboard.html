@@ -625,25 +625,6 @@
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
         }
 
-        .section-divider {
-            margin: 4rem 0;
-            height: 2px;
-            background: linear-gradient(90deg, transparent, var(--neon-blue), transparent);
-            position: relative;
-        }
-
-        .section-divider::after {
-            content: '◆';
-            position: absolute;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%);
-            background: var(--bg-primary);
-            padding: 0 1rem;
-            color: var(--neon-blue);
-            font-size: 1.2rem;
-        }
-
         @media (max-width: 768px) {
             .sidebar {
                 width: 0;
@@ -674,8 +655,26 @@
             </div>
             
             <ul class="sidebar-menu">
-                <li class="menu-item active" data-page="quantum-labs">
-                    <span>AI QUANTUM LABS</span>
+                <li class="menu-item active" data-page="quantum">
+                    <span>Quantum Hub</span>
+                </li>
+                <li class="menu-item" data-page="neural">
+                    <span>Neural Command</span>
+                </li>
+                <li class="menu-item" data-page="dimension">
+                    <span>Dimension Portal</span>
+                </li>
+                <li class="menu-item" data-page="consciousness">
+                    <span>AI Consciousness</span>
+                </li>
+                <li class="menu-item" data-page="biometric">
+                    <span>Biometric Sync</span>
+                </li>
+                <li class="menu-item" data-page="holographic">
+                    <span>Holographic Lab</span>
+                </li>
+                <li class="menu-item" data-page="autopilot">
+                    <span>AI Autopilot</span>
                 </li>
                 <li class="menu-item" data-page="clone">
                     <span>Clone Factory</span>
@@ -683,8 +682,8 @@
                 <li class="menu-item" data-page="vault">
                     <span>Clone Vault</span>
                 </li>
-                <li class="menu-item" data-page="meetings">
-                    <span>Meetings</span>
+                <li class="menu-item" data-page="timemachine">
+                    <span>Time Machine</span>
                 </li>
                 <li class="menu-item" data-page="settings">
                     <span>Settings</span>
@@ -698,8 +697,8 @@
         <main class="main-content">
             <div class="top-bar">
                 <div class="page-title">
-                    <h1 id="page-title-main">AI Quantum Labs</h1>
-                    <p id="page-subtitle">All Advanced AI Features in One Place</p>
+                    <h1>Neural Command Center</h1>
+                    <p>AI-Powered Reality Manipulation</p>
                 </div>
                 <div class="user-menu">
                     <button class="neural-pulse-btn" id="neural-btn" title="Neural Pulse Mode">
@@ -709,10 +708,7 @@
                 </div>
             </div>
 
-            <!-- ALL ORIGINAL IDEAS CONSOLIDATED IN ONE TAB -->
-            <div id="quantum-labs-page" class="page-content active">
-                
-                <!-- QUANTUM HUB SECTION -->
+            <div id="quantum-page" class="page-content active">
                 <div class="quantum-insight-card">
                     <div style="position: relative; z-index: 1;">
                         <h2 style="font-size: 1.8rem; margin-bottom: 1rem;">Quantum Intelligence Active</h2>
@@ -768,9 +764,19 @@
                     </div>
                 </div>
 
-                <div class="section-divider"></div>
+                <div class="ai-autopilot-card">
+                    <h3 style="margin-bottom: 1rem; font-size: 1.5rem;">AI Autopilot Status</h3>
+                    <p style="color: var(--text-secondary); margin-bottom: 1rem;">
+                        Your AI is currently managing 23 active processes autonomously
+                    </p>
+                    <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                        <button class="btn btn-neural">View Autopilot Log</button>
+                        <button class="btn btn-quantum">Override Manual</button>
+                    </div>
+                </div>
+            </div>
 
-                <!-- NEURAL COMMAND SECTION -->
+            <div id="neural-page" class="page-content">
                 <div class="section">
                     <h2 style="margin-bottom: 1.5rem; font-size: 1.8rem;">DNA-Level Meeting Analysis</h2>
                     <div class="dna-helix">
@@ -822,10 +828,9 @@
                         </h3>
                     </div>
                 </div>
+            </div>
 
-                <div class="section-divider"></div>
-
-                <!-- DIMENSION PORTAL SECTION -->
+            <div id="dimension-page" class="page-content">
                 <div class="section">
                     <h2 style="margin-bottom: 1.5rem; font-size: 1.8rem; text-align: center;">
                         Multi-Dimensional Decision Engine
@@ -854,10 +859,9 @@
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <div class="section-divider"></div>
-
-                <!-- AI CONSCIOUSNESS SECTION -->
+            <div id="consciousness-page" class="page-content">
                 <div class="section">
                     <h2 style="margin-bottom: 1.5rem; font-size: 1.8rem; text-align: center;">
                         AI Consciousness Level
@@ -893,10 +897,9 @@
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <div class="section-divider"></div>
-
-                <!-- BIOMETRIC SYNC SECTION -->
+            <div id="biometric-page" class="page-content">
                 <div class="section">
                     <h2 style="margin-bottom: 1.5rem; font-size: 1.8rem; text-align: center;">
                         Biometric Integration
@@ -929,10 +932,9 @@
                         <button class="btn btn-quantum" style="margin-top: 1rem;">Auto-Schedule Based on Biometrics</button>
                     </div>
                 </div>
+            </div>
 
-                <div class="section-divider"></div>
-
-                <!-- HOLOGRAPHIC LAB SECTION -->
+            <div id="holographic-page" class="page-content">
                 <div class="section">
                     <h2 style="margin-bottom: 1.5rem; font-size: 1.8rem; text-align: center;">
                         Holographic Clone Preview
@@ -957,10 +959,9 @@
                         <button class="btn btn-neural" style="margin-left: 1rem;">Test Projection</button>
                     </div>
                 </div>
+            </div>
 
-                <div class="section-divider"></div>
-
-                <!-- AI AUTOPILOT SECTION -->
+            <div id="autopilot-page" class="page-content">
                 <div class="ai-autopilot-card">
                     <h2 style="margin-bottom: 1.5rem; font-size: 1.8rem;">Full AI Autopilot Mode</h2>
                     <p style="color: var(--text-secondary); margin-bottom: 2rem;">
@@ -996,47 +997,8 @@
                         ACTIVATE AUTOPILOT MODE
                     </button>
                 </div>
-
-                <div class="section-divider"></div>
-
-                <!-- TIME MACHINE SECTION -->
-                <div class="section">
-                    <h2 style="margin-bottom: 1.5rem; font-size: 1.8rem; text-align: center;">
-                        Temporal Decision Analyzer
-                    </h2>
-                    <p style="text-align: center; color: var(--text-secondary); margin-bottom: 2rem;">
-                        See how your past decisions would change with today's AI intelligence
-                    </p>
-                    <div class="time-machine-dial">
-                        <div class="dial-needle"></div>
-                        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center;">
-                            <div style="font-size: 0.9rem; color: var(--text-secondary);">Time Traveling...</div>
-                        </div>
-                    </div>
-                    <div style="text-align: center; margin-top: 2rem;">
-                        <button class="btn btn-quantum">Analyze Past Decisions</button>
-                        <button class="btn btn-neural" style="margin-left: 1rem;">View Future Predictions</button>
-                    </div>
-                </div>
-
-                <div class="quantum-insight-card">
-                    <h3 style="margin-bottom: 1rem;">Timeline Analysis:</h3>
-                    <div style="display: grid; gap: 1rem;">
-                        <div style="background: rgba(0, 0, 0, 0.3); padding: 1rem; border-radius: 8px;">
-                            <strong>3 Months Ago:</strong> Meeting declined - AI would have accepted (potential $50K deal)
-                        </div>
-                        <div style="background: rgba(0, 0, 0, 0.3); padding: 1rem; border-radius: 8px;">
-                            <strong>1 Month Ago:</strong> Budget approved - AI agrees with decision
-                        </div>
-                        <div style="background: rgba(0, 0, 0, 0.3); padding: 1rem; border-radius: 8px;">
-                            <strong>Next Week Prediction:</strong> High-value opportunity window detected
-                        </div>
-                    </div>
-                </div>
-
             </div>
 
-            <!-- CLONE FACTORY TAB (UNCHANGED - RENDER BACKEND INTACT) -->
             <div id="clone-page" class="page-content">
                 <div id="clone-alert"></div>
                 
@@ -1090,38 +1052,49 @@
                 </div>
             </div>
 
-            <!-- MEETINGS TAB -->
-            <div id="meetings-page" class="page-content">
+            <div id="timemachine-page" class="page-content">
                 <div class="section">
-                    <h2 style="margin-bottom: 1.5rem; font-size: 1.8rem;">Meeting Management</h2>
-                    
-                    <div class="quantum-insight-card">
-                        <strong>AI Meeting Assistant Ready</strong><br>
-                        Schedule, manage, and optimize all your meetings with quantum intelligence
+                    <h2 style="margin-bottom: 1.5rem; font-size: 1.8rem; text-align: center;">
+                        Temporal Decision Analyzer
+                    </h2>
+                    <p style="text-align: center; color: var(--text-secondary); margin-bottom: 2rem;">
+                        See how your past decisions would change with today's AI intelligence
+                    </p>
+                    <div class="time-machine-dial">
+                        <div class="dial-needle"></div>
+                        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center;">
+                            <div style="font-size: 0.9rem; color: var(--text-secondary);">Time Traveling...</div>
+                        </div>
                     </div>
-
-                    <div style="margin-top: 2rem;">
-                        <button class="btn btn-quantum" style="margin-right: 1rem;">Schedule New Meeting</button>
-                        <button class="btn btn-neural">View Calendar</button>
+                    <div style="text-align: center; margin-top: 2rem;">
+                        <button class="btn btn-quantum">Analyze Past Decisions</button>
+                        <button class="btn btn-neural" style="margin-left: 1rem;">View Future Predictions</button>
                     </div>
+                </div>
 
-                    <div style="margin-top: 3rem;">
-                        <h3 style="margin-bottom: 1.5rem; font-size: 1.3rem;">Upcoming Meetings</h3>
-                        <div style="background: rgba(0, 0, 0, 0.3); border: 1px solid var(--border); border-radius: 12px; padding: 2rem; text-align: center; color: var(--text-secondary);">
-                            No upcoming meetings scheduled
+                <div class="quantum-insight-card">
+                    <h3 style="margin-bottom: 1rem;">Timeline Analysis:</h3>
+                    <div style="display: grid; gap: 1rem;">
+                        <div style="background: rgba(0, 0, 0, 0.3); padding: 1rem; border-radius: 8px;">
+                            <strong>3 Months Ago:</strong> Meeting declined - AI would have accepted (potential $50K deal)
+                        </div>
+                        <div style="background: rgba(0, 0, 0, 0.3); padding: 1rem; border-radius: 8px;">
+                            <strong>1 Month Ago:</strong> Budget approved - AI agrees with decision
+                        </div>
+                        <div style="background: rgba(0, 0, 0, 0.3); padding: 1rem; border-radius: 8px;">
+                            <strong>Next Week Prediction:</strong> High-value opportunity window detected
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- SETTINGS TAB -->
             <div id="settings-page" class="page-content">
                 <div class="section">
                     <h3 style="margin-bottom: 1.5rem; font-size: 1.5rem;">Settings</h3>
                     <div style="display: grid; gap: 1rem;">
-                        <input type="text" id="settings-name" placeholder="Full Name" style="padding: 1rem; background: rgba(0, 0, 0, 0.5); border: 1px solid var(--border); border-radius: 8px; color: white;">
-                        <input type="email" id="settings-email" placeholder="Email" style="padding: 1rem; background: rgba(0, 0, 0, 0.5); border: 1px solid var(--border); border-radius: 8px; color: white;">
-                        <button class="btn btn-quantum" id="save-settings-btn">Save Settings</button>
+                        <input type="text" placeholder="Full Name" style="padding: 1rem; background: rgba(0, 0, 0, 0.5); border: 1px solid var(--border); border-radius: 8px; color: white;">
+                        <input type="email" placeholder="Email" style="padding: 1rem; background: rgba(0, 0, 0, 0.5); border: 1px solid var(--border); border-radius: 8px; color: white;">
+                        <button class="btn btn-quantum">Save Settings</button>
                     </div>
                 </div>
             </div>
@@ -1165,13 +1138,6 @@
         let currentVideoUrl = null;
         let currentTalkId = null;
 
-        const pageTitles = {
-            'quantum-labs': { title: 'AI Quantum Labs', subtitle: 'All Advanced AI Features in One Place' },
-            'clone': { title: 'Clone Factory', subtitle: 'Create Your AI Digital Twin' },
-            'meetings': { title: 'Meetings', subtitle: 'AI-Powered Meeting Management' },
-            'settings': { title: 'Settings', subtitle: 'Configure Your Preferences' }
-        };
-
         function showPage(pageName) {
             document.querySelectorAll('.page-content').forEach(page => {
                 page.classList.remove('active');
@@ -1183,12 +1149,6 @@
             const targetPage = document.getElementById(pageName + '-page');
             if (targetPage) {
                 targetPage.classList.add('active');
-                
-                // Update page title
-                if (pageTitles[pageName]) {
-                    document.getElementById('page-title-main').textContent = pageTitles[pageName].title;
-                    document.getElementById('page-subtitle').textContent = pageTitles[pageName].subtitle;
-                }
             }
         }
 
@@ -1215,22 +1175,12 @@
 
             document.getElementById('neural-btn').addEventListener('click', toggleNeuralMode);
             document.getElementById('deactivate-neural-btn').addEventListener('click', toggleNeuralMode);
-            
-            const voiceUploadArea = document.getElementById('voice-upload-area');
-            const videoUploadArea = document.getElementById('video-upload-area');
-            const voiceFileInput = document.getElementById('voice-file');
-            const videoFileInput = document.getElementById('video-file');
-            const saveCloneBtn = document.getElementById('save-clone-btn');
-            const cloneForm = document.getElementById('clone-form');
-            const saveSettingsBtn = document.getElementById('save-settings-btn');
-
-            if (voiceUploadArea) voiceUploadArea.addEventListener('click', () => voiceFileInput.click());
-            if (videoUploadArea) videoUploadArea.addEventListener('click', () => videoFileInput.click());
-            if (voiceFileInput) voiceFileInput.addEventListener('change', handleVoiceUpload);
-            if (videoFileInput) videoFileInput.addEventListener('change', handleVideoUpload);
-            if (saveCloneBtn) saveCloneBtn.addEventListener('click', saveClone);
-            if (cloneForm) cloneForm.addEventListener('submit', handleCloneSubmit);
-            if (saveSettingsBtn) saveSettingsBtn.addEventListener('click', handleSaveSettings);
+            document.getElementById('voice-upload-area').addEventListener('click', () => document.getElementById('voice-file').click());
+            document.getElementById('video-upload-area').addEventListener('click', () => document.getElementById('video-file').click());
+            document.getElementById('voice-file').addEventListener('change', handleVoiceUpload);
+            document.getElementById('video-file').addEventListener('change', handleVideoUpload);
+            document.getElementById('save-clone-btn').addEventListener('click', saveClone);
+            document.getElementById('clone-form').addEventListener('submit', handleCloneSubmit);
         });
 
         function toggleNeuralMode() {
@@ -1403,19 +1353,6 @@
             } catch (error) {
                 console.error('Error:', error);
                 alert('Error: ' + error.message);
-            }
-        }
-
-        function handleSaveSettings() {
-            const name = document.getElementById('settings-name').value;
-            const email = document.getElementById('settings-email').value;
-            
-            if (name && email) {
-                localStorage.setItem('userName', name);
-                localStorage.setItem('userEmail', email);
-                alert('Settings saved successfully!');
-            } else {
-                alert('Please fill in all fields');
             }
         }
     </script>
