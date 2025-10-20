@@ -2,14 +2,14 @@
 // Toggle MOCK_MODE to test without backend deployment
 
 const BACKEND_CONFIG = {
-  // 🔧 CHANGE THIS: Set to false when backend is deployed to Render
-  MOCK_MODE: true,
+  // 🚀 PRODUCTION MODE ENABLED - Using live backend on Render
+  MOCK_MODE: false,
   
   // Local development
   local: 'http://localhost:3000',
   
   // Production - Render deployment URL
-  production: 'https://neuralmeet-backend.onrender.com',
+  production: 'https://neuralmeet.onrender.com',
   
   // Auto-detect environment
   get url() {
