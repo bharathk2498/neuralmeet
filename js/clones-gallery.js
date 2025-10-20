@@ -6,6 +6,11 @@ document.addEventListener('DOMContentLoaded', loadClones);
 
 async function loadClones() {
     try {
+        if (!BACKEND_CONFIG.url) {
+            showError('Backend not configured');
+            return;
+        }
+
         const response = await fetch(`${BACKEND_CONFIG.url}/api/clone/saved`);
         const data = await response.json();
 
@@ -50,33 +55,34 @@ function renderClones() {
 
 function createCloneCard(clone) {
     const card = document.createElement('div');
-    card.className = 'bg-gray-800 rounded-lg overflow-hidden hover:ring-2 hover:ring-blue-500 transition cursor-pointer';
+    card.className = 'clone-card';
     card.onclick = () => openCloneModal(clone);
 
     const createdDate = new Date(clone.createdAt).toLocaleDateString();
     const duration = clone.duration ? `${clone.duration}s` : 'N/A';
 
     card.innerHTML = `
-        <div class="aspect-video bg-gray-900 relative">
+        <div class="clone-thumbnail">
             ${clone.thumbnailUrl ? 
-                `<img src="${clone.thumbnailUrl}" alt="${clone.name}" class="w-full h-full object-cover" />` :
-                `<div class="flex items-center justify-center h-full">
-                    <span class="text-6xl">🤖</span>
-                </div>`
+                `<img src="${clone.thumbnailUrl}" alt="${clone.name}" />` :
+                `<div class="clone-placeholder">AI</div>`
             }
-            <div class="absolute bottom-2 right-2 bg-black bg-opacity-75 px-2 py-1 rounded text-sm">
-                ${duration}
-            </div>
+            <div class="clone-duration">${duration}</div>
         </div>
-        <div class="p-4">
-            <h3 class="font-semibold text-lg mb-2">${clone.name}</h3>
-            <div class="text-sm text-gray-400 space-y-1">
-                <div>Created: ${createdDate}</div>
-                <div>Used: ${clone.usageCount || 0} times</div>
+        <div class="clone-info">
+            <h3 class="clone-name">${clone.name}</h3>
+            <div class="clone-stats">
+                <span>Created: ${createdDate}</span>
+                <span>Used: ${clone.usageCount || 0}×</span>
             </div>
-            <button onclick="event.stopPropagation(); quickUseClone('${clone.id}')" class="mt-4 w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded font-semibold transition">
-                Use in Meeting
-            </button>
+            <div class="clone-actions">
+                <button onclick="event.stopPropagation(); quickUseClone('${clone.id}')" class="btn btn-quantum btn-small">
+                    Deploy
+                </button>
+                <button onclick="event.stopPropagation(); openCloneModal(clones.find(c => c.id === '${clone.id}'))" class="btn btn-neural btn-small">
+                    Details
+                </button>
+            </div>
         </div>
     `;
 
@@ -96,6 +102,8 @@ function openCloneModal(clone) {
     if (clone.communicationStyle) {
         document.getElementById('modal-comm-style-container').classList.remove('hidden');
         document.getElementById('modal-comm-style').textContent = clone.communicationStyle;
+    } else {
+        document.getElementById('modal-comm-style-container').classList.add('hidden');
     }
 
     document.getElementById('clone-modal').classList.remove('hidden');
@@ -103,7 +111,9 @@ function openCloneModal(clone) {
 
 function closeModal() {
     document.getElementById('clone-modal').classList.add('hidden');
-    document.getElementById('modal-video').pause();
+    const video = document.getElementById('modal-video');
+    video.pause();
+    video.currentTime = 0;
     selectedClone = null;
 }
 
@@ -126,6 +136,9 @@ async function useClone() {
 
         // Show usage instructions
         showUsageInstructions(selectedClone);
+        
+        // Reload to update usage count
+        await loadClones();
     } catch (error) {
         console.error('Error updating usage:', error);
     }
@@ -133,12 +146,12 @@ async function useClone() {
 
 function showUsageInstructions(clone) {
     const instructions = `
-📹 HOW TO USE YOUR AI CLONE IN MEETINGS
+HOW TO USE YOUR AI CLONE IN MEETINGS
 
-Your clone video: ${clone.name}
+Your clone: ${clone.name}
 
 METHOD 1: Screen Share (Easiest)
-1. Download video (click Download button below)
+1. Download video (click Download button)
 2. Join your Zoom/Teams/Meet meeting
 3. Click "Share Screen"
 4. Select video player window
@@ -182,7 +195,7 @@ function downloadClone() {
 async function deleteClone() {
     if (!selectedClone) return;
 
-    if (!confirm(`Are you sure you want to delete "${selectedClone.name}"?`)) {
+    if (!confirm(`Are you sure you want to permanently delete "${selectedClone.name}"?\n\nThis action cannot be undone.`)) {
         return;
     }
 
@@ -212,6 +225,13 @@ function showError(message) {
 // Close modal on escape key
 document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
+        closeModal();
+    }
+});
+
+// Click outside modal to close
+document.getElementById('clone-modal').addEventListener('click', (e) => {
+    if (e.target.id === 'clone-modal') {
         closeModal();
     }
 });
