@@ -2,7 +2,7 @@ const config = {
   didApiKey: process.env.DID_API_KEY,
   port: process.env.PORT || 3000,
   nodeEnv: process.env.NODE_ENV || 'development',
-  frontendUrl: process.env.FRONTEND_URL || 'http://localhost:3000',
+  frontendUrl: process.env.FRONTEND_URL || 'https://bharathk2498.github.io',
   apiBaseUrl: 'https://api.d-id.com',
   supabaseUrl: process.env.SUPABASE_URL,
   supabaseKey: process.env.SUPABASE_KEY
