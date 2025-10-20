@@ -100,7 +100,7 @@
 
         @keyframes pulse {
             0%, 100% { box-shadow: 0 0 20px rgba(79, 70, 229, 0.3); }
-            50% { box-shadow: 0 0 40px rgba(20, 184, 166, 0.5)); }
+            50% { box-shadow: 0 0 40px rgba(20, 184, 166, 0.5); }
         }
 
         .ai-brain-icon {
@@ -705,51 +705,51 @@
             </div>
             
             <ul class="sidebar-menu">
-                <li class="menu-item active" onclick="showPage('quantum')">
+                <li class="menu-item active" data-page="quantum">
                     <span class="menu-icon">⚛️</span>
                     <span>Quantum Hub</span>
                 </li>
-                <li class="menu-item" onclick="showPage('neural')">
+                <li class="menu-item" data-page="neural">
                     <span class="menu-icon">🧬</span>
                     <span>Neural Command</span>
                 </li>
-                <li class="menu-item" onclick="showPage('dimension')">
+                <li class="menu-item" data-page="dimension">
                     <span class="menu-icon">🌌</span>
                     <span>Dimension Portal</span>
                 </li>
-                <li class="menu-item" onclick="showPage('consciousness')">
+                <li class="menu-item" data-page="consciousness">
                     <span class="menu-icon">💫</span>
                     <span>AI Consciousness</span>
                 </li>
-                <li class="menu-item" onclick="showPage('biometric')">
+                <li class="menu-item" data-page="biometric">
                     <span class="menu-icon">❤️</span>
                     <span>Biometric Sync</span>
                 </li>
-                <li class="menu-item" onclick="showPage('holographic')">
+                <li class="menu-item" data-page="holographic">
                     <span class="menu-icon">🔮</span>
                     <span>Holographic Lab</span>
                 </li>
-                <li class="menu-item" onclick="showPage('autopilot')">
+                <li class="menu-item" data-page="autopilot">
                     <span class="menu-icon">🚀</span>
                     <span>AI Autopilot</span>
                 </li>
-                <li class="menu-item" onclick="showPage('clone')">
+                <li class="menu-item" data-page="clone">
                     <span class="menu-icon">🎭</span>
                     <span>Clone Factory</span>
                 </li>
-                <li class="menu-item" onclick="location.href='clones-gallery.html'">
+                <li class="menu-item" data-page="vault">
                     <span class="menu-icon">📁</span>
                     <span>Clone Vault</span>
                 </li>
-                <li class="menu-item" onclick="showPage('timemachine')">
+                <li class="menu-item" data-page="timemachine">
                     <span class="menu-icon">⏰</span>
                     <span>Time Machine</span>
                 </li>
-                <li class="menu-item" onclick="showPage('settings')">
+                <li class="menu-item" data-page="settings">
                     <span class="menu-icon">⚙️</span>
                     <span>Matrix Settings</span>
                 </li>
-                <li class="menu-item" onclick="handleLogout()">
+                <li class="menu-item" data-page="logout">
                     <span class="menu-icon">🚪</span>
                     <span>Exit Matrix</span>
                 </li>
@@ -763,7 +763,7 @@
                     <p>AI-Powered Reality Manipulation</p>
                 </div>
                 <div class="user-menu">
-                    <button class="neural-pulse-btn" id="neural-btn" onclick="toggleNeuralMode()" title="Neural Pulse Mode">
+                    <button class="neural-pulse-btn" id="neural-btn" title="Neural Pulse Mode">
                         🧠
                     </button>
                     <div class="holographic-avatar">U</div>
@@ -1076,20 +1076,20 @@
                     <form id="clone-form">
                         <div style="margin-bottom: 1.5rem;">
                             <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Voice Sample</label>
-                            <div style="border: 2px dashed var(--neon-blue); border-radius: 12px; padding: 2rem; text-align: center; cursor: pointer;" onclick="document.getElementById('voice-file').click()">
+                            <div style="border: 2px dashed var(--neon-blue); border-radius: 12px; padding: 2rem; text-align: center; cursor: pointer;" id="voice-upload-area">
                                 <div style="font-size: 3rem; margin-bottom: 1rem;">🎤</div>
                                 <div id="voice-text">Upload voice recording</div>
                             </div>
-                            <input type="file" id="voice-file" accept=".mp3,.wav,.m4a,.flac" style="display: none" onchange="handleVoiceUpload(event)">
+                            <input type="file" id="voice-file" accept=".mp3,.wav,.m4a,.flac" style="display: none">
                         </div>
 
                         <div style="margin-bottom: 1.5rem;">
                             <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Avatar Photo</label>
-                            <div style="border: 2px dashed var(--neon-purple); border-radius: 12px; padding: 2rem; text-align: center; cursor: pointer;" onclick="document.getElementById('video-file').click()">
+                            <div style="border: 2px dashed var(--neon-purple); border-radius: 12px; padding: 2rem; text-align: center; cursor: pointer;" id="video-upload-area">
                                 <div style="font-size: 3rem; margin-bottom: 1rem;">📹</div>
                                 <div id="video-text">Upload photo</div>
                             </div>
-                            <input type="file" id="video-file" accept="image/*" style="display: none" onchange="handleVideoUpload(event)">
+                            <input type="file" id="video-file" accept="image/*" style="display: none">
                         </div>
 
                         <button type="submit" class="btn btn-quantum" style="width: 100%; font-size: 1.1rem;">
@@ -1109,7 +1109,7 @@
                             </div>
                             <video id="result-video" controls style="width: 100%; border-radius: 12px; margin: 1rem 0;"></video>
                             <input type="text" id="clone-name" placeholder="Name your clone" style="width: 100%; padding: 1rem; background: rgba(0, 0, 0, 0.5); border: 1px solid var(--neon-blue); border-radius: 8px; color: white; margin-bottom: 1rem;">
-                            <button type="button" class="btn btn-neural" onclick="saveClone()" style="width: 100%;">
+                            <button type="button" class="btn btn-neural" id="save-clone-btn" style="width: 100%;">
                                 💾 Save to Clone Vault
                             </button>
                         </div>
@@ -1180,7 +1180,7 @@
         <p style="color: var(--text-secondary); margin: 1rem 0;">
             AI is listening to your neural patterns...
         </p>
-        <button class="btn btn-neural" style="width: 100%;" onclick="toggleNeuralMode()">
+        <button class="btn btn-neural" style="width: 100%;" id="deactivate-neural-btn">
             Deactivate Neural Mode
         </button>
     </div>
@@ -1207,9 +1207,42 @@
                 item.classList.remove('active');
             });
             
-            document.getElementById(pageName + '-page').classList.add('active');
-            event.currentTarget.classList.add('active');
+            const targetPage = document.getElementById(pageName + '-page');
+            if (targetPage) {
+                targetPage.classList.add('active');
+            }
         }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.menu-item').forEach(item => {
+                item.addEventListener('click', function() {
+                    const pageName = this.getAttribute('data-page');
+                    
+                    if (pageName === 'vault') {
+                        window.location.href = 'clones-gallery.html';
+                        return;
+                    }
+                    
+                    if (pageName === 'logout') {
+                        handleLogout();
+                        return;
+                    }
+                    
+                    document.querySelectorAll('.menu-item').forEach(mi => mi.classList.remove('active'));
+                    this.classList.add('active');
+                    showPage(pageName);
+                });
+            });
+
+            document.getElementById('neural-btn').addEventListener('click', toggleNeuralMode);
+            document.getElementById('deactivate-neural-btn').addEventListener('click', toggleNeuralMode);
+            document.getElementById('voice-upload-area').addEventListener('click', () => document.getElementById('voice-file').click());
+            document.getElementById('video-upload-area').addEventListener('click', () => document.getElementById('video-file').click());
+            document.getElementById('voice-file').addEventListener('change', handleVoiceUpload);
+            document.getElementById('video-file').addEventListener('change', handleVideoUpload);
+            document.getElementById('save-clone-btn').addEventListener('click', saveClone);
+            document.getElementById('clone-form').addEventListener('submit', handleCloneSubmit);
+        });
 
         function toggleNeuralMode() {
             const btn = document.getElementById('neural-btn');
@@ -1326,7 +1359,7 @@
             }
         }
 
-        document.getElementById('clone-form').addEventListener('submit', async (e) => {
+        async function handleCloneSubmit(e) {
             e.preventDefault();
             
             if (!voiceFile || !videoFile) {
@@ -1368,7 +1401,7 @@
                 console.error('Error:', error);
                 alert('Error: ' + error.message);
             }
-        });
+        }
     </script>
 </body>
 </html>
