@@ -6,6 +6,7 @@
     <title>My Clones - NeuralMeet</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="js/backend-config.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body class="bg-gray-900 text-white">
     <div class="flex h-screen">
@@ -32,6 +33,9 @@
                 </a>
                 <a href="#" class="flex items-center px-6 py-3 text-gray-300 hover:bg-gray-700">
                     <span class="mr-3">⚙️</span> Settings
+                </a>
+                <a href="#" onclick="handleLogout(); return false;" class="flex items-center px-6 py-3 text-gray-300 hover:bg-gray-700">
+                    <span class="mr-3">🚪</span> Logout
                 </a>
             </nav>
         </aside>
@@ -141,6 +145,42 @@
         </div>
     </div>
 
+    <script>
+        // Initialize Supabase
+        const SUPABASE_URL = 'https://axzvvnqasdsnopbzjqrq.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF4enZ2bnFhc2Rzbm9wYnpqcXJxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA4MTc5MjQsImV4cCI6MjA3NjM5MzkyNH0.Yw5PYzGAwOeTj0mgXQ5zYg_He045qO2j2c-Z40n5WIM';
+        
+        let supabase;
+        if (SUPABASE_URL && SUPABASE_ANON_KEY) {
+            supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        }
+
+        async function handleLogout() {
+            if (confirm('Are you sure you want to logout?')) {
+                try {
+                    // Sign out from Supabase
+                    if (supabase) {
+                        await supabase.auth.signOut();
+                    }
+                    
+                    // Clear storage
+                    localStorage.clear();
+                    sessionStorage.clear();
+                    
+                    // Clear cookies
+                    document.cookie.split(";").forEach((c) => {
+                        document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
+                    });
+                    
+                    // Redirect to auth page
+                    window.location.href = 'auth.html';
+                } catch (error) {
+                    console.error('Logout error:', error);
+                    window.location.href = 'auth.html';
+                }
+            }
+        }
+    </script>
     <script src="js/clones-gallery.js"></script>
 </body>
 </html>
