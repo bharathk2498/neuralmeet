@@ -47,6 +47,7 @@ const upload = multer({
   fileFilter: (req, file, cb) => {
     const allowedAudioTypes = /mp3|wav|m4a|flac|mp4/;
     const allowedImageTypes = /jpeg|jpg|png/;
+    const allowedVideoTypes = /mp4|mov|avi|webm/;
 
     const extname = path.extname(file.originalname).toLowerCase();
     const mimetype = file.mimetype;
@@ -63,9 +64,48 @@ const upload = multer({
       } else {
         cb(new Error('Only image files are allowed (jpg, jpeg, png)'));
       }
+    } else if (file.fieldname === 'video') {
+      if (allowedVideoTypes.test(extname) || mimetype.startsWith('video')) {
+        cb(null, true);
+      } else {
+        cb(new Error('Only video files are allowed (mp4, mov, avi, webm)'));
+      }
     } else {
       cb(new Error('Invalid field name'));
     }
+  }
+});
+
+// Upload video file (for manual clone imports)
+router.post('/upload-video', upload.single('video'), async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({
+        success: false,
+        error: 'No video file uploaded'
+      });
+    }
+
+    const protocol = process.env.NODE_ENV === 'production' ? 'https' : req.protocol;
+    const host = req.get('host');
+    const videoUrl = `${protocol}://${host}/uploads/${req.file.filename}`;
+
+    console.log('Video uploaded:', {
+      filename: req.file.filename,
+      url: videoUrl
+    });
+
+    res.json({
+      success: true,
+      videoUrl: videoUrl,
+      filename: req.file.filename
+    });
+  } catch (error) {
+    console.error('Video upload error:', error);
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
   }
 });
 
@@ -128,7 +168,7 @@ router.post('/create',
 // Save clone to profile
 router.post('/save', async (req, res) => {
   try {
-    const { name, talkId, videoUrl, thumbnailUrl, duration, communicationStyle, decisionMaking } = req.body;
+    const { name, talkId, videoUrl, thumbnailUrl, duration, communicationStyle, decisionMaking, source } = req.body;
 
     if (!name || !talkId || !videoUrl) {
       return res.status(400).json({
@@ -148,6 +188,7 @@ router.post('/save', async (req, res) => {
       duration: duration || 0,
       communicationStyle: communicationStyle || '',
       decisionMaking: decisionMaking || '',
+      source: source || 'generated',
       createdAt: new Date().toISOString(),
       usageCount: 0,
       lastUsed: null
