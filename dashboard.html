@@ -1,1 +1,903 @@
-The complete HTML file with ALL original functionality restored including AI Clone generation with D-ID, file uploads, save/regenerate features, PLUS the fixed logout with Supabase and all menu sections functional
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | NeuralMeet</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="js/backend-config.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        :root {
+            --primary: #4f46e5;
+            --primary-dark: #3730a3;
+            --accent: #14b8a6;
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #111118;
+            --bg-card: #1a1a24;
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --text-muted: #64748b;
+            --border: rgba(255, 255, 255, 0.08);
+            --success: #10b981;
+            --warning: #f59e0b;
+            --error: #ef4444;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        .dashboard-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 260px;
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border);
+            padding: 2rem 0;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .sidebar-logo {
+            padding: 0 1.5rem;
+            margin-bottom: 3rem;
+            font-size: 1.4rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            cursor: pointer;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+        }
+
+        .menu-item {
+            padding: 0.8rem 1.5rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        .menu-item:hover {
+            background: rgba(79, 70, 229, 0.1);
+            color: var(--text-primary);
+        }
+
+        .menu-item.active {
+            background: rgba(79, 70, 229, 0.15);
+            color: var(--primary);
+            border-left: 3px solid var(--primary);
+        }
+
+        .menu-icon {
+            font-size: 1.2rem;
+        }
+
+        .main-content {
+            flex: 1;
+            margin-left: 260px;
+            padding: 2rem;
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .page-title h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.3rem;
+        }
+
+        .page-title p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .btn {
+            padding: 0.7rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(79, 70, 229, 0.4);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-secondary {
+            background: var(--bg-card);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--primary);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, var(--success), #059669);
+            color: white;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(16, 185, 129, 0.4);
+        }
+
+        .section {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            color: var(--text-secondary);
+            font-weight: 500;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            transition: all 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: rgba(79, 70, 229, 0.05);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .upload-area {
+            border: 2px dashed var(--border);
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .upload-area:hover {
+            border-color: var(--primary);
+            background: rgba(79, 70, 229, 0.05);
+        }
+
+        .upload-area.active {
+            border-color: var(--accent);
+            background: rgba(20, 184, 166, 0.05);
+        }
+
+        .upload-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .upload-text {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        .upload-hint {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
+        }
+
+        .alert {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .alert.success {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: var(--success);
+        }
+
+        .alert.error {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: var(--error);
+        }
+
+        .alert.info {
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            color: #3b82f6;
+        }
+
+        .progress-container {
+            margin-top: 1rem;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            transition: width 0.3s;
+        }
+
+        .save-clone-section {
+            background: rgba(16, 185, 129, 0.05);
+            border: 2px solid var(--success);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-top: 2rem;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .page-content {
+            display: none;
+        }
+
+        .page-content.active {
+            display: block;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.8rem;
+            transition: all 0.3s;
+        }
+
+        .stat-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-4px);
+        }
+
+        .stat-value {
+            font-size: 2.2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.3rem;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                display: none;
+            }
+            .main-content {
+                margin-left: 0;
+                padding: 1.5rem;
+            }
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            .button-group {
+                flex-direction: column;
+            }
+            .button-group .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <aside class="sidebar">
+            <div class="sidebar-logo" onclick="window.location.href='index.html'">◆ NeuralMeet</div>
+            <ul class="sidebar-menu">
+                <li class="menu-item active" onclick="showPage('overview')">
+                    <span class="menu-icon">📊</span>
+                    <span>Overview</span>
+                </li>
+                <li class="menu-item" onclick="showPage('calendar')">
+                    <span class="menu-icon">📅</span>
+                    <span>Calendar Setup</span>
+                </li>
+                <li class="menu-item" onclick="showPage('clone')">
+                    <span class="menu-icon">🎭</span>
+                    <span>AI Clone</span>
+                </li>
+                <li class="menu-item" onclick="location.href='clones-gallery.html'">
+                    <span class="menu-icon">📁</span>
+                    <span>My Clones</span>
+                </li>
+                <li class="menu-item" onclick="showPage('meetings')">
+                    <span class="menu-icon">💼</span>
+                    <span>Meetings</span>
+                </li>
+                <li class="menu-item" onclick="showPage('rules')">
+                    <span class="menu-icon">⚙️</span>
+                    <span>Decision Rules</span>
+                </li>
+                <li class="menu-item" onclick="showPage('analytics')">
+                    <span class="menu-icon">📈</span>
+                    <span>Analytics</span>
+                </li>
+                <li class="menu-item" onclick="showPage('settings')">
+                    <span class="menu-icon">⚙️</span>
+                    <span>Settings</span>
+                </li>
+                <li class="menu-item" onclick="handleLogout()">
+                    <span class="menu-icon">🚪</span>
+                    <span>Logout</span>
+                </li>
+            </ul>
+        </aside>
+
+        <main class="main-content">
+            <div class="top-bar">
+                <div class="page-title">
+                    <h1>Welcome back!</h1>
+                    <p>Your AI clone is ready to handle your meetings</p>
+                </div>
+                <div class="user-menu">
+                    <div class="user-avatar">U</div>
+                </div>
+            </div>
+
+            <!-- Overview Page -->
+            <div id="overview-page" class="page-content active">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value">23hrs</div>
+                        <div class="stat-label">Saved This Week</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">45</div>
+                        <div class="stat-label">Meetings Automated</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">3</div>
+                        <div class="stat-label">Active Clones</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">98%</div>
+                        <div class="stat-label">Success Rate</div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h3 style="margin-bottom: 1rem;">Quick Actions</h3>
+                    <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                        <button onclick="showPage('clone')" class="btn btn-primary">Create AI Clone</button>
+                        <a href="clones-gallery.html" class="btn btn-secondary" style="text-decoration: none;">View My Clones</a>
+                        <button onclick="showPage('calendar')" class="btn btn-secondary">Setup Calendar</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- AI Clone Page -->
+            <div id="clone-page" class="page-content">
+                <div id="clone-alert"></div>
+                
+                <div class="section">
+                    <div class="section-header">
+                        <h2 class="section-title">Create Your AI Clone</h2>
+                    </div>
+                    
+                    <div class="alert info">
+                        <strong>🔒 Secure Backend Integration</strong><br>
+                        API key is securely managed by backend. No keys needed in frontend!
+                    </div>
+                    
+                    <form id="clone-form">
+                        <div class="form-group">
+                            <label>Voice Training Audio Sample</label>
+                            <div class="upload-area" id="voice-upload" onclick="document.getElementById('voice-file').click()">
+                                <div class="upload-icon">🎤</div>
+                                <div class="upload-text">Upload voice recording</div>
+                                <div class="upload-hint">MP3, WAV, M4A - Max 100MB</div>
+                            </div>
+                            <input type="file" id="voice-file" accept=".mp3,.wav,.m4a,.flac,.mp4" style="display: none" onchange="handleVoiceUpload(event)">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Video Avatar Photo</label>
+                            <div class="upload-area" id="video-upload" onclick="document.getElementById('video-file').click()">
+                                <div class="upload-icon">📹</div>
+                                <div class="upload-text">Upload photo</div>
+                                <div class="upload-hint">JPG, PNG - Clear front-facing shot</div>
+                            </div>
+                            <input type="file" id="video-file" accept="image/*" style="display: none" onchange="handleVideoUpload(event)">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Communication Style</label>
+                            <textarea placeholder="Describe your speaking style, common phrases, tone preferences..." id="communication-style"></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Decision-Making Approach</label>
+                            <textarea placeholder="How do you typically make decisions? What factors do you prioritize?" id="decision-style"></textarea>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary" id="train-btn">Generate AI Clone</button>
+                        
+                        <div class="progress-container" id="progress-container" style="display: none;">
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+                            </div>
+                            <p id="status-text" style="margin-top: 1rem; color: var(--text-secondary);"></p>
+                        </div>
+                        
+                        <div id="result-container" style="display: none; margin-top: 2rem;">
+                            <div class="alert success">
+                                <strong>✅ Your AI Clone is Ready!</strong><br>
+                                Your talking avatar has been generated successfully.
+                            </div>
+                            
+                            <h3 style="margin-bottom: 1rem;">Your AI Clone</h3>
+                            <video id="result-video" controls style="width: 100%; max-width: 600px; border-radius: 12px; margin-bottom: 1.5rem;"></video>
+                            
+                            <div class="save-clone-section" id="save-clone-section">
+                                <h4 style="margin-bottom: 1rem; font-size: 1.2rem;">💾 Save This Clone to Your Profile</h4>
+                                <div class="form-group">
+                                    <label>Clone Name *</label>
+                                    <input type="text" id="clone-name" placeholder="e.g., Professional Clone" value="Professional Clone">
+                                </div>
+                                <div class="button-group">
+                                    <button type="button" class="btn btn-success" onclick="saveClone()" id="save-btn">
+                                        💾 Save My Clone
+                                    </button>
+                                    <button type="button" class="btn btn-secondary" onclick="regenerateClone()">
+                                        🔄 Regenerate New Clone
+                                    </button>
+                                </div>
+                                <p style="margin-top: 1rem; color: var(--text-secondary); font-size: 0.9rem;">
+                                    💡 Saved clones can be reused in multiple meetings. Visit <a href="clones-gallery.html" style="color: var(--primary);">My Clones</a> to manage them.
+                                </p>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Calendar Page -->
+            <div id="calendar-page" class="page-content">
+                <div class="section">
+                    <h3>Calendar Integration</h3>
+                    <p style="color: var(--text-muted); margin: 1rem 0;">Connect your calendar to automate meeting attendance</p>
+                    <button class="btn btn-primary">Connect Google Calendar</button>
+                    <button class="btn btn-secondary" style="margin-left: 1rem;">Connect Outlook</button>
+                </div>
+            </div>
+
+            <!-- Meetings Page -->
+            <div id="meetings-page" class="page-content">
+                <div class="section">
+                    <h3>Upcoming Meetings</h3>
+                    <p style="color: var(--text-muted); margin-top: 1rem;">No upcoming meetings. Connect your calendar to see meetings here.</p>
+                </div>
+            </div>
+
+            <!-- Rules Page -->
+            <div id="rules-page" class="page-content">
+                <div class="section">
+                    <h3>Decision Rules</h3>
+                    <div class="form-group">
+                        <label>Auto-approve budgets under:</label>
+                        <input type="number" placeholder="$10,000">
+                    </div>
+                    <button class="btn btn-primary">Save Rules</button>
+                </div>
+            </div>
+
+            <!-- Analytics Page -->
+            <div id="analytics-page" class="page-content">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value">156</div>
+                        <div class="stat-label">Total Meetings</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">92hrs</div>
+                        <div class="stat-label">Time Saved</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings Page -->
+            <div id="settings-page" class="page-content">
+                <div class="section">
+                    <h3>Account Settings</h3>
+                    <div class="form-group">
+                        <label>Full Name</label>
+                        <input type="text" placeholder="Your name">
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" placeholder="your@email.com">
+                    </div>
+                    <button class="btn btn-primary">Save Changes</button>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <script>
+        // Initialize Supabase
+        const SUPABASE_URL = 'https://axzvvnqasdsnopbzjqrq.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF4enZ2bnFhc2Rzbm9wYnpqcXJxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA4MTc5MjQsImV4cCI6MjA3NjM5MzkyNH0.Yw5PYzGAwOeTj0mgXQ5zYg_He045qO2j2c-Z40n5WIM';
+        
+        let supabase;
+        if (SUPABASE_URL && SUPABASE_ANON_KEY) {
+            supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        }
+
+        let voiceFile = null;
+        let videoFile = null;
+        let currentVideoUrl = null;
+        let currentTalkId = null;
+
+        function showPage(pageName) {
+            document.querySelectorAll('.page-content').forEach(page => {
+                page.classList.remove('active');
+            });
+            document.querySelectorAll('.menu-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            document.getElementById(pageName + '-page').classList.add('active');
+            event.currentTarget.classList.add('active');
+            
+            const titles = {
+                'overview': { title: 'Overview', subtitle: 'Your AI meeting dashboard' },
+                'calendar': { title: 'Calendar Setup', subtitle: 'Connect your calendars' },
+                'meetings': { title: 'Meetings', subtitle: 'Manage your meetings' },
+                'clone': { title: 'AI Clone', subtitle: 'Create your AI clone' },
+                'rules': { title: 'Decision Rules', subtitle: 'Configure decision-making' },
+                'analytics': { title: 'Analytics', subtitle: 'Track performance' },
+                'settings': { title: 'Settings', subtitle: 'Account preferences' }
+            };
+            
+            if (titles[pageName]) {
+                document.querySelector('.page-title h1').textContent = titles[pageName].title;
+                document.querySelector('.page-title p').textContent = titles[pageName].subtitle;
+            }
+        }
+
+        async function handleLogout() {
+            if (confirm('Are you sure you want to logout?')) {
+                try {
+                    if (supabase) {
+                        await supabase.auth.signOut();
+                    }
+                    localStorage.clear();
+                    sessionStorage.clear();
+                    document.cookie.split(";").forEach((c) => {
+                        document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
+                    });
+                    window.location.href = 'auth.html';
+                } catch (error) {
+                    console.error('Logout error:', error);
+                    window.location.href = 'auth.html';
+                }
+            }
+        }
+
+        function showAlert(containerId, message, type) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+            container.innerHTML = `<div class="alert ${type}">${message}</div>`;
+            setTimeout(() => container.innerHTML = '', 5000);
+        }
+
+        function updateProgress(percentage, text) {
+            const container = document.getElementById('progress-container');
+            const fill = document.getElementById('progress-fill');
+            const statusText = document.getElementById('status-text');
+            
+            container.style.display = 'block';
+            fill.style.width = Math.round(percentage) + '%';
+            if (statusText && text) statusText.textContent = text;
+        }
+
+        function handleVoiceUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                voiceFile = file;
+                const uploadArea = document.getElementById('voice-upload');
+                uploadArea.classList.add('active');
+                uploadArea.querySelector('.upload-text').textContent = file.name;
+            }
+        }
+
+        function handleVideoUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                videoFile = file;
+                const uploadArea = document.getElementById('video-upload');
+                uploadArea.classList.add('active');
+                uploadArea.querySelector('.upload-text').textContent = file.name;
+            }
+        }
+
+        async function pollForCompletion(talkId) {
+            const maxAttempts = 60;
+            let attempts = 0;
+            
+            while (attempts < maxAttempts) {
+                try {
+                    updateProgress(50 + (attempts * 0.8), `Processing... (${attempts + 1}/${maxAttempts})`);
+                    
+                    const response = await fetch(`${BACKEND_CONFIG.url}/api/clone/status/${talkId}`);
+                    const result = await response.json();
+                    
+                    if (result.success && result.data.status === 'done') {
+                        return result.data.result_url;
+                    }
+                    
+                    if (result.data.status === 'error') {
+                        throw new Error('Video generation failed');
+                    }
+                    
+                    await new Promise(resolve => setTimeout(resolve, 3000));
+                    attempts++;
+                    
+                } catch (error) {
+                    console.error('Polling error:', error);
+                    throw error;
+                }
+            }
+            
+            throw new Error('Video generation timeout');
+        }
+
+        async function saveClone() {
+            const cloneName = document.getElementById('clone-name').value.trim();
+            
+            if (!cloneName) {
+                alert('Please enter a name for your clone');
+                return;
+            }
+
+            if (!currentVideoUrl) {
+                alert('No video to save');
+                return;
+            }
+
+            const saveBtn = document.getElementById('save-btn');
+            const originalText = saveBtn.textContent;
+            saveBtn.disabled = true;
+            saveBtn.textContent = 'Saving...';
+
+            try {
+                const videoElement = document.getElementById('result-video');
+                const commStyle = document.getElementById('communication-style').value;
+                const decisionStyle = document.getElementById('decision-style').value;
+
+                const response = await fetch(`${BACKEND_CONFIG.url}/api/clone/save`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        name: cloneName,
+                        talkId: currentTalkId || 'clone-' + Date.now(),
+                        videoUrl: currentVideoUrl,
+                        duration: Math.floor(videoElement.duration) || 0,
+                        communicationStyle: commStyle,
+                        decisionMaking: decisionStyle
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    showAlert('clone-alert', '✅ Clone saved! <a href="clones-gallery.html" style="color: var(--success);">View Gallery</a>', 'success');
+                    saveBtn.textContent = '✅ Saved!';
+                    
+                    setTimeout(() => {
+                        if (confirm('View clones gallery?')) {
+                            window.location.href = 'clones-gallery.html';
+                        }
+                    }, 1000);
+                } else {
+                    throw new Error(data.error || 'Failed to save clone');
+                }
+
+            } catch (error) {
+                console.error('Save error:', error);
+                showAlert('clone-alert', 'Error: ' + error.message, 'error');
+                saveBtn.disabled = false;
+                saveBtn.textContent = originalText;
+            }
+        }
+
+        function regenerateClone() {
+            if (confirm('Create new clone?')) {
+                document.getElementById('result-container').style.display = 'none';
+                document.getElementById('clone-form').reset();
+                voiceFile = null;
+                videoFile = null;
+                currentVideoUrl = null;
+                currentTalkId = null;
+                
+                document.getElementById('voice-upload').classList.remove('active');
+                document.getElementById('voice-upload').querySelector('.upload-text').textContent = 'Upload voice recording';
+                
+                document.getElementById('video-upload').classList.remove('active');
+                document.getElementById('video-upload').querySelector('.upload-text').textContent = 'Upload photo';
+                
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                showAlert('clone-alert', 'Ready to create new clone!', 'info');
+            }
+        }
+
+        document.getElementById('clone-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            if (!voiceFile || !videoFile) {
+                showAlert('clone-alert', 'Please upload both audio and image files', 'error');
+                return;
+            }
+
+            const trainBtn = document.getElementById('train-btn');
+            trainBtn.disabled = true;
+            trainBtn.textContent = 'Processing...';
+
+            try {
+                updateProgress(10, 'Uploading files...');
+                
+                const formData = new FormData();
+                formData.append('audio', voiceFile);
+                formData.append('image', videoFile);
+
+                const response = await fetch(`${BACKEND_CONFIG.url}/api/clone/create`, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const result = await response.json();
+                
+                if (!result.success) {
+                    throw new Error(result.error || 'Failed to create clone');
+                }
+
+                currentTalkId = result.talkId;
+
+                updateProgress(30, 'Generating AI clone...');
+                showAlert('clone-alert', 'Clone creation started! This may take 2-3 minutes.', 'success');
+                
+                const videoUrl = await pollForCompletion(result.talkId);
+                currentVideoUrl = videoUrl;
+                
+                updateProgress(100, 'Complete!');
+                
+                document.getElementById('result-video').src = videoUrl;
+                document.getElementById('result-container').style.display = 'block';
+                
+                setTimeout(() => {
+                    document.getElementById('save-clone-section').scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }, 500);
+                
+            } catch (error) {
+                console.error('Error:', error);
+                showAlert('clone-alert', 'Error: ' + error.message, 'error');
+            } finally {
+                trainBtn.disabled = false;
+                trainBtn.textContent = 'Generate AI Clone';
+                setTimeout(() => {
+                    document.getElementById('progress-container').style.display = 'none';
+                    updateProgress(0, '');
+                }, 3000);
+            }
+        });
+    </script>
+</body>
+</html>
