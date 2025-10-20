@@ -1,11 +1,14 @@
 // Backend Configuration
-// Your backend is deployed and uses the GitHub Secret for API key
+// Toggle MOCK_MODE to test without backend deployment
 
 const BACKEND_CONFIG = {
+  // 🔧 CHANGE THIS: Set to false when backend is deployed to Render
+  MOCK_MODE: true,
+  
   // Local development
   local: 'http://localhost:3000',
   
-  // Production - update this after deploying to Render/Railway/Vercel
+  // Production - Render deployment URL
   production: 'https://neuralmeet-backend.onrender.com',
   
   // Auto-detect environment
@@ -16,15 +19,87 @@ const BACKEND_CONFIG = {
   }
 };
 
-// API Helper Functions
-const API = {
+// Mock responses for testing without backend
+const MOCK_API = {
+  async checkHealth() {
+    console.log('🔧 MOCK MODE: Health check');
+    await new Promise(r => setTimeout(r, 500));
+    return {
+      status: 'healthy (mock)',
+      timestamp: new Date().toISOString(),
+      environment: 'development',
+      hasApiKey: true
+    };
+  },
+
+  async getCredits() {
+    console.log('🔧 MOCK MODE: Getting credits');
+    await new Promise(r => setTimeout(r, 500));
+    return {
+      success: true,
+      credits: {
+        remaining: 95,
+        total: 100
+      }
+    };
+  },
+
+  async createClone(audioFile, imageFile) {
+    console.log('🔧 MOCK MODE: Creating clone with:', {
+      audio: audioFile?.name,
+      image: imageFile?.name
+    });
+    
+    // Simulate API delay
+    await new Promise(r => setTimeout(r, 2000));
+    
+    return {
+      success: true,
+      data: {
+        talk_id: 'mock-talk-' + Date.now(),
+        status: 'created',
+        result_url: 'https://via.placeholder.com/400x300/6366f1/ffffff?text=Mock+AI+Clone',
+        message: '✅ Mock clone created! Backend not deployed yet.'
+      }
+    };
+  },
+
+  async getCloneStatus(talkId) {
+    console.log('🔧 MOCK MODE: Getting status for:', talkId);
+    await new Promise(r => setTimeout(r, 1000));
+    
+    return {
+      success: true,
+      data: {
+        status: 'done',
+        result_url: 'https://via.placeholder.com/400x300/6366f1/ffffff?text=Clone+Ready',
+        created_at: new Date().toISOString()
+      }
+    };
+  },
+
+  async deleteClone(talkId) {
+    console.log('🔧 MOCK MODE: Deleting clone:', talkId);
+    await new Promise(r => setTimeout(r, 500));
+    
+    return {
+      success: true,
+      message: 'Clone deleted (mock)'
+    };
+  }
+};
+
+// Real API Functions
+const REAL_API = {
   async checkHealth() {
     const response = await fetch(`${BACKEND_CONFIG.url}/health`);
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
     return response.json();
   },
 
   async getCredits() {
     const response = await fetch(`${BACKEND_CONFIG.url}/api/clone/credits`);
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
     return response.json();
   },
 
@@ -37,12 +112,14 @@ const API = {
       method: 'POST',
       body: formData
     });
-
+    
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
     return response.json();
   },
 
   async getCloneStatus(talkId) {
     const response = await fetch(`${BACKEND_CONFIG.url}/api/clone/status/${talkId}`);
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
     return response.json();
   },
 
@@ -50,9 +127,20 @@ const API = {
     const response = await fetch(`${BACKEND_CONFIG.url}/api/clone/${talkId}`, {
       method: 'DELETE'
     });
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
     return response.json();
   }
 };
+
+// Unified API - automatically uses mock or real based on MOCK_MODE
+const API = BACKEND_CONFIG.MOCK_MODE ? MOCK_API : REAL_API;
+
+// Log current mode on load
+console.log(
+  BACKEND_CONFIG.MOCK_MODE 
+    ? '🔧 MOCK MODE ENABLED - Backend not required. UI testing only.' 
+    : `🚀 PRODUCTION MODE - Using backend at ${BACKEND_CONFIG.url}`
+);
 
 // Export for use in other files
 if (typeof module !== 'undefined' && module.exports) {
