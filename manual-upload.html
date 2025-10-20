@@ -85,6 +85,14 @@
                         placeholder="Describe the decision-making approach..."></textarea>
                 </div>
 
+                <!-- Progress -->
+                <div id="upload-progress" class="hidden mb-6">
+                    <div class="bg-gray-700 rounded-full h-4 overflow-hidden">
+                        <div id="progress-bar" class="bg-blue-600 h-full transition-all duration-300" style="width: 0%"></div>
+                    </div>
+                    <p id="progress-text" class="text-sm text-gray-400 mt-2 text-center">Uploading...</p>
+                </div>
+
                 <!-- Buttons -->
                 <div class="flex gap-4">
                     <button 
@@ -121,7 +129,6 @@
 
     <script>
         let selectedVideo = null;
-        let uploadedVideoUrl = null;
 
         function showAlert(message, type) {
             const container = document.getElementById('alert-container');
@@ -134,28 +141,38 @@
             setTimeout(() => container.innerHTML = '', 5000);
         }
 
+        function updateProgress(percent, text) {
+            const progressContainer = document.getElementById('upload-progress');
+            const progressBar = document.getElementById('progress-bar');
+            const progressText = document.getElementById('progress-text');
+            
+            progressContainer.classList.remove('hidden');
+            progressBar.style.width = percent + '%';
+            progressText.textContent = text;
+        }
+
         function handleVideoSelect(event) {
             const file = event.target.files[0];
             if (!file) return;
 
             selectedVideo = file;
 
-            // Update UI
             document.getElementById('video-upload-text').textContent = file.name;
             document.getElementById('video-drop-zone').classList.add('border-green-500', 'bg-green-900/10');
 
-            // Show preview
             const preview = document.getElementById('video-preview');
             const player = document.getElementById('preview-player');
             preview.classList.remove('hidden');
             player.src = URL.createObjectURL(file);
         }
 
-        async function uploadToBackend(videoFile) {
+        async function uploadVideoToBackend(videoFile) {
             const formData = new FormData();
             formData.append('video', videoFile);
 
             try {
+                updateProgress(30, 'Uploading video to server...');
+                
                 const response = await fetch(`${BACKEND_CONFIG.url}/api/clone/upload-video`, {
                     method: 'POST',
                     body: formData
@@ -166,7 +183,12 @@
                 }
 
                 const data = await response.json();
-                return data;
+                
+                if (!data.success) {
+                    throw new Error(data.error || 'Upload failed');
+                }
+
+                return data.videoUrl;
             } catch (error) {
                 console.error('Upload error:', error);
                 throw error;
@@ -193,10 +215,12 @@
             uploadBtn.textContent = 'Uploading...';
 
             try {
-                // For now, create a local URL. In production, you'd upload to backend first.
-                const videoUrl = URL.createObjectURL(selectedVideo);
+                updateProgress(10, 'Preparing upload...');
                 
-                // Get video duration
+                const videoUrl = await uploadVideoToBackend(selectedVideo);
+                
+                updateProgress(60, 'Video uploaded! Saving to gallery...');
+                
                 const video = document.createElement('video');
                 video.src = videoUrl;
                 await new Promise(resolve => {
@@ -204,7 +228,8 @@
                 });
                 const duration = Math.floor(video.duration);
 
-                // Save to backend
+                updateProgress(80, 'Saving clone metadata...');
+
                 const response = await fetch(`${BACKEND_CONFIG.url}/api/clone/save`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -222,8 +247,12 @@
                 const data = await response.json();
 
                 if (data.success) {
-                    document.getElementById('manual-upload-form').classList.add('hidden');
-                    document.getElementById('success-message').classList.remove('hidden');
+                    updateProgress(100, 'Complete!');
+                    setTimeout(() => {
+                        document.getElementById('manual-upload-form').classList.add('hidden');
+                        document.getElementById('upload-progress').classList.add('hidden');
+                        document.getElementById('success-message').classList.remove('hidden');
+                    }, 500);
                 } else {
                     throw new Error(data.error || 'Failed to save clone');
                 }
@@ -233,6 +262,7 @@
                 showAlert('Error uploading clone: ' + error.message, 'error');
                 uploadBtn.disabled = false;
                 uploadBtn.textContent = originalText;
+                document.getElementById('upload-progress').classList.add('hidden');
             }
         });
 
@@ -241,6 +271,7 @@
             document.getElementById('video-preview').classList.add('hidden');
             document.getElementById('video-drop-zone').classList.remove('border-green-500', 'bg-green-900/10');
             document.getElementById('video-upload-text').textContent = 'Click to upload or drag video here';
+            document.getElementById('upload-progress').classList.add('hidden');
             selectedVideo = null;
         }
 
@@ -250,7 +281,6 @@
             resetForm();
         }
 
-        // Drag and drop support
         const dropZone = document.getElementById('video-drop-zone');
 
         dropZone.addEventListener('dragover', (e) => {
