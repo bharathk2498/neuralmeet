@@ -5,6 +5,24 @@ const didService = require('../services/didService');
 const path = require('path');
 const fs = require('fs').promises;
 
+const CLONES_FILE = path.join(__dirname, '../data/clones.json');
+
+// Helper: Read clones from storage
+async function readClones() {
+  try {
+    const data = await fs.readFile(CLONES_FILE, 'utf8');
+    return JSON.parse(data);
+  } catch (error) {
+    return [];
+  }
+}
+
+// Helper: Write clones to storage
+async function writeClones(clones) {
+  await fs.mkdir(path.dirname(CLONES_FILE), { recursive: true });
+  await fs.writeFile(CLONES_FILE, JSON.stringify(clones, null, 2));
+}
+
 const storage = multer.diskStorage({
   destination: async (req, file, cb) => {
     const uploadDir = 'uploads';
@@ -51,6 +69,7 @@ const upload = multer({
   }
 });
 
+// Create clone
 router.post('/create',
   upload.fields([
     { name: 'audio', maxCount: 1 },
@@ -73,7 +92,6 @@ router.post('/create',
         image: imageFile.filename
       });
 
-      // Force HTTPS for production URLs (Render uses reverse proxy)
       const protocol = process.env.NODE_ENV === 'production' ? 'https' : req.protocol;
       const host = req.get('host');
       
@@ -107,6 +125,148 @@ router.post('/create',
   }
 );
 
+// Save clone to profile
+router.post('/save', async (req, res) => {
+  try {
+    const { name, talkId, videoUrl, thumbnailUrl, duration, communicationStyle, decisionMaking } = req.body;
+
+    if (!name || !talkId || !videoUrl) {
+      return res.status(400).json({
+        success: false,
+        error: 'Name, talkId, and videoUrl are required'
+      });
+    }
+
+    const clones = await readClones();
+    
+    const newClone = {
+      id: Date.now().toString(),
+      name,
+      talkId,
+      videoUrl,
+      thumbnailUrl: thumbnailUrl || '',
+      duration: duration || 0,
+      communicationStyle: communicationStyle || '',
+      decisionMaking: decisionMaking || '',
+      createdAt: new Date().toISOString(),
+      usageCount: 0,
+      lastUsed: null
+    };
+
+    clones.push(newClone);
+    await writeClones(clones);
+
+    res.json({
+      success: true,
+      clone: newClone
+    });
+  } catch (error) {
+    console.error('Clone save error:', error);
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
+  }
+});
+
+// Get all saved clones
+router.get('/saved', async (req, res) => {
+  try {
+    const clones = await readClones();
+    res.json({
+      success: true,
+      clones
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
+  }
+});
+
+// Get single clone by ID
+router.get('/saved/:id', async (req, res) => {
+  try {
+    const clones = await readClones();
+    const clone = clones.find(c => c.id === req.params.id);
+    
+    if (!clone) {
+      return res.status(404).json({
+        success: false,
+        error: 'Clone not found'
+      });
+    }
+
+    res.json({
+      success: true,
+      clone
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
+  }
+});
+
+// Update clone usage
+router.put('/saved/:id/use', async (req, res) => {
+  try {
+    const clones = await readClones();
+    const cloneIndex = clones.findIndex(c => c.id === req.params.id);
+    
+    if (cloneIndex === -1) {
+      return res.status(404).json({
+        success: false,
+        error: 'Clone not found'
+      });
+    }
+
+    clones[cloneIndex].usageCount++;
+    clones[cloneIndex].lastUsed = new Date().toISOString();
+    await writeClones(clones);
+
+    res.json({
+      success: true,
+      clone: clones[cloneIndex]
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
+  }
+});
+
+// Delete saved clone
+router.delete('/saved/:id', async (req, res) => {
+  try {
+    const clones = await readClones();
+    const filteredClones = clones.filter(c => c.id !== req.params.id);
+    
+    if (filteredClones.length === clones.length) {
+      return res.status(404).json({
+        success: false,
+        error: 'Clone not found'
+      });
+    }
+
+    await writeClones(filteredClones);
+
+    res.json({
+      success: true,
+      message: 'Clone deleted successfully'
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
+  }
+});
+
+// Get clone status
 router.get('/status/:talkId', async (req, res) => {
   try {
     const result = await didService.getTalkStatus(req.params.talkId);
@@ -119,6 +279,7 @@ router.get('/status/:talkId', async (req, res) => {
   }
 });
 
+// Get D-ID credits
 router.get('/credits', async (req, res) => {
   try {
     const result = await didService.getCredits();
@@ -131,6 +292,7 @@ router.get('/credits', async (req, res) => {
   }
 });
 
+// Delete D-ID talk
 router.delete('/:talkId', async (req, res) => {
   try {
     const result = await didService.deleteTalk(req.params.talkId);
