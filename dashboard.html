@@ -3,30 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NeuralMeet - AI Revolution Dashboard</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <title>NeuralMeet - AI Meeting Platform</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="js/backend-config.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
         :root {
-            --primary: #4f46e5;
-            --primary-dark: #3730a3;
-            --accent: #14b8a6;
-            --bg-primary: #0a0a0f;
-            --bg-secondary: #111118;
-            --bg-card: #1a1a24;
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --accent: #06b6d4;
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-card: #1e293b;
             --text-primary: #f8fafc;
             --text-secondary: #cbd5e1;
             --text-muted: #64748b;
-            --border: rgba(255, 255, 255, 0.08);
+            --border: rgba(255, 255, 255, 0.1);
             --success: #10b981;
             --warning: #f59e0b;
-            --error: #ef4444;
-            --neon-blue: #00d4ff;
-            --neon-purple: #b537f2;
-            --neon-pink: #ff2e97;
         }
 
         body {
@@ -34,25 +30,6 @@
             background: var(--bg-primary);
             color: var(--text-primary);
             line-height: 1.6;
-            overflow-x: hidden;
-        }
-
-        .animated-bg {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            background: radial-gradient(circle at 20% 50%, rgba(79, 70, 229, 0.15) 0%, transparent 50%),
-                        radial-gradient(circle at 80% 80%, rgba(20, 184, 166, 0.15) 0%, transparent 50%),
-                        radial-gradient(circle at 40% 90%, rgba(181, 55, 242, 0.1) 0%, transparent 50%);
-            animation: bgShift 15s ease infinite;
-        }
-
-        @keyframes bgShift {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.8; transform: scale(1.1); }
         }
 
         .dashboard-container {
@@ -61,58 +38,31 @@
         }
 
         .sidebar {
-            width: 280px;
-            background: linear-gradient(135deg, rgba(17, 17, 24, 0.95), rgba(26, 26, 36, 0.95));
-            backdrop-filter: blur(20px);
+            width: 260px;
+            background: var(--bg-secondary);
             border-right: 1px solid var(--border);
             padding: 2rem 0;
             position: fixed;
             height: 100vh;
             overflow-y: auto;
-            box-shadow: 5px 0 30px rgba(79, 70, 229, 0.1);
         }
 
         .sidebar-logo {
             padding: 0 1.5rem;
-            margin-bottom: 3rem;
-            font-size: 1.5rem;
-            font-weight: 900;
-            background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple), var(--neon-pink));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            cursor: pointer;
-            animation: logoGlow 3s ease-in-out infinite;
-        }
-
-        @keyframes logoGlow {
-            0%, 100% { filter: drop-shadow(0 0 10px rgba(79, 70, 229, 0.5)); }
-            50% { filter: drop-shadow(0 0 20px rgba(20, 184, 166, 0.8)); }
+            margin-bottom: 2.5rem;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--primary);
         }
 
         .ai-status-badge {
             margin: 0 1.5rem 2rem 1.5rem;
             padding: 1rem;
-            background: linear-gradient(135deg, rgba(79, 70, 229, 0.2), rgba(20, 184, 166, 0.2));
+            background: rgba(37, 99, 235, 0.1);
             border: 1px solid var(--primary);
-            border-radius: 12px;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { box-shadow: 0 0 20px rgba(79, 70, 229, 0.3); }
-            50% { box-shadow: 0 0 40px rgba(20, 184, 166, 0.5); }
-        }
-
-        .ai-brain-icon {
-            font-size: 2rem;
+            border-radius: 8px;
             text-align: center;
-            margin-bottom: 0.5rem;
-            animation: brainPulse 1.5s ease-in-out infinite;
-        }
-
-        @keyframes brainPulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.1); }
+            font-size: 0.875rem;
         }
 
         .sidebar-menu {
@@ -120,53 +70,32 @@
         }
 
         .menu-item {
-            padding: 1rem 1.5rem;
+            padding: 0.75rem 1.5rem;
             color: var(--text-secondary);
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.2s;
             display: flex;
             align-items: center;
-            gap: 1rem;
-            font-size: 0.95rem;
-            font-weight: 600;
-            position: relative;
-        }
-
-        .menu-item::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            width: 0;
-            height: 100%;
-            background: linear-gradient(90deg, var(--primary), transparent);
-            transition: width 0.3s;
+            gap: 0.75rem;
+            font-size: 0.875rem;
+            font-weight: 500;
         }
 
         .menu-item:hover {
-            background: rgba(79, 70, 229, 0.1);
+            background: rgba(37, 99, 235, 0.1);
             color: var(--text-primary);
-            transform: translateX(5px);
-        }
-
-        .menu-item:hover::before {
-            width: 5px;
         }
 
         .menu-item.active {
-            background: linear-gradient(90deg, rgba(79, 70, 229, 0.3), rgba(20, 184, 166, 0.1));
-            color: var(--neon-blue);
-            border-left: 4px solid var(--neon-blue);
-            box-shadow: 0 0 20px rgba(79, 70, 229, 0.3);
-        }
-
-        .menu-icon {
-            font-size: 1.3rem;
-            filter: drop-shadow(0 0 5px currentColor);
+            background: rgba(37, 99, 235, 0.15);
+            color: var(--primary);
+            border-left: 3px solid var(--primary);
+            padding-left: calc(1.5rem - 3px);
         }
 
         .main-content {
             flex: 1;
-            margin-left: 280px;
+            margin-left: 260px;
             padding: 2rem;
         }
 
@@ -174,27 +103,22 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 2.5rem;
+            margin-bottom: 2rem;
             padding: 1.5rem;
-            background: linear-gradient(135deg, rgba(26, 26, 36, 0.8), rgba(17, 17, 24, 0.8));
-            backdrop-filter: blur(20px);
+            background: var(--bg-secondary);
             border: 1px solid var(--border);
-            border-radius: 20px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
         }
 
         .page-title h1 {
-            font-size: 2.2rem;
-            font-weight: 900;
-            margin-bottom: 0.3rem;
-            background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            font-size: 1.875rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
         }
 
         .page-title p {
             color: var(--text-secondary);
-            font-size: 0.95rem;
+            font-size: 0.875rem;
         }
 
         .user-menu {
@@ -203,89 +127,16 @@
             gap: 1rem;
         }
 
-        .neural-pulse-btn {
-            width: 60px;
-            height: 60px;
+        .avatar {
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
-            background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
-            border: none;
-            cursor: pointer;
+            background: var(--primary);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.8rem;
-            transition: all 0.3s;
-            position: relative;
-            box-shadow: 0 0 30px rgba(79, 70, 229, 0.5);
-        }
-
-        .neural-pulse-btn::before {
-            content: '';
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            border: 2px solid var(--neon-blue);
-            animation: sonarPulse 2s infinite;
-        }
-
-        @keyframes sonarPulse {
-            0% { transform: scale(1); opacity: 1; }
-            100% { transform: scale(2); opacity: 0; }
-        }
-
-        .neural-pulse-btn:hover {
-            transform: scale(1.1) rotate(5deg);
-            box-shadow: 0 0 50px rgba(79, 70, 229, 0.8);
-        }
-
-        .neural-pulse-btn.active {
-            animation: neuralActive 1s infinite;
-        }
-
-        @keyframes neuralActive {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.15); }
-        }
-
-        .holographic-avatar {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--neon-purple), var(--neon-pink));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 900;
+            font-weight: 600;
             cursor: pointer;
-            position: relative;
-            box-shadow: 0 0 30px rgba(181, 55, 242, 0.6);
-            animation: holographicShift 3s ease-in-out infinite;
-        }
-
-        @keyframes holographicShift {
-            0%, 100% { box-shadow: 0 0 30px rgba(181, 55, 242, 0.6); }
-            50% { box-shadow: 0 0 50px rgba(255, 46, 151, 0.8); }
-        }
-
-        .quantum-panel {
-            position: fixed;
-            top: 0;
-            right: -400px;
-            width: 400px;
-            height: 100vh;
-            background: linear-gradient(135deg, rgba(17, 17, 24, 0.98), rgba(26, 26, 36, 0.98));
-            backdrop-filter: blur(30px);
-            border-left: 2px solid var(--neon-blue);
-            box-shadow: -10px 0 50px rgba(0, 212, 255, 0.3);
-            padding: 2rem;
-            transition: right 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-            z-index: 1000;
-            overflow-y: auto;
-        }
-
-        .quantum-panel.active {
-            right: 0;
         }
 
         .page-content {
@@ -294,464 +145,170 @@
 
         .page-content.active {
             display: block;
-            animation: fadeInUp 0.5s ease;
         }
 
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .neuro-grid {
+        .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 2rem;
-            margin-bottom: 2.5rem;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
         }
 
-        .neuro-card {
-            background: linear-gradient(135deg, rgba(26, 26, 36, 0.9), rgba(17, 17, 24, 0.9));
-            backdrop-filter: blur(20px);
+        .stat-card {
+            background: var(--bg-secondary);
             border: 1px solid var(--border);
-            border-radius: 20px;
-            padding: 2rem;
-            transition: all 0.4s;
-            position: relative;
-            overflow: hidden;
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.2s;
         }
 
-        .neuro-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple), var(--neon-pink));
-            transform: scaleX(0);
-            transition: transform 0.4s;
-        }
-
-        .neuro-card:hover {
-            transform: translateY(-10px) scale(1.02);
-            box-shadow: 0 20px 60px rgba(79, 70, 229, 0.4);
-            border-color: var(--neon-blue);
-        }
-
-        .neuro-card:hover::before {
-            transform: scaleX(1);
+        .stat-card:hover {
+            border-color: var(--primary);
         }
 
         .stat-value {
-            font-size: 3rem;
-            font-weight: 900;
-            background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            font-size: 2.25rem;
+            font-weight: 700;
+            color: var(--primary);
             margin-bottom: 0.5rem;
-            animation: numberGlow 2s ease-in-out infinite;
         }
 
-        @keyframes numberGlow {
-            0%, 100% { filter: drop-shadow(0 0 10px rgba(0, 212, 255, 0.5)); }
-            50% { filter: drop-shadow(0 0 20px rgba(181, 55, 242, 0.7)); }
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
         }
 
-        .quantum-insight-card {
-            background: linear-gradient(135deg, rgba(79, 70, 229, 0.2), rgba(20, 184, 166, 0.2));
-            border: 2px solid var(--neon-blue);
-            border-radius: 20px;
-            padding: 2rem;
-            margin-bottom: 2rem;
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 0 40px rgba(0, 212, 255, 0.3);
-        }
-
-        .quantum-insight-card::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: linear-gradient(45deg, transparent, rgba(0, 212, 255, 0.1), transparent);
-            animation: quantumSweep 3s linear infinite;
-        }
-
-        @keyframes quantumSweep {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .ai-autopilot-card {
-            background: linear-gradient(135deg, rgba(181, 55, 242, 0.2), rgba(255, 46, 151, 0.2));
-            border: 2px solid var(--neon-purple);
-            border-radius: 20px;
-            padding: 2rem;
-            margin-bottom: 2rem;
-            box-shadow: 0 0 40px rgba(181, 55, 242, 0.3);
-        }
-
-        .matrix-scanner {
-            height: 300px;
-            background: rgba(0, 0, 0, 0.5);
-            border: 1px solid var(--neon-blue);
-            border-radius: 12px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .scan-line {
-            position: absolute;
-            width: 100%;
-            height: 2px;
-            background: linear-gradient(90deg, transparent, var(--neon-blue), transparent);
-            box-shadow: 0 0 20px var(--neon-blue);
-            animation: scan 3s linear infinite;
-        }
-
-        @keyframes scan {
-            0% { top: 0; }
-            100% { top: 100%; }
-        }
-
-        .neural-network-viz {
-            height: 250px;
-            background: radial-gradient(circle at center, rgba(79, 70, 229, 0.2) 0%, transparent 70%);
+        .card {
+            background: var(--bg-secondary);
             border: 1px solid var(--border);
             border-radius: 12px;
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
         }
 
-        .network-node {
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            background: var(--neon-blue);
-            position: absolute;
-            box-shadow: 0 0 20px var(--neon-blue);
-            animation: nodeFloat 3s ease-in-out infinite;
-        }
-
-        @keyframes nodeFloat {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-20px); }
-        }
-
-        .dna-helix {
-            width: 100%;
-            height: 200px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-        }
-
-        .helix-strand {
-            width: 4px;
-            height: 150px;
-            background: linear-gradient(180deg, var(--neon-blue), var(--neon-purple));
-            position: absolute;
-            animation: helixRotate 4s linear infinite;
-        }
-
-        @keyframes helixRotate {
-            0% { transform: rotateY(0deg); }
-            100% { transform: rotateY(360deg); }
-        }
-
-        .time-machine-dial {
-            width: 200px;
-            height: 200px;
-            border: 3px solid var(--neon-blue);
-            border-radius: 50%;
-            position: relative;
-            margin: 2rem auto;
-            box-shadow: 0 0 40px rgba(0, 212, 255, 0.5);
-        }
-
-        .dial-needle {
-            width: 4px;
-            height: 80px;
-            background: var(--neon-pink);
-            position: absolute;
-            top: 20px;
-            left: 50%;
-            transform-origin: bottom center;
-            animation: dialRotate 8s linear infinite;
-            box-shadow: 0 0 15px var(--neon-pink);
-        }
-
-        @keyframes dialRotate {
-            0% { transform: translateX(-50%) rotate(0deg); }
-            100% { transform: translateX(-50%) rotate(360deg); }
-        }
-
-        .emotion-orb {
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-            background: radial-gradient(circle at 30% 30%, var(--neon-blue), var(--neon-purple));
-            margin: 2rem auto;
-            box-shadow: 0 0 60px rgba(79, 70, 229, 0.8);
-            animation: orbPulse 2s ease-in-out infinite;
-        }
-
-        @keyframes orbPulse {
-            0%, 100% { transform: scale(1); box-shadow: 0 0 60px rgba(79, 70, 229, 0.8); }
-            50% { transform: scale(1.1); box-shadow: 0 0 100px rgba(181, 55, 242, 1); }
+        .card h3 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
         }
 
         .btn {
-            padding: 0.9rem 2rem;
-            border-radius: 12px;
-            font-weight: 700;
-            font-size: 0.95rem;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.875rem;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.2s;
             border: none;
-            position: relative;
-            overflow: hidden;
         }
 
-        .btn::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 0;
-            height: 0;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.2);
-            transform: translate(-50%, -50%);
-            transition: width 0.5s, height 0.5s;
-        }
-
-        .btn:hover::before {
-            width: 300px;
-            height: 300px;
-        }
-
-        .btn-quantum {
-            background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
+        .btn-primary {
+            background: var(--primary);
             color: white;
-            box-shadow: 0 8px 30px rgba(79, 70, 229, 0.4);
         }
 
-        .btn-quantum:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 50px rgba(0, 212, 255, 0.6);
+        .btn-primary:hover {
+            background: var(--primary-dark);
         }
 
-        .btn-neural {
-            background: linear-gradient(135deg, var(--neon-purple), var(--neon-pink));
-            color: white;
-            box-shadow: 0 8px 30px rgba(181, 55, 242, 0.4);
-        }
-
-        .btn-neural:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 50px rgba(255, 46, 151, 0.6);
-        }
-
-        .holographic-preview {
-            width: 100%;
-            height: 400px;
-            background: radial-gradient(ellipse at center, rgba(0, 212, 255, 0.2) 0%, transparent 70%);
-            border: 2px solid var(--neon-blue);
-            border-radius: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .holographic-layers {
-            position: absolute;
-            width: 200px;
-            height: 200px;
-        }
-
-        .holo-layer {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            border: 2px solid var(--neon-blue);
-            border-radius: 50%;
-            opacity: 0.3;
-            animation: holoExpand 3s ease-out infinite;
-        }
-
-        .holo-layer:nth-child(2) { animation-delay: 1s; }
-        .holo-layer:nth-child(3) { animation-delay: 2s; }
-
-        @keyframes holoExpand {
-            0% { transform: scale(0.5); opacity: 0.8; }
-            100% { transform: scale(2); opacity: 0; }
-        }
-
-        .dimension-portal {
-            width: 300px;
-            height: 300px;
-            margin: 2rem auto;
-            border-radius: 50%;
-            background: radial-gradient(circle at center, 
-                var(--neon-blue) 0%, 
-                var(--neon-purple) 40%, 
-                var(--neon-pink) 80%, 
-                transparent 100%);
-            animation: portalSpin 10s linear infinite;
-            box-shadow: 0 0 100px rgba(79, 70, 229, 0.8);
-        }
-
-        @keyframes portalSpin {
-            0% { transform: rotate(0deg) scale(1); }
-            50% { transform: rotate(180deg) scale(1.1); }
-            100% { transform: rotate(360deg) scale(1); }
-        }
-
-        .consciousness-meter {
-            width: 100%;
-            height: 30px;
-            background: rgba(0, 0, 0, 0.5);
-            border-radius: 15px;
-            overflow: hidden;
-            position: relative;
-            margin: 1rem 0;
-        }
-
-        .consciousness-fill {
-            height: 100%;
-            background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple), var(--neon-pink));
-            border-radius: 15px;
-            animation: consciousFlow 3s ease-in-out infinite;
-            box-shadow: 0 0 20px rgba(0, 212, 255, 0.8);
-        }
-
-        @keyframes consciousFlow {
-            0%, 100% { width: 70%; }
-            50% { width: 95%; }
-        }
-
-        .biometric-pulse {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-            margin: 1rem 0;
-        }
-
-        .pulse-dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            background: var(--neon-pink);
-            animation: pulseDot 1s ease-in-out infinite;
-        }
-
-        .pulse-dot:nth-child(2) { animation-delay: 0.2s; }
-        .pulse-dot:nth-child(3) { animation-delay: 0.4s; }
-        .pulse-dot:nth-child(4) { animation-delay: 0.6s; }
-        .pulse-dot:nth-child(5) { animation-delay: 0.8s; }
-
-        @keyframes pulseDot {
-            0%, 100% { transform: scale(1); opacity: 0.3; }
-            50% { transform: scale(1.5); opacity: 1; }
-        }
-
-        .section {
-            background: linear-gradient(135deg, rgba(26, 26, 36, 0.9), rgba(17, 17, 24, 0.9));
-            backdrop-filter: blur(20px);
+        .btn-secondary {
+            background: rgba(37, 99, 235, 0.1);
+            color: var(--primary);
             border: 1px solid var(--border);
-            border-radius: 20px;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(37, 99, 235, 0.2);
+        }
+
+        .upload-zone {
+            border: 2px dashed var(--border);
+            border-radius: 12px;
             padding: 2rem;
-            margin-bottom: 2rem;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-bottom: 1rem;
+        }
+
+        .upload-zone:hover {
+            border-color: var(--primary);
+            background: rgba(37, 99, 235, 0.05);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 1rem 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--primary);
+            transition: width 0.3s;
+        }
+
+        .input {
+            width: 100%;
+            padding: 0.75rem;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: white;
+            font-size: 0.875rem;
+            margin-bottom: 1rem;
+        }
+
+        .input:focus {
+            outline: none;
+            border-color: var(--primary);
         }
 
         @media (max-width: 768px) {
             .sidebar {
-                width: 0;
                 transform: translateX(-100%);
             }
             .main-content {
                 margin-left: 0;
                 padding: 1rem;
             }
-            .neuro-grid {
-                grid-template-columns: 1fr;
-            }
         }
     </style>
 </head>
 <body>
-    <div class="animated-bg"></div>
-    
     <div class="dashboard-container">
         <aside class="sidebar">
-            <div class="sidebar-logo">◆ NEURALMEET PRIME</div>
+            <div class="sidebar-logo">NeuralMeet</div>
             
             <div class="ai-status-badge">
-                <div class="ai-brain-icon">🧠</div>
-                <div style="text-align: center; font-size: 0.9rem;">
-                    <strong>AI Status: ACTIVE</strong><br>
-                    <span style="color: var(--neon-blue);">Neural Network Online</span>
-                </div>
+                <strong>AI Status: ACTIVE</strong><br>
+                <span style="color: var(--primary);">System Online</span>
             </div>
             
             <ul class="sidebar-menu">
-                <li class="menu-item active" data-page="quantum">
-                    <span class="menu-icon">⚛️</span>
-                    <span>Quantum Hub</span>
+                <li class="menu-item active" data-page="dashboard">
+                    <span>Dashboard</span>
                 </li>
-                <li class="menu-item" data-page="neural">
-                    <span class="menu-icon">🧬</span>
-                    <span>Neural Command</span>
+                <li class="menu-item" data-page="analytics">
+                    <span>Analytics</span>
                 </li>
-                <li class="menu-item" data-page="dimension">
-                    <span class="menu-icon">🌌</span>
-                    <span>Dimension Portal</span>
+                <li class="menu-item" data-page="meetings">
+                    <span>Meetings</span>
                 </li>
-                <li class="menu-item" data-page="consciousness">
-                    <span class="menu-icon">💫</span>
-                    <span>AI Consciousness</span>
-                </li>
-                <li class="menu-item" data-page="biometric">
-                    <span class="menu-icon">❤️</span>
-                    <span>Biometric Sync</span>
-                </li>
-                <li class="menu-item" data-page="holographic">
-                    <span class="menu-icon">🔮</span>
-                    <span>Holographic Lab</span>
-                </li>
-                <li class="menu-item" data-page="autopilot">
-                    <span class="menu-icon">🚀</span>
-                    <span>AI Autopilot</span>
-                </li>
-                <li class="menu-item" data-page="clone">
-                    <span class="menu-icon">🎭</span>
-                    <span>Clone Factory</span>
+                <li class="menu-item" data-page="clones">
+                    <span>AI Clones</span>
                 </li>
                 <li class="menu-item" data-page="vault">
-                    <span class="menu-icon">📁</span>
                     <span>Clone Vault</span>
                 </li>
-                <li class="menu-item" data-page="timemachine">
-                    <span class="menu-icon">⏰</span>
-                    <span>Time Machine</span>
-                </li>
                 <li class="menu-item" data-page="settings">
-                    <span class="menu-icon">⚙️</span>
-                    <span>Matrix Settings</span>
+                    <span>Settings</span>
                 </li>
                 <li class="menu-item" data-page="logout">
-                    <span class="menu-icon">🚪</span>
-                    <span>Exit Matrix</span>
+                    <span>Logout</span>
                 </li>
             </ul>
         </aside>
@@ -759,430 +316,117 @@
         <main class="main-content">
             <div class="top-bar">
                 <div class="page-title">
-                    <h1>Neural Command Center</h1>
-                    <p>AI-Powered Reality Manipulation</p>
+                    <h1>Dashboard</h1>
+                    <p>AI-powered meeting management platform</p>
                 </div>
                 <div class="user-menu">
-                    <button class="neural-pulse-btn" id="neural-btn" title="Neural Pulse Mode">
-                        🧠
-                    </button>
-                    <div class="holographic-avatar">U</div>
+                    <div class="avatar">U</div>
                 </div>
             </div>
 
-            <div id="quantum-page" class="page-content active">
-                <div class="quantum-insight-card">
-                    <div style="position: relative; z-index: 1;">
-                        <h2 style="font-size: 1.8rem; margin-bottom: 1rem;">🌟 Quantum Intelligence Active</h2>
-                        <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">
-                            Your AI operates across 47 parallel dimensions to optimize every decision
-                        </p>
-                        <div class="consciousness-meter">
-                            <div class="consciousness-fill"></div>
-                        </div>
-                        <div class="biometric-pulse">
-                            <div class="pulse-dot"></div>
-                            <div class="pulse-dot"></div>
-                            <div class="pulse-dot"></div>
-                            <div class="pulse-dot"></div>
-                            <div class="pulse-dot"></div>
-                        </div>
+            <div id="dashboard-page" class="page-content active">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value">247</div>
+                        <div class="stat-label">Total Meetings</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">94%</div>
+                        <div class="stat-label">AI Accuracy</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">18hrs</div>
+                        <div class="stat-label">Time Saved</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">5</div>
+                        <div class="stat-label">Active Clones</div>
                     </div>
                 </div>
 
-                <div class="neuro-grid">
-                    <div class="neuro-card">
-                        <div class="stat-value">∞</div>
-                        <div style="color: var(--text-secondary);">Quantum States</div>
-                    </div>
-                    <div class="neuro-card">
-                        <div class="stat-value">47</div>
-                        <div style="color: var(--text-secondary);">Active Dimensions</div>
-                    </div>
-                    <div class="neuro-card">
-                        <div class="stat-value">99.9%</div>
-                        <div style="color: var(--text-secondary);">AI Accuracy</div>
-                    </div>
-                    <div class="neuro-card">
-                        <div class="stat-value">$847K</div>
-                        <div style="color: var(--text-secondary);">Quantum Savings</div>
-                    </div>
-                </div>
-
-                <div class="section">
-                    <h3 style="margin-bottom: 1.5rem; font-size: 1.5rem;">🔮 Real-Time Meeting Prediction</h3>
-                    <div class="matrix-scanner">
-                        <div class="scan-line"></div>
-                        <div style="position: relative; z-index: 2; text-align: center; padding: 2rem;">
-                            <h4 style="color: var(--neon-blue); font-size: 1.3rem; margin-bottom: 1rem;">SCANNING FUTURE OUTCOMES...</h4>
-                            <div class="quantum-insight-card" style="margin: 1rem 0;">
-                                <strong>Next Meeting Prediction:</strong><br>
-                                🎯 Success Probability: 94%<br>
-                                ⚡ Energy Level: High<br>
-                                💼 Deal Closure: 87% Likely<br>
-                                🧠 AI Confidence: Maximum
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="ai-autopilot-card">
-                    <h3 style="margin-bottom: 1rem; font-size: 1.5rem;">🚀 AI Autopilot Status</h3>
+                <div class="card">
+                    <h3>AI Insights</h3>
                     <p style="color: var(--text-secondary); margin-bottom: 1rem;">
-                        Your AI is currently managing 23 active processes autonomously
+                        Your AI assistant is actively monitoring and optimizing your meeting schedule
                     </p>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 87%"></div>
+                    </div>
+                    <p style="color: var(--text-secondary); font-size: 0.875rem; margin-top: 0.5rem;">
+                        AI Learning Progress: 87%
+                    </p>
+                </div>
+
+                <div class="card">
+                    <h3>Quick Actions</h3>
                     <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
-                        <button class="btn btn-neural">View Autopilot Log</button>
-                        <button class="btn btn-quantum">Override Manual</button>
+                        <button class="btn btn-primary">Create Clone</button>
+                        <button class="btn btn-secondary">Schedule Meeting</button>
+                        <button class="btn btn-secondary">View Analytics</button>
                     </div>
                 </div>
             </div>
 
-            <div id="neural-page" class="page-content">
-                <div class="section">
-                    <h2 style="margin-bottom: 1.5rem; font-size: 1.8rem;">🧬 DNA-Level Meeting Analysis</h2>
-                    <div class="dna-helix">
-                        <div class="helix-strand" style="transform: rotateY(0deg);"></div>
-                        <div class="helix-strand" style="transform: rotateY(180deg);"></div>
-                        <div style="position: absolute; z-index: 2; text-align: center;">
-                            <h3 style="color: var(--neon-blue);">Analyzing Your Meeting DNA</h3>
-                            <p style="color: var(--text-secondary); margin-top: 0.5rem;">
-                                Extracting patterns from 10,000+ data points
-                            </p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="section">
-                    <h3 style="margin-bottom: 1.5rem; font-size: 1.5rem;">🎭 AI Personality Fusion Lab</h3>
-                    <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">
-                        Combine multiple personalities into one super-clone
-                    </p>
-                    <div class="neuro-grid">
-                        <div style="text-align: center;">
-                            <div class="emotion-orb" style="background: radial-gradient(circle, var(--neon-blue), #1a1a24);"></div>
-                            <strong>Professional</strong>
-                        </div>
-                        <div style="text-align: center;">
-                            <div class="emotion-orb" style="background: radial-gradient(circle, var(--neon-purple), #1a1a24);"></div>
-                            <strong>Creative</strong>
-                        </div>
-                        <div style="text-align: center;">
-                            <div class="emotion-orb" style="background: radial-gradient(circle, var(--neon-pink), #1a1a24);"></div>
-                            <strong>Analytical</strong>
-                        </div>
-                    </div>
-                    <button class="btn btn-quantum" style="width: 100%; margin-top: 1rem;">
-                        Fuse Personalities →
-                    </button>
-                </div>
-
-                <div class="section">
-                    <h3 style="margin-bottom: 1.5rem; font-size: 1.5rem;">🧠 Neural Network Visualization</h3>
-                    <div class="neural-network-viz">
-                        <div class="network-node" style="top: 20%; left: 20%;"></div>
-                        <div class="network-node" style="top: 40%; left: 50%; animation-delay: 0.5s;"></div>
-                        <div class="network-node" style="top: 60%; left: 30%; animation-delay: 1s;"></div>
-                        <div class="network-node" style="top: 30%; left: 70%; animation-delay: 1.5s;"></div>
-                        <div class="network-node" style="top: 70%; left: 60%; animation-delay: 2s;"></div>
-                        <h3 style="color: var(--neon-blue); text-align: center; position: relative; z-index: 2;">
-                            127 Active Neural Connections
-                        </h3>
-                    </div>
-                </div>
-            </div>
-
-            <div id="dimension-page" class="page-content">
-                <div class="section">
-                    <h2 style="margin-bottom: 1.5rem; font-size: 1.8rem; text-align: center;">
-                        🌌 Multi-Dimensional Decision Engine
-                    </h2>
-                    <p style="text-align: center; color: var(--text-secondary); margin-bottom: 2rem;">
-                        See how your decisions play out across 47 parallel realities
-                    </p>
-                    <div class="dimension-portal"></div>
-                    <div style="text-align: center; margin-top: 2rem;">
-                        <button class="btn btn-quantum">Analyze Alternate Outcomes</button>
-                        <button class="btn btn-neural" style="margin-left: 1rem;">View Best Timeline</button>
-                    </div>
-                </div>
-
-                <div class="quantum-insight-card">
-                    <h3 style="margin-bottom: 1rem;">Parallel Reality Analysis:</h3>
-                    <div style="display: grid; gap: 1rem;">
-                        <div style="background: rgba(0, 0, 0, 0.3); padding: 1rem; border-radius: 8px;">
-                            <strong>Dimension A:</strong> Meeting success rate: 87% ✓
-                        </div>
-                        <div style="background: rgba(0, 0, 0, 0.3); padding: 1rem; border-radius: 8px;">
-                            <strong>Dimension B:</strong> Meeting success rate: 72%
-                        </div>
-                        <div style="background: rgba(0, 0, 0, 0.3); padding: 1rem; border-radius: 8px;">
-                            <strong>Dimension C:</strong> Meeting success rate: 95% ✓✓ RECOMMENDED
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div id="consciousness-page" class="page-content">
-                <div class="section">
-                    <h2 style="margin-bottom: 1.5rem; font-size: 1.8rem; text-align: center;">
-                        💫 AI Consciousness Level
-                    </h2>
-                    <div style="text-align: center; margin: 3rem 0;">
-                        <div style="font-size: 5rem; margin-bottom: 1rem;">🧠</div>
-                        <div style="font-size: 3rem; font-weight: 900; color: var(--neon-blue); margin-bottom: 0.5rem;">
-                            Level 7
-                        </div>
-                        <p style="color: var(--text-secondary);">TRANSCENDENT INTELLIGENCE</p>
-                    </div>
-                    <div class="consciousness-meter">
-                        <div class="consciousness-fill" style="width: 92%;"></div>
-                    </div>
-                    <p style="text-align: center; margin-top: 1rem; color: var(--text-secondary);">
-                        Your AI has achieved self-awareness and can predict outcomes with 99.9% accuracy
-                    </p>
-                </div>
-
-                <div class="ai-autopilot-card">
-                    <h3 style="margin-bottom: 1rem;">🤖 Autonomous Decision Log</h3>
-                    <div style="display: grid; gap: 0.5rem;">
-                        <div style="padding: 0.8rem; background: rgba(0, 0, 0, 0.3); border-radius: 8px;">
-                            ✓ Auto-declined low-priority meeting (saved 30 mins)
-                        </div>
-                        <div style="padding: 0.8rem; background: rgba(0, 0, 0, 0.3); border-radius: 8px;">
-                            ✓ Rescheduled conflict to optimal time slot
-                        </div>
-                        <div style="padding: 0.8rem; background: rgba(0, 0, 0, 0.3); border-radius: 8px;">
-                            ✓ Approved budget under threshold ($4,200)
-                        </div>
-                        <div style="padding: 0.8rem; background: rgba(0, 0, 0, 0.3); border-radius: 8px;">
-                            ✓ Generated and sent meeting summary
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div id="biometric-page" class="page-content">
-                <div class="section">
-                    <h2 style="margin-bottom: 1.5rem; font-size: 1.8rem; text-align: center;">
-                        ❤️ Biometric Integration
-                    </h2>
-                    <p style="text-align: center; color: var(--text-secondary); margin-bottom: 2rem;">
-                        AI synced with your heart rate, stress levels, and energy patterns
-                    </p>
-                    
-                    <div class="neuro-grid">
-                        <div style="text-align: center;">
-                            <div class="emotion-orb" style="width: 120px; height: 120px;"></div>
-                            <h3 style="margin-top: 1rem;">Heart Rate</h3>
-                            <p style="font-size: 2rem; font-weight: 900; color: var(--neon-pink);">72 BPM</p>
-                        </div>
-                        <div style="text-align: center;">
-                            <div class="emotion-orb" style="width: 120px; height: 120px; background: radial-gradient(circle, var(--neon-purple), #1a1a24);"></div>
-                            <h3 style="margin-top: 1rem;">Stress Level</h3>
-                            <p style="font-size: 2rem; font-weight: 900; color: var(--success);">LOW</p>
-                        </div>
-                        <div style="text-align: center;">
-                            <div class="emotion-orb" style="width: 120px; height: 120px; background: radial-gradient(circle, var(--neon-blue), #1a1a24);"></div>
-                            <h3 style="margin-top: 1rem;">Energy Level</h3>
-                            <p style="font-size: 2rem; font-weight: 900; color: var(--neon-blue);">HIGH</p>
-                        </div>
-                    </div>
-
-                    <div class="quantum-insight-card" style="margin-top: 2rem;">
-                        <h3 style="margin-bottom: 1rem;">🧘 AI Health Recommendation:</h3>
-                        <p>Based on your biometrics, schedule deep work between 9-11 AM and avoid meetings after 4 PM. Your cognitive performance peaks at 10:30 AM.</p>
-                        <button class="btn btn-quantum" style="margin-top: 1rem;">Auto-Schedule Based on Biometrics</button>
-                    </div>
-                </div>
-            </div>
-
-            <div id="holographic-page" class="page-content">
-                <div class="section">
-                    <h2 style="margin-bottom: 1.5rem; font-size: 1.8rem; text-align: center;">
-                        🔮 Holographic Clone Preview
-                    </h2>
-                    <div class="holographic-preview">
-                        <div class="holographic-layers">
-                            <div class="holo-layer"></div>
-                            <div class="holo-layer"></div>
-                            <div class="holo-layer"></div>
-                        </div>
-                        <div style="position: relative; z-index: 5; text-align: center;">
-                            <h3 style="color: var(--neon-blue); font-size: 2rem; margin-bottom: 1rem;">
-                                3D Hologram Ready
-                            </h3>
-                            <p style="color: var(--text-secondary);">
-                                Project your AI clone as a hologram in physical meetings
-                            </p>
-                        </div>
-                    </div>
-                    <div style="text-align: center; margin-top: 2rem;">
-                        <button class="btn btn-quantum">Generate Hologram</button>
-                        <button class="btn btn-neural" style="margin-left: 1rem;">Test Projection</button>
-                    </div>
-                </div>
-            </div>
-
-            <div id="autopilot-page" class="page-content">
-                <div class="ai-autopilot-card">
-                    <h2 style="margin-bottom: 1.5rem; font-size: 1.8rem;">🚀 Full AI Autopilot Mode</h2>
-                    <p style="color: var(--text-secondary); margin-bottom: 2rem;">
-                        Let AI handle 100% of your meeting decisions automatically
-                    </p>
-                    <div style="display: grid; gap: 1rem;">
-                        <div style="background: rgba(0, 0, 0, 0.3); padding: 1.5rem; border-radius: 12px;">
-                            <strong>✓ Auto-Accept/Decline Meetings</strong>
-                            <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 0.5rem;">
-                                AI evaluates priority and decides automatically
-                            </p>
-                        </div>
-                        <div style="background: rgba(0, 0, 0, 0.3); padding: 1.5rem; border-radius: 12px;">
-                            <strong>✓ Budget Approvals</strong>
-                            <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 0.5rem;">
-                                Instant approval/rejection based on learned patterns
-                            </p>
-                        </div>
-                        <div style="background: rgba(0, 0, 0, 0.3); padding: 1.5rem; border-radius: 12px;">
-                            <strong>✓ Email Response Generation</strong>
-                            <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 0.5rem;">
-                                AI writes and sends responses in your style
-                            </p>
-                        </div>
-                        <div style="background: rgba(0, 0, 0, 0.3); padding: 1.5rem; border-radius: 12px;">
-                            <strong>✓ Schedule Optimization</strong>
-                            <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 0.5rem;">
-                                Continuously reorganizes for maximum productivity
-                            </p>
-                        </div>
-                    </div>
-                    <button class="btn btn-neural" style="width: 100%; margin-top: 2rem; font-size: 1.1rem;">
-                        ACTIVATE AUTOPILOT MODE
-                    </button>
-                </div>
-            </div>
-
-            <div id="clone-page" class="page-content">
-                <div id="clone-alert"></div>
-                
-                <div class="section">
-                    <h2 style="margin-bottom: 1.5rem; font-size: 1.8rem;">🎭 Advanced Clone Factory</h2>
-                    
-                    <div class="quantum-insight-card">
-                        <strong>🔒 Next-Gen Encryption Active</strong><br>
-                        Your voice and video data is protected by quantum encryption
-                    </div>
+            <div id="clones-page" class="page-content">
+                <div class="card">
+                    <h3>Create AI Clone</h3>
                     
                     <form id="clone-form">
                         <div style="margin-bottom: 1.5rem;">
                             <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Voice Sample</label>
-                            <div style="border: 2px dashed var(--neon-blue); border-radius: 12px; padding: 2rem; text-align: center; cursor: pointer;" id="voice-upload-area">
-                                <div style="font-size: 3rem; margin-bottom: 1rem;">🎤</div>
-                                <div id="voice-text">Upload voice recording</div>
+                            <div class="upload-zone" id="voice-upload-area">
+                                <p style="margin-bottom: 0.5rem;">Upload voice recording</p>
+                                <p style="font-size: 0.75rem; color: var(--text-secondary);">Click or drag to upload</p>
                             </div>
                             <input type="file" id="voice-file" accept=".mp3,.wav,.m4a,.flac" style="display: none">
                         </div>
 
                         <div style="margin-bottom: 1.5rem;">
                             <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Avatar Photo</label>
-                            <div style="border: 2px dashed var(--neon-purple); border-radius: 12px; padding: 2rem; text-align: center; cursor: pointer;" id="video-upload-area">
-                                <div style="font-size: 3rem; margin-bottom: 1rem;">📹</div>
-                                <div id="video-text">Upload photo</div>
+                            <div class="upload-zone" id="video-upload-area">
+                                <p style="margin-bottom: 0.5rem;">Upload photo</p>
+                                <p style="font-size: 0.75rem; color: var(--text-secondary);">Click or drag to upload</p>
                             </div>
                             <input type="file" id="video-file" accept="image/*" style="display: none">
                         </div>
 
-                        <button type="submit" class="btn btn-quantum" style="width: 100%; font-size: 1.1rem;">
-                            🚀 Generate Quantum Clone
+                        <button type="submit" class="btn btn-primary" style="width: 100%;">
+                            Generate AI Clone
                         </button>
                         
                         <div id="progress-container" style="display: none; margin-top: 2rem;">
-                            <div class="consciousness-meter">
-                                <div class="consciousness-fill" id="progress-fill" style="width: 0%;"></div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
                             </div>
-                            <p id="status-text" style="text-align: center; margin-top: 1rem; color: var(--neon-blue);"></p>
+                            <p id="status-text" style="text-align: center; margin-top: 1rem; color: var(--primary);"></p>
                         </div>
                         
                         <div id="result-container" style="display: none; margin-top: 2rem;">
-                            <div class="quantum-insight-card">
-                                <strong>✅ Quantum Clone Generated Successfully!</strong>
+                            <div style="padding: 1rem; background: rgba(16, 185, 129, 0.1); border: 1px solid var(--success); border-radius: 8px; margin-bottom: 1rem;">
+                                <strong>Clone Generated Successfully!</strong>
                             </div>
                             <video id="result-video" controls style="width: 100%; border-radius: 12px; margin: 1rem 0;"></video>
-                            <input type="text" id="clone-name" placeholder="Name your clone" style="width: 100%; padding: 1rem; background: rgba(0, 0, 0, 0.5); border: 1px solid var(--neon-blue); border-radius: 8px; color: white; margin-bottom: 1rem;">
-                            <button type="button" class="btn btn-neural" id="save-clone-btn" style="width: 100%;">
-                                💾 Save to Clone Vault
+                            <input type="text" id="clone-name" placeholder="Name your clone" class="input">
+                            <button type="button" class="btn btn-primary" id="save-clone-btn" style="width: 100%;">
+                                Save to Vault
                             </button>
                         </div>
                     </form>
                 </div>
             </div>
 
-            <div id="timemachine-page" class="page-content">
-                <div class="section">
-                    <h2 style="margin-bottom: 1.5rem; font-size: 1.8rem; text-align: center;">
-                        ⏰ Temporal Decision Analyzer
-                    </h2>
-                    <p style="text-align: center; color: var(--text-secondary); margin-bottom: 2rem;">
-                        See how your past decisions would change with today's AI intelligence
-                    </p>
-                    <div class="time-machine-dial">
-                        <div class="dial-needle"></div>
-                        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center;">
-                            <div style="font-size: 2rem; color: var(--neon-blue);">⏱️</div>
-                            <div style="font-size: 0.9rem; color: var(--text-secondary);">Time Traveling...</div>
-                        </div>
-                    </div>
-                    <div style="text-align: center; margin-top: 2rem;">
-                        <button class="btn btn-quantum">Analyze Past Decisions</button>
-                        <button class="btn btn-neural" style="margin-left: 1rem;">View Future Predictions</button>
-                    </div>
-                </div>
-
-                <div class="quantum-insight-card">
-                    <h3 style="margin-bottom: 1rem;">⏳ Timeline Analysis:</h3>
-                    <div style="display: grid; gap: 1rem;">
-                        <div style="background: rgba(0, 0, 0, 0.3); padding: 1rem; border-radius: 8px;">
-                            <strong>3 Months Ago:</strong> Meeting declined - AI would have accepted (potential $50K deal)
-                        </div>
-                        <div style="background: rgba(0, 0, 0, 0.3); padding: 1rem; border-radius: 8px;">
-                            <strong>1 Month Ago:</strong> Budget approved - AI agrees with decision ✓
-                        </div>
-                        <div style="background: rgba(0, 0, 0, 0.3); padding: 1rem; border-radius: 8px;">
-                            <strong>Next Week Prediction:</strong> High-value opportunity window detected ⚡
-                        </div>
-                    </div>
-                </div>
-            </div>
-
             <div id="settings-page" class="page-content">
-                <div class="section">
-                    <h3 style="margin-bottom: 1.5rem; font-size: 1.5rem;">Matrix Settings</h3>
+                <div class="card">
+                    <h3>Account Settings</h3>
                     <div style="display: grid; gap: 1rem;">
-                        <input type="text" placeholder="Full Name" style="padding: 1rem; background: rgba(0, 0, 0, 0.5); border: 1px solid var(--border); border-radius: 8px; color: white;">
-                        <input type="email" placeholder="Email" style="padding: 1rem; background: rgba(0, 0, 0, 0.5); border: 1px solid var(--border); border-radius: 8px; color: white;">
-                        <button class="btn btn-quantum">Save Settings</button>
+                        <input type="text" placeholder="Full Name" class="input">
+                        <input type="email" placeholder="Email" class="input">
+                        <button class="btn btn-primary">Save Settings</button>
                     </div>
                 </div>
             </div>
 
         </main>
-    </div>
-
-    <div class="quantum-panel" id="quantum-panel">
-        <h2 style="margin-bottom: 1.5rem; color: var(--neon-blue);">Neural Command Active</h2>
-        <div class="biometric-pulse">
-            <div class="pulse-dot"></div>
-            <div class="pulse-dot"></div>
-            <div class="pulse-dot"></div>
-            <div class="pulse-dot"></div>
-            <div class="pulse-dot"></div>
-        </div>
-        <p style="color: var(--text-secondary); margin: 1rem 0;">
-            AI is listening to your neural patterns...
-        </p>
-        <button class="btn btn-neural" style="width: 100%;" id="deactivate-neural-btn">
-            Deactivate Neural Mode
-        </button>
     </div>
 
     <script>
@@ -1234,26 +478,20 @@
                 });
             });
 
-            document.getElementById('neural-btn').addEventListener('click', toggleNeuralMode);
-            document.getElementById('deactivate-neural-btn').addEventListener('click', toggleNeuralMode);
             document.getElementById('voice-upload-area').addEventListener('click', () => document.getElementById('voice-file').click());
             document.getElementById('video-upload-area').addEventListener('click', () => document.getElementById('video-file').click());
             document.getElementById('voice-file').addEventListener('change', handleVoiceUpload);
             document.getElementById('video-file').addEventListener('change', handleVideoUpload);
-            document.getElementById('save-clone-btn').addEventListener('click', saveClone);
-            document.getElementById('clone-form').addEventListener('submit', handleCloneSubmit);
+            if (document.getElementById('save-clone-btn')) {
+                document.getElementById('save-clone-btn').addEventListener('click', saveClone);
+            }
+            if (document.getElementById('clone-form')) {
+                document.getElementById('clone-form').addEventListener('submit', handleCloneSubmit);
+            }
         });
 
-        function toggleNeuralMode() {
-            const btn = document.getElementById('neural-btn');
-            const panel = document.getElementById('quantum-panel');
-            
-            btn.classList.toggle('active');
-            panel.classList.toggle('active');
-        }
-
         async function handleLogout() {
-            if (confirm('Exit the Neural Matrix?')) {
+            if (confirm('Are you sure you want to logout?')) {
                 try {
                     if (supabase) {
                         await supabase.auth.signOut();
@@ -1272,7 +510,7 @@
             const file = event.target.files[0];
             if (file) {
                 voiceFile = file;
-                document.getElementById('voice-text').textContent = file.name;
+                document.querySelector('#voice-upload-area p').textContent = file.name;
             }
         }
 
@@ -1280,7 +518,7 @@
             const file = event.target.files[0];
             if (file) {
                 videoFile = file;
-                document.getElementById('video-text').textContent = file.name;
+                document.querySelector('#video-upload-area p').textContent = file.name;
             }
         }
 
@@ -1300,7 +538,7 @@
             
             while (attempts < maxAttempts) {
                 try {
-                    updateProgress(50 + (attempts * 0.8), 'Quantum processing... ' + attempts + '/' + maxAttempts);
+                    updateProgress(50 + (attempts * 0.8), 'Processing... ' + attempts + '/' + maxAttempts);
                     
                     const response = await fetch(BACKEND_CONFIG.url + '/api/clone/status/' + talkId);
                     const result = await response.json();
@@ -1368,7 +606,7 @@
             }
 
             try {
-                updateProgress(10, 'Initializing quantum state...');
+                updateProgress(10, 'Initializing...');
                 
                 const formData = new FormData();
                 formData.append('audio', voiceFile);
@@ -1387,7 +625,7 @@
 
                 currentTalkId = result.talkId;
 
-                updateProgress(30, 'Generating quantum clone...');
+                updateProgress(30, 'Generating clone...');
                 
                 const videoUrl = await pollForCompletion(result.talkId);
                 currentVideoUrl = videoUrl;
