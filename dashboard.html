@@ -182,6 +182,16 @@
             box-shadow: 0 6px 16px rgba(16, 185, 129, 0.4);
         }
 
+        .btn-danger {
+            background: var(--error);
+            color: white;
+        }
+
+        .btn-small {
+            padding: 0.5rem 1rem;
+            font-size: 0.85rem;
+        }
+
         .section {
             background: var(--bg-card);
             border: 1px solid var(--border);
@@ -233,6 +243,17 @@
             outline: none;
             border-color: var(--primary);
             background: rgba(79, 70, 229, 0.05);
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: auto;
         }
 
         textarea {
@@ -301,6 +322,12 @@
             color: #3b82f6;
         }
 
+        .alert.warning {
+            background: rgba(245, 158, 11, 0.1);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            color: var(--warning);
+        }
+
         .progress-container {
             margin-top: 1rem;
         }
@@ -331,6 +358,7 @@
             display: flex;
             gap: 1rem;
             margin-top: 1rem;
+            flex-wrap: wrap;
         }
 
         .page-content {
@@ -374,6 +402,108 @@
             color: var(--text-secondary);
             font-size: 0.85rem;
             font-weight: 500;
+        }
+
+        .meeting-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            transition: all 0.3s;
+        }
+
+        .meeting-card:hover {
+            border-color: var(--primary);
+            background: rgba(79, 70, 229, 0.05);
+        }
+
+        .meeting-time {
+            color: var(--accent);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .meeting-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .meeting-attendees {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .rule-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .rule-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .rule-name {
+            font-weight: 600;
+            font-size: 1.05rem;
+        }
+
+        .rule-status {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .rule-status.active {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--success);
+        }
+
+        .rule-status.inactive {
+            background: rgba(100, 116, 139, 0.2);
+            color: var(--text-muted);
+        }
+
+        .calendar-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .calendar-icon {
+            font-size: 2.5rem;
+        }
+
+        .calendar-info h4 {
+            margin-bottom: 0.25rem;
+        }
+
+        .calendar-status {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .connected {
+            color: var(--success);
+        }
+
+        .two-col-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
         }
 
         @media (max-width: 768px) {
@@ -444,7 +574,7 @@
             <div class="top-bar">
                 <div class="page-title">
                     <h1>Welcome back!</h1>
-                    <p>Your AI clone is ready to handle your meetings</p>
+                    <p>Your AI meeting dashboard</p>
                 </div>
                 <div class="user-menu">
                     <div class="user-avatar">U</div>
@@ -474,11 +604,76 @@
 
                 <div class="section">
                     <h3 style="margin-bottom: 1rem;">Quick Actions</h3>
-                    <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                    <div class="button-group">
                         <button onclick="showPage('clone')" class="btn btn-primary">Create AI Clone</button>
                         <a href="clones-gallery.html" class="btn btn-secondary" style="text-decoration: none;">View My Clones</a>
                         <button onclick="showPage('calendar')" class="btn btn-secondary">Setup Calendar</button>
+                        <button onclick="showPage('meetings')" class="btn btn-secondary">View Meetings</button>
                     </div>
+                </div>
+
+                <div class="section">
+                    <h3 style="margin-bottom: 1rem;">Recent Activity</h3>
+                    <div class="meeting-card">
+                        <div class="meeting-time">Today, 2:00 PM</div>
+                        <div class="meeting-title">Team Sync Meeting</div>
+                        <div class="meeting-attendees">AI Clone attended successfully</div>
+                    </div>
+                    <div class="meeting-card">
+                        <div class="meeting-time">Yesterday, 4:30 PM</div>
+                        <div class="meeting-title">Client Review</div>
+                        <div class="meeting-attendees">AI Clone provided project updates</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Calendar Page -->
+            <div id="calendar-page" class="page-content">
+                <div class="section">
+                    <h3 style="margin-bottom: 1.5rem;">Connected Calendars</h3>
+                    
+                    <div class="calendar-card">
+                        <div class="calendar-icon">📆</div>
+                        <div class="calendar-info" style="flex: 1;">
+                            <h4>Google Calendar</h4>
+                            <p class="calendar-status"><span class="connected">● Connected</span> - Syncing 5 calendars</p>
+                        </div>
+                        <button class="btn btn-secondary btn-small">Disconnect</button>
+                    </div>
+
+                    <div class="calendar-card">
+                        <div class="calendar-icon">📧</div>
+                        <div class="calendar-info" style="flex: 1;">
+                            <h4>Outlook Calendar</h4>
+                            <p class="calendar-status">Not connected</p>
+                        </div>
+                        <button class="btn btn-primary btn-small" onclick="connectCalendar('outlook')">Connect</button>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h3 style="margin-bottom: 1.5rem;">Calendar Settings</h3>
+                    
+                    <div class="form-group">
+                        <label>Auto-accept meeting invites</label>
+                        <select id="auto-accept">
+                            <option value="all">All meetings</option>
+                            <option value="internal">Internal only</option>
+                            <option value="none">None</option>
+                        </select>
+                    </div>
+
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="sync-conflicts" checked>
+                        <label for="sync-conflicts">Prevent double booking</label>
+                    </div>
+
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="remind-clone" checked>
+                        <label for="remind-clone">Send summary after clone attends meeting</label>
+                    </div>
+
+                    <button class="btn btn-success" onclick="saveCalendarSettings()">Save Settings</button>
                 </div>
             </div>
 
@@ -568,33 +763,130 @@
                 </div>
             </div>
 
-            <!-- Calendar Page -->
-            <div id="calendar-page" class="page-content">
-                <div class="section">
-                    <h3>Calendar Integration</h3>
-                    <p style="color: var(--text-muted); margin: 1rem 0;">Connect your calendar to automate meeting attendance</p>
-                    <button class="btn btn-primary">Connect Google Calendar</button>
-                    <button class="btn btn-secondary" style="margin-left: 1rem;">Connect Outlook</button>
-                </div>
-            </div>
-
             <!-- Meetings Page -->
             <div id="meetings-page" class="page-content">
                 <div class="section">
-                    <h3>Upcoming Meetings</h3>
-                    <p style="color: var(--text-muted); margin-top: 1rem;">No upcoming meetings. Connect your calendar to see meetings here.</p>
+                    <div class="section-header">
+                        <h3>Upcoming Meetings</h3>
+                        <button class="btn btn-primary btn-small" onclick="scheduleMeeting()">+ Schedule</button>
+                    </div>
+                    
+                    <div class="meeting-card">
+                        <div class="meeting-time">Tomorrow, 10:00 AM - 11:00 AM</div>
+                        <div class="meeting-title">Product Strategy Review</div>
+                        <div class="meeting-attendees">5 attendees - AI Clone assigned</div>
+                        <div class="button-group" style="margin-top: 1rem;">
+                            <button class="btn btn-secondary btn-small">Edit</button>
+                            <button class="btn btn-primary btn-small">Join</button>
+                        </div>
+                    </div>
+
+                    <div class="meeting-card">
+                        <div class="meeting-time">Tomorrow, 2:00 PM - 3:00 PM</div>
+                        <div class="meeting-title">Client Check-in</div>
+                        <div class="meeting-attendees">3 attendees - AI Clone assigned</div>
+                        <div class="button-group" style="margin-top: 1rem;">
+                            <button class="btn btn-secondary btn-small">Edit</button>
+                            <button class="btn btn-primary btn-small">Join</button>
+                        </div>
+                    </div>
+
+                    <div class="meeting-card">
+                        <div class="meeting-time">Friday, 4:00 PM - 5:00 PM</div>
+                        <div class="meeting-title">Team Retrospective</div>
+                        <div class="meeting-attendees">8 attendees - No clone assigned</div>
+                        <div class="button-group" style="margin-top: 1rem;">
+                            <button class="btn btn-secondary btn-small">Assign Clone</button>
+                            <button class="btn btn-primary btn-small">Join</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h3 style="margin-bottom: 1rem;">Past Meetings</h3>
+                    <div class="meeting-card">
+                        <div class="meeting-time">Yesterday, 3:00 PM</div>
+                        <div class="meeting-title">Budget Planning</div>
+                        <div class="meeting-attendees">AI Clone attended - <a href="#" style="color: var(--primary);">View Summary</a></div>
+                    </div>
                 </div>
             </div>
 
             <!-- Rules Page -->
             <div id="rules-page" class="page-content">
                 <div class="section">
-                    <h3>Decision Rules</h3>
-                    <div class="form-group">
-                        <label>Auto-approve budgets under:</label>
-                        <input type="number" placeholder="$10,000">
+                    <div class="section-header">
+                        <h3>Active Decision Rules</h3>
+                        <button class="btn btn-primary btn-small" onclick="addRule()">+ Add Rule</button>
                     </div>
-                    <button class="btn btn-primary">Save Rules</button>
+
+                    <div class="rule-card">
+                        <div class="rule-header">
+                            <div class="rule-name">Auto-approve budgets under $5,000</div>
+                            <span class="rule-status active">Active</span>
+                        </div>
+                        <p style="color: var(--text-muted); margin-bottom: 1rem;">AI clone can approve budget requests below this threshold automatically</p>
+                        <div class="button-group">
+                            <button class="btn btn-secondary btn-small">Edit</button>
+                            <button class="btn btn-danger btn-small">Deactivate</button>
+                        </div>
+                    </div>
+
+                    <div class="rule-card">
+                        <div class="rule-header">
+                            <div class="rule-name">Forward urgent emails to personal phone</div>
+                            <span class="rule-status active">Active</span>
+                        </div>
+                        <p style="color: var(--text-muted); margin-bottom: 1rem;">Emails marked urgent will be forwarded immediately</p>
+                        <div class="button-group">
+                            <button class="btn btn-secondary btn-small">Edit</button>
+                            <button class="btn btn-danger btn-small">Deactivate</button>
+                        </div>
+                    </div>
+
+                    <div class="rule-card">
+                        <div class="rule-header">
+                            <div class="rule-name">Decline meetings on Friday afternoons</div>
+                            <span class="rule-status inactive">Inactive</span>
+                        </div>
+                        <p style="color: var(--text-muted); margin-bottom: 1rem;">Automatically decline meeting invites scheduled after 2pm on Fridays</p>
+                        <div class="button-group">
+                            <button class="btn btn-secondary btn-small">Edit</button>
+                            <button class="btn btn-success btn-small">Activate</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h3 style="margin-bottom: 1.5rem;">Create New Rule</h3>
+                    
+                    <div class="form-group">
+                        <label>Rule Name</label>
+                        <input type="text" id="rule-name" placeholder="e.g., Auto-decline weekend meetings">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Rule Type</label>
+                        <select id="rule-type">
+                            <option>Meeting Management</option>
+                            <option>Budget Approval</option>
+                            <option>Email Management</option>
+                            <option>Task Delegation</option>
+                            <option>Custom</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Rule Condition</label>
+                        <textarea id="rule-condition" placeholder="When should this rule trigger?"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Action</label>
+                        <textarea id="rule-action" placeholder="What should happen when this rule triggers?"></textarea>
+                    </div>
+
+                    <button class="btn btn-success" onclick="createRule()">Create Rule</button>
                 </div>
             </div>
 
@@ -609,22 +901,134 @@
                         <div class="stat-value">92hrs</div>
                         <div class="stat-label">Time Saved</div>
                     </div>
+                    <div class="stat-card">
+                        <div class="stat-value">$12.4k</div>
+                        <div class="stat-label">Cost Savings</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">4.8</div>
+                        <div class="stat-label">Avg Rating</div>
+                    </div>
+                </div>
+
+                <div class="two-col-grid">
+                    <div class="section">
+                        <h3 style="margin-bottom: 1rem;">Meeting Distribution</h3>
+                        <div style="height: 200px; display: flex; align-items: center; justify-content: center; color: var(--text-muted);">
+                            📊 Chart visualization coming soon
+                        </div>
+                    </div>
+
+                    <div class="section">
+                        <h3 style="margin-bottom: 1rem;">Time Saved Trend</h3>
+                        <div style="height: 200px; display: flex; align-items: center; justify-content: center; color: var(--text-muted);">
+                            📈 Chart visualization coming soon
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h3 style="margin-bottom: 1rem;">Performance Metrics</h3>
+                    <div class="rule-card">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                            <span>Meeting Attendance Rate</span>
+                            <span style="font-weight: 600;">98%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 98%;"></div>
+                        </div>
+                    </div>
+
+                    <div class="rule-card">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                            <span>Decision Accuracy</span>
+                            <span style="font-weight: 600;">95%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 95%;"></div>
+                        </div>
+                    </div>
+
+                    <div class="rule-card">
+                        <div style="display: flex; justify-space; margin-bottom: 0.5rem;">
+                            <span>User Satisfaction</span>
+                            <span style="font-weight: 600;">92%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 92%;"></div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
             <!-- Settings Page -->
             <div id="settings-page" class="page-content">
                 <div class="section">
-                    <h3>Account Settings</h3>
+                    <h3 style="margin-bottom: 1.5rem;">Account Settings</h3>
                     <div class="form-group">
                         <label>Full Name</label>
-                        <input type="text" placeholder="Your name">
+                        <input type="text" id="user-name" placeholder="Your name" value="John Doe">
                     </div>
                     <div class="form-group">
                         <label>Email</label>
-                        <input type="email" placeholder="your@email.com">
+                        <input type="email" id="user-email" placeholder="your@email.com" value="john@example.com">
                     </div>
-                    <button class="btn btn-primary">Save Changes</button>
+                    <div class="form-group">
+                        <label>Company</label>
+                        <input type="text" id="user-company" placeholder="Your company" value="TechCorp">
+                    </div>
+                    <button class="btn btn-success" onclick="saveAccountSettings()">Save Changes</button>
+                </div>
+
+                <div class="section">
+                    <h3 style="margin-bottom: 1.5rem;">Notification Preferences</h3>
+                    
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="notify-meetings" checked>
+                        <label for="notify-meetings">Notify before meetings</label>
+                    </div>
+
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="notify-clone" checked>
+                        <label for="notify-clone">Clone activity updates</label>
+                    </div>
+
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="notify-weekly">
+                        <label for="notify-weekly">Weekly summary reports</label>
+                    </div>
+
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="notify-rules" checked>
+                        <label for="notify-rules">Decision rule triggers</label>
+                    </div>
+
+                    <button class="btn btn-success" onclick="saveNotificationSettings()">Save Preferences</button>
+                </div>
+
+                <div class="section">
+                    <h3 style="margin-bottom: 1.5rem;">Security</h3>
+                    <div class="form-group">
+                        <label>Current Password</label>
+                        <input type="password" placeholder="Enter current password">
+                    </div>
+                    <div class="form-group">
+                        <label>New Password</label>
+                        <input type="password" placeholder="Enter new password">
+                    </div>
+                    <div class="form-group">
+                        <label>Confirm New Password</label>
+                        <input type="password" placeholder="Confirm new password">
+                    </div>
+                    <button class="btn btn-primary" onclick="changePassword()">Change Password</button>
+                </div>
+
+                <div class="section">
+                    <h3 style="margin-bottom: 1.5rem;">Danger Zone</h3>
+                    <p style="color: var(--text-muted); margin-bottom: 1rem;">
+                        Delete your account and all associated data. This action cannot be undone.
+                    </p>
+                    <button class="btn btn-danger" onclick="deleteAccount()">Delete Account</button>
                 </div>
             </div>
 
@@ -657,13 +1061,13 @@
             event.currentTarget.classList.add('active');
             
             const titles = {
-                'overview': { title: 'Overview', subtitle: 'Your AI meeting dashboard' },
-                'calendar': { title: 'Calendar Setup', subtitle: 'Connect your calendars' },
+                'overview': { title: 'Dashboard Overview', subtitle: 'Your AI meeting dashboard' },
+                'calendar': { title: 'Calendar Integration', subtitle: 'Manage your calendar connections' },
                 'meetings': { title: 'Meetings', subtitle: 'Manage your meetings' },
                 'clone': { title: 'AI Clone', subtitle: 'Create your AI clone' },
-                'rules': { title: 'Decision Rules', subtitle: 'Configure decision-making' },
-                'analytics': { title: 'Analytics', subtitle: 'Track performance' },
-                'settings': { title: 'Settings', subtitle: 'Account preferences' }
+                'rules': { title: 'Decision Rules', subtitle: 'Configure automated decisions' },
+                'analytics': { title: 'Analytics', subtitle: 'Track your performance' },
+                'settings': { title: 'Settings', subtitle: 'Manage your account' }
             };
             
             if (titles[pageName]) {
@@ -696,6 +1100,19 @@
             if (!container) return;
             container.innerHTML = `<div class="alert ${type}">${message}</div>`;
             setTimeout(() => container.innerHTML = '', 5000);
+        }
+
+        function showNotification(message, type = 'success') {
+            const notification = document.createElement('div');
+            notification.className = `alert ${type}`;
+            notification.textContent = message;
+            notification.style.position = 'fixed';
+            notification.style.top = '20px';
+            notification.style.right = '20px';
+            notification.style.zIndex = '9999';
+            notification.style.minWidth = '300px';
+            document.body.appendChild(notification);
+            setTimeout(() => notification.remove(), 3000);
         }
 
         function updateProgress(percentage, text) {
@@ -835,6 +1252,60 @@
                 
                 window.scrollTo({ top: 0, behavior: 'smooth' });
                 showAlert('clone-alert', 'Ready to create new clone!', 'info');
+            }
+        }
+
+        // Calendar functions
+        function connectCalendar(type) {
+            showNotification(`Connecting to ${type} calendar...`, 'info');
+            setTimeout(() => {
+                showNotification(`${type} calendar connected successfully!`, 'success');
+            }, 1500);
+        }
+
+        function saveCalendarSettings() {
+            showNotification('Calendar settings saved!', 'success');
+        }
+
+        // Meeting functions
+        function scheduleMeeting() {
+            showNotification('Opening meeting scheduler...', 'info');
+        }
+
+        // Rules functions
+        function addRule() {
+            showNotification('Scroll down to create a new rule', 'info');
+            document.querySelector('#rules-page .section:last-child').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function createRule() {
+            const ruleName = document.getElementById('rule-name').value;
+            if (!ruleName) {
+                showNotification('Please enter a rule name', 'error');
+                return;
+            }
+            showNotification('Decision rule created successfully!', 'success');
+            document.getElementById('rule-name').value = '';
+            document.getElementById('rule-condition').value = '';
+            document.getElementById('rule-action').value = '';
+        }
+
+        // Settings functions
+        function saveAccountSettings() {
+            showNotification('Account settings saved!', 'success');
+        }
+
+        function saveNotificationSettings() {
+            showNotification('Notification preferences saved!', 'success');
+        }
+
+        function changePassword() {
+            showNotification('Password changed successfully!', 'success');
+        }
+
+        function deleteAccount() {
+            if (confirm('Are you absolutely sure? This will permanently delete your account and all data.')) {
+                showNotification('Account deletion initiated...', 'warning');
             }
         }
 
