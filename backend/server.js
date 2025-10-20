@@ -7,6 +7,7 @@ const cloneRoutes = require('./routes/clone');
 
 const app = express();
 
+// CORS configuration
 app.use(cors({
   origin: config.frontendUrl,
   credentials: true
@@ -15,10 +16,13 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
+// Serve uploaded files publicly - FIXED PATH
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
+// API routes
 app.use('/api/clone', cloneRoutes);
 
+// Health check endpoint
 app.get('/health', (req, res) => {
   res.json({
     status: 'healthy',
@@ -28,6 +32,7 @@ app.get('/health', (req, res) => {
   });
 });
 
+// Root endpoint
 app.get('/', (req, res) => {
   res.json({
     message: 'NeuralMeet Backend API',
@@ -42,6 +47,7 @@ app.get('/', (req, res) => {
   });
 });
 
+// Error handling middleware
 app.use((err, req, res, next) => {
   console.error('Error:', err.stack);
   res.status(500).json({
