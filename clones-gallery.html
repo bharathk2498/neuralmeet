@@ -13,25 +13,31 @@
         <!-- Sidebar -->
         <aside class="w-64 bg-gray-800 border-r border-gray-700">
             <div class="p-6">
-                <h1 class="text-2xl font-bold text-blue-500">◆ NeuralMeet</h1>
+                <h1 class="text-2xl font-bold text-blue-500 cursor-pointer" onclick="window.location.href='index.html'">◆ NeuralMeet</h1>
             </div>
             <nav class="mt-6">
-                <a href="index.html" class="flex items-center px-6 py-3 text-gray-300 hover:bg-gray-700">
+                <a href="dashboard.html" class="flex items-center px-6 py-3 text-gray-300 hover:bg-gray-700">
                     <span class="mr-3">📊</span> Overview
                 </a>
-                <a href="calendar-setup.html" class="flex items-center px-6 py-3 text-gray-300 hover:bg-gray-700">
+                <a href="dashboard.html#calendar" class="flex items-center px-6 py-3 text-gray-300 hover:bg-gray-700">
                     <span class="mr-3">📅</span> Calendar Setup
                 </a>
-                <a href="dashboard.html" class="flex items-center px-6 py-3 text-gray-300 hover:bg-gray-700">
+                <a href="dashboard.html#clone" class="flex items-center px-6 py-3 text-gray-300 hover:bg-gray-700">
                     <span class="mr-3">🤖</span> AI Clone
                 </a>
                 <a href="clones-gallery.html" class="flex items-center px-6 py-3 bg-gray-700 text-white">
                     <span class="mr-3">📁</span> My Clones
                 </a>
-                <a href="#" class="flex items-center px-6 py-3 text-gray-300 hover:bg-gray-700">
+                <a href="dashboard.html#meetings" class="flex items-center px-6 py-3 text-gray-300 hover:bg-gray-700">
                     <span class="mr-3">📹</span> Meetings
                 </a>
-                <a href="#" class="flex items-center px-6 py-3 text-gray-300 hover:bg-gray-700">
+                <a href="dashboard.html#rules" class="flex items-center px-6 py-3 text-gray-300 hover:bg-gray-700">
+                    <span class="mr-3">⚙️</span> Decision Rules
+                </a>
+                <a href="dashboard.html#analytics" class="flex items-center px-6 py-3 text-gray-300 hover:bg-gray-700">
+                    <span class="mr-3">📈</span> Analytics
+                </a>
+                <a href="dashboard.html#settings" class="flex items-center px-6 py-3 text-gray-300 hover:bg-gray-700">
                     <span class="mr-3">⚙️</span> Settings
                 </a>
                 <a href="#" onclick="handleLogout(); return false;" class="flex items-center px-6 py-3 text-gray-300 hover:bg-gray-700">
@@ -52,7 +58,7 @@
                         <a href="manual-upload.html" class="bg-gray-700 hover:bg-gray-600 text-white px-6 py-3 rounded-lg font-semibold transition flex items-center gap-2">
                             📤 Import Clone
                         </a>
-                        <a href="dashboard.html" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold transition flex items-center gap-2">
+                        <a href="dashboard.html#clone" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold transition flex items-center gap-2">
                             + Create New
                         </a>
                     </div>
@@ -70,7 +76,7 @@
                     <h3 class="text-2xl font-semibold mb-2">No Clones Yet</h3>
                     <p class="text-gray-400 mb-6">Create your first AI clone or import an existing one</p>
                     <div class="flex gap-4 justify-center flex-wrap">
-                        <a href="dashboard.html" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg inline-block font-semibold transition">
+                        <a href="dashboard.html#clone" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg inline-block font-semibold transition">
                             Create Your First Clone
                         </a>
                         <a href="manual-upload.html" class="bg-gray-700 hover:bg-gray-600 text-white px-6 py-3 rounded-lg inline-block font-semibold transition">
@@ -158,21 +164,14 @@
         async function handleLogout() {
             if (confirm('Are you sure you want to logout?')) {
                 try {
-                    // Sign out from Supabase
                     if (supabase) {
                         await supabase.auth.signOut();
                     }
-                    
-                    // Clear storage
                     localStorage.clear();
                     sessionStorage.clear();
-                    
-                    // Clear cookies
                     document.cookie.split(";").forEach((c) => {
                         document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
                     });
-                    
-                    // Redirect to auth page
                     window.location.href = 'auth.html';
                 } catch (error) {
                     console.error('Logout error:', error);
