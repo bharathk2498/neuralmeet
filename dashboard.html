@@ -122,6 +122,35 @@
             gap: 1rem;
         }
 
+        .voice-command-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .voice-command-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 20px rgba(79, 70, 229, 0.4);
+        }
+
+        .voice-command-btn.listening {
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); box-shadow: 0 0 30px rgba(79, 70, 229, 0.6); }
+        }
+
         .user-avatar {
             width: 40px;
             height: 40px;
@@ -198,6 +227,148 @@
             border-radius: 16px;
             padding: 2rem;
             margin-bottom: 2rem;
+        }
+
+        .ai-insight-card {
+            background: linear-gradient(135deg, rgba(79, 70, 229, 0.1), rgba(20, 184, 166, 0.1));
+            border: 2px solid var(--primary);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ai-insight-card::before {
+            content: '🤖';
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            font-size: 4rem;
+            opacity: 0.1;
+        }
+
+        .insight-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .insight-badge {
+            background: var(--primary);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+
+        .fatigue-meter {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            position: relative;
+        }
+
+        .fatigue-score {
+            font-size: 3rem;
+            font-weight: 800;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        .fatigue-score.low { color: var(--success); }
+        .fatigue-score.medium { color: var(--warning); }
+        .fatigue-score.high { color: var(--error); }
+
+        .personality-slider {
+            margin: 1rem 0;
+        }
+
+        .personality-slider input[type="range"] {
+            width: 100%;
+            height: 8px;
+            border-radius: 5px;
+            background: var(--border);
+            outline: none;
+        }
+
+        .personality-slider input[type="range"]::-webkit-slider-thumb {
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--primary);
+            cursor: pointer;
+        }
+
+        .cost-calculator {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .cost-item {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .cost-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--success);
+        }
+
+        .smart-suggestion {
+            background: rgba(20, 184, 166, 0.1);
+            border-left: 4px solid var(--accent);
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+
+        .voice-transcript {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 1rem;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .collab-space {
+            border: 2px dashed var(--accent);
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .collab-space:hover {
+            background: rgba(20, 184, 166, 0.05);
+            border-color: var(--primary);
+        }
+
+        .live-indicator {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            background: var(--error);
+            border-radius: 50%;
+            animation: blink 1s infinite;
+            margin-right: 0.5rem;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
         }
 
         .section-header {
@@ -535,6 +706,10 @@
                     <span class="menu-icon">📊</span>
                     <span>Overview</span>
                 </li>
+                <li class="menu-item" onclick="showPage('ai-insights')">
+                    <span class="menu-icon">🧠</span>
+                    <span>AI Insights</span>
+                </li>
                 <li class="menu-item" onclick="showPage('calendar')">
                     <span class="menu-icon">📅</span>
                     <span>Calendar Setup</span>
@@ -577,8 +752,18 @@
                     <p>Your AI meeting dashboard</p>
                 </div>
                 <div class="user-menu">
+                    <button class="voice-command-btn" id="voice-btn" onclick="toggleVoiceCommand()" title="Voice Commands">
+                        🎤
+                    </button>
                     <div class="user-avatar">U</div>
                 </div>
+            </div>
+
+            <!-- Voice Command Panel -->
+            <div id="voice-panel" style="display: none;" class="alert info">
+                <strong>🎤 Voice Command Active</strong><br>
+                Try saying: "Show meetings", "Create clone", "Open analytics", "What's my fatigue score?"
+                <div class="voice-transcript" id="voice-transcript">Listening...</div>
             </div>
 
             <!-- Overview Page -->
@@ -602,12 +787,54 @@
                     </div>
                 </div>
 
+                <!-- AI Smart Suggestions -->
+                <div class="ai-insight-card">
+                    <div class="insight-header">
+                        <span class="insight-badge">AI SUGGESTION</span>
+                        <span style="color: var(--text-secondary);">Based on your patterns</span>
+                    </div>
+                    <h3 style="margin-bottom: 0.5rem;">Schedule focused work time</h3>
+                    <p style="color: var(--text-secondary); margin-bottom: 1rem;">
+                        You have 3 meetings tomorrow afternoon. AI suggests blocking 10am-12pm for deep work based on your productivity patterns.
+                    </p>
+                    <div class="button-group">
+                        <button class="btn btn-primary btn-small" onclick="acceptSuggestion()">Accept Suggestion</button>
+                        <button class="btn btn-secondary btn-small">Dismiss</button>
+                    </div>
+                </div>
+
+                <!-- Meeting Cost Calculator -->
+                <div class="section">
+                    <h3 style="margin-bottom: 1rem;">💰 Meeting Cost Savings</h3>
+                    <div class="cost-calculator">
+                        <div class="cost-item">
+                            <div class="cost-value">$12,400</div>
+                            <div style="color: var(--text-muted); font-size: 0.9rem;">Total Saved</div>
+                        </div>
+                        <div class="cost-item">
+                            <div class="cost-value">$850</div>
+                            <div style="color: var(--text-muted); font-size: 0.9rem;">This Week</div>
+                        </div>
+                        <div class="cost-item">
+                            <div class="cost-value">23hrs</div>
+                            <div style="color: var(--text-muted); font-size: 0.9rem;">Time Reclaimed</div>
+                        </div>
+                        <div class="cost-item">
+                            <div class="cost-value">156</div>
+                            <div style="color: var(--text-muted); font-size: 0.9rem;">Meetings Handled</div>
+                        </div>
+                    </div>
+                    <p style="color: var(--text-muted); margin-top: 1rem; font-size: 0.9rem;">
+                        💡 Calculated based on $150/hour average meeting cost
+                    </p>
+                </div>
+
                 <div class="section">
                     <h3 style="margin-bottom: 1rem;">Quick Actions</h3>
                     <div class="button-group">
                         <button onclick="showPage('clone')" class="btn btn-primary">Create AI Clone</button>
                         <a href="clones-gallery.html" class="btn btn-secondary" style="text-decoration: none;">View My Clones</a>
-                        <button onclick="showPage('calendar')" class="btn btn-secondary">Setup Calendar</button>
+                        <button onclick="showPage('ai-insights')" class="btn btn-secondary">AI Insights</button>
                         <button onclick="showPage('meetings')" class="btn btn-secondary">View Meetings</button>
                     </div>
                 </div>
@@ -617,12 +844,137 @@
                     <div class="meeting-card">
                         <div class="meeting-time">Today, 2:00 PM</div>
                         <div class="meeting-title">Team Sync Meeting</div>
-                        <div class="meeting-attendees">AI Clone attended successfully</div>
+                        <div class="meeting-attendees">AI Clone attended successfully • Sentiment: Positive</div>
                     </div>
                     <div class="meeting-card">
                         <div class="meeting-time">Yesterday, 4:30 PM</div>
                         <div class="meeting-title">Client Review</div>
-                        <div class="meeting-attendees">AI Clone provided project updates</div>
+                        <div class="meeting-attendees">AI Clone provided project updates • 2 action items created</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- AI Insights Page -->
+            <div id="ai-insights-page" class="page-content">
+                <div class="two-col-grid">
+                    <!-- Meeting Fatigue Tracker -->
+                    <div class="section">
+                        <h3 style="margin-bottom: 1.5rem;">🧘 Meeting Fatigue Score</h3>
+                        <div class="fatigue-meter">
+                            <div class="fatigue-score low" id="fatigue-score">32%</div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 32%; background: var(--success);"></div>
+                            </div>
+                            <p style="text-align: center; margin-top: 1rem; color: var(--success);">
+                                ✓ Healthy meeting load
+                            </p>
+                        </div>
+                        <div class="smart-suggestion">
+                            <strong>💡 AI Recommendation:</strong><br>
+                            Keep meeting-free mornings. Your productivity is 3x higher before 11am.
+                        </div>
+                    </div>
+
+                    <!-- Personality Trainer -->
+                    <div class="section">
+                        <h3 style="margin-bottom: 1.5rem;">🎭 AI Personality Trainer</h3>
+                        <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">
+                            Fine-tune your AI clone's personality traits
+                        </p>
+                        
+                        <div class="personality-slider">
+                            <label>Formality Level</label>
+                            <input type="range" min="0" max="100" value="70" oninput="updatePersonality('formality', this.value)">
+                            <div style="display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--text-muted);">
+                                <span>Casual</span><span>Professional</span>
+                            </div>
+                        </div>
+
+                        <div class="personality-slider">
+                            <label>Decision Speed</label>
+                            <input type="range" min="0" max="100" value="60" oninput="updatePersonality('speed', this.value)">
+                            <div style="display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--text-muted);">
+                                <span>Thoughtful</span><span>Quick</span>
+                            </div>
+                        </div>
+
+                        <div class="personality-slider">
+                            <label>Risk Tolerance</label>
+                            <input type="range" min="0" max="100" value="45" oninput="updatePersonality('risk', this.value)">
+                            <div style="display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--text-muted);">
+                                <span>Conservative</span><span>Bold</span>
+                            </div>
+                        </div>
+
+                        <button class="btn btn-success" onclick="savePersonality()">Apply Personality</button>
+                    </div>
+                </div>
+
+                <!-- Predictive Meeting Scheduler -->
+                <div class="section">
+                    <h3 style="margin-bottom: 1.5rem;">🔮 Predictive Scheduler</h3>
+                    <div class="ai-insight-card">
+                        <h4>Optimal meeting times for next week:</h4>
+                        <div style="margin-top: 1rem;">
+                            <div class="smart-suggestion">
+                                Tuesday 10:00 AM - High energy period, 92% focus probability
+                            </div>
+                            <div class="smart-suggestion">
+                                Thursday 2:00 PM - Post-lunch creative peak, 88% engagement
+                            </div>
+                            <div class="smart-suggestion">
+                                Friday 11:00 AM - Team morale highest, 94% positive sentiment
+                            </div>
+                        </div>
+                        <button class="btn btn-primary btn-small" onclick="scheduleOptimal()">Schedule All</button>
+                    </div>
+                </div>
+
+                <!-- Real-time Collaboration Space -->
+                <div class="section">
+                    <h3 style="margin-bottom: 1.5rem;">👥 Live Collaboration Hub</h3>
+                    <div class="collab-space" onclick="startCollabSession()">
+                        <div style="font-size: 3rem; margin-bottom: 1rem;">🚀</div>
+                        <h4>Start Real-Time Session</h4>
+                        <p style="color: var(--text-muted); margin-top: 0.5rem;">
+                            Share your dashboard with team members in real-time
+                        </p>
+                    </div>
+                    <div id="collab-status" style="margin-top: 1rem; display: none;">
+                        <div class="alert success">
+                            <span class="live-indicator"></span>
+                            <strong>Live Session Active</strong><br>
+                            3 team members viewing • Share code: <code>NM-7845</code>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sentiment Analysis -->
+                <div class="section">
+                    <h3 style="margin-bottom: 1.5rem;">😊 Meeting Sentiment Tracker</h3>
+                    <div class="meeting-card">
+                        <div class="meeting-title">Team Sync - Yesterday</div>
+                        <div style="margin-top: 1rem;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                <span>Overall Sentiment</span>
+                                <span style="font-weight: 600; color: var(--success);">Positive 😊</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 85%; background: var(--success);"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="meeting-card">
+                        <div class="meeting-title">Budget Review - Last Week</div>
+                        <div style="margin-top: 1rem;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                <span>Overall Sentiment</span>
+                                <span style="font-weight: 600; color: var(--warning);">Neutral 😐</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 60%; background: var(--warning);"></div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -677,7 +1029,7 @@
                 </div>
             </div>
 
-            <!-- AI Clone Page -->
+            <!-- Clone Page -->
             <div id="clone-page" class="page-content">
                 <div id="clone-alert"></div>
                 
@@ -790,16 +1142,6 @@
                             <button class="btn btn-primary btn-small">Join</button>
                         </div>
                     </div>
-
-                    <div class="meeting-card">
-                        <div class="meeting-time">Friday, 4:00 PM - 5:00 PM</div>
-                        <div class="meeting-title">Team Retrospective</div>
-                        <div class="meeting-attendees">8 attendees - No clone assigned</div>
-                        <div class="button-group" style="margin-top: 1rem;">
-                            <button class="btn btn-secondary btn-small">Assign Clone</button>
-                            <button class="btn btn-primary btn-small">Join</button>
-                        </div>
-                    </div>
                 </div>
 
                 <div class="section">
@@ -841,18 +1183,6 @@
                         <div class="button-group">
                             <button class="btn btn-secondary btn-small">Edit</button>
                             <button class="btn btn-danger btn-small">Deactivate</button>
-                        </div>
-                    </div>
-
-                    <div class="rule-card">
-                        <div class="rule-header">
-                            <div class="rule-name">Decline meetings on Friday afternoons</div>
-                            <span class="rule-status inactive">Inactive</span>
-                        </div>
-                        <p style="color: var(--text-muted); margin-bottom: 1rem;">Automatically decline meeting invites scheduled after 2pm on Fridays</p>
-                        <div class="button-group">
-                            <button class="btn btn-secondary btn-small">Edit</button>
-                            <button class="btn btn-success btn-small">Activate</button>
                         </div>
                     </div>
                 </div>
@@ -950,7 +1280,7 @@
                     </div>
 
                     <div class="rule-card">
-                        <div style="display: flex; justify-space; margin-bottom: 0.5rem;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
                             <span>User Satisfaction</span>
                             <span style="font-weight: 600;">92%</span>
                         </div>
@@ -1048,6 +1378,7 @@
         let videoFile = null;
         let currentVideoUrl = null;
         let currentTalkId = null;
+        let isListening = false;
 
         function showPage(pageName) {
             document.querySelectorAll('.page-content').forEach(page => {
@@ -1062,6 +1393,7 @@
             
             const titles = {
                 'overview': { title: 'Dashboard Overview', subtitle: 'Your AI meeting dashboard' },
+                'ai-insights': { title: 'AI Insights', subtitle: 'Powered by advanced analytics' },
                 'calendar': { title: 'Calendar Integration', subtitle: 'Manage your calendar connections' },
                 'meetings': { title: 'Meetings', subtitle: 'Manage your meetings' },
                 'clone': { title: 'AI Clone', subtitle: 'Create your AI clone' },
@@ -1074,6 +1406,68 @@
                 document.querySelector('.page-title h1').textContent = titles[pageName].title;
                 document.querySelector('.page-title p').textContent = titles[pageName].subtitle;
             }
+        }
+
+        // Voice Command Feature
+        function toggleVoiceCommand() {
+            const btn = document.getElementById('voice-btn');
+            const panel = document.getElementById('voice-panel');
+            
+            isListening = !isListening;
+            
+            if (isListening) {
+                btn.classList.add('listening');
+                panel.style.display = 'block';
+                simulateVoiceRecognition();
+            } else {
+                btn.classList.remove('listening');
+                panel.style.display = 'none';
+            }
+        }
+
+        function simulateVoiceRecognition() {
+            const transcript = document.getElementById('voice-transcript');
+            const commands = [
+                { text: "Show meetings", action: () => showPage('meetings') },
+                { text: "Open analytics", action: () => showPage('analytics') },
+                { text: "Create clone", action: () => showPage('clone') },
+                { text: "AI insights", action: () => showPage('ai-insights') }
+            ];
+            
+            setTimeout(() => {
+                if (isListening) {
+                    const randomCommand = commands[Math.floor(Math.random() * commands.length)];
+                    transcript.textContent = `Heard: "${randomCommand.text}"`;
+                    
+                    setTimeout(() => {
+                        randomCommand.action();
+                        toggleVoiceCommand();
+                        showNotification(`Voice command executed: ${randomCommand.text}`, 'success');
+                    }, 1000);
+                }
+            }, 2000);
+        }
+
+        // AI Features
+        function acceptSuggestion() {
+            showNotification('Time block added to your calendar!', 'success');
+        }
+
+        function updatePersonality(trait, value) {
+            console.log(`Updating ${trait}: ${value}%`);
+        }
+
+        function savePersonality() {
+            showNotification('AI personality updated successfully!', 'success');
+        }
+
+        function scheduleOptimal() {
+            showNotification('Optimal meetings scheduled!', 'success');
+        }
+
+        function startCollabSession() {
+            document.getElementById('collab-status').style.display = 'block';
+            showNotification('Live collaboration session started!', 'success');
         }
 
         async function handleLogout() {
