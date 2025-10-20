@@ -401,15 +401,15 @@
         <aside class="sidebar">
             <div class="sidebar-logo" onclick="window.location.href='index.html'">◆ NeuralMeet</div>
             <ul class="sidebar-menu">
-                <li class="menu-item active" onclick="showPage('overview')">
+                <li class="menu-item" data-page="overview" onclick="navigateToPage('overview')">
                     <span class="menu-icon">📊</span>
                     <span>Overview</span>
                 </li>
-                <li class="menu-item" onclick="showPage('calendar')">
+                <li class="menu-item" data-page="calendar" onclick="navigateToPage('calendar')">
                     <span class="menu-icon">📅</span>
                     <span>Calendar Setup</span>
                 </li>
-                <li class="menu-item" onclick="showPage('clone')">
+                <li class="menu-item" data-page="clone" onclick="navigateToPage('clone')">
                     <span class="menu-icon">🎭</span>
                     <span>AI Clone</span>
                 </li>
@@ -417,19 +417,19 @@
                     <span class="menu-icon">📁</span>
                     <span>My Clones</span>
                 </li>
-                <li class="menu-item" onclick="showPage('meetings')">
+                <li class="menu-item" data-page="meetings" onclick="navigateToPage('meetings')">
                     <span class="menu-icon">💼</span>
                     <span>Meetings</span>
                 </li>
-                <li class="menu-item" onclick="showPage('rules')">
+                <li class="menu-item" data-page="rules" onclick="navigateToPage('rules')">
                     <span class="menu-icon">⚙️</span>
                     <span>Decision Rules</span>
                 </li>
-                <li class="menu-item" onclick="showPage('analytics')">
+                <li class="menu-item" data-page="analytics" onclick="navigateToPage('analytics')">
                     <span class="menu-icon">📈</span>
                     <span>Analytics</span>
                 </li>
-                <li class="menu-item" onclick="showPage('settings')">
+                <li class="menu-item" data-page="settings" onclick="navigateToPage('settings')">
                     <span class="menu-icon">⚙️</span>
                     <span>Settings</span>
                 </li>
@@ -444,7 +444,7 @@
             <div class="top-bar">
                 <div class="page-title">
                     <h1>Welcome back!</h1>
-                    <p>Your AI clone is ready to handle your meetings</p>
+                    <p>Your AI meeting dashboard</p>
                 </div>
                 <div class="user-menu">
                     <div class="user-avatar">U</div>
@@ -475,9 +475,9 @@
                 <div class="section">
                     <h3 style="margin-bottom: 1rem;">Quick Actions</h3>
                     <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
-                        <button onclick="showPage('clone')" class="btn btn-primary">Create AI Clone</button>
+                        <button onclick="navigateToPage('clone')" class="btn btn-primary">Create AI Clone</button>
                         <a href="clones-gallery.html" class="btn btn-secondary" style="text-decoration: none;">View My Clones</a>
-                        <button onclick="showPage('calendar')" class="btn btn-secondary">Setup Calendar</button>
+                        <button onclick="navigateToPage('calendar')" class="btn btn-secondary">Setup Calendar</button>
                     </div>
                 </div>
             </div>
@@ -646,6 +646,13 @@
         let currentVideoUrl = null;
         let currentTalkId = null;
 
+        // Navigate to page and update URL hash
+        function navigateToPage(pageName) {
+            showPage(pageName);
+            window.location.hash = pageName;
+        }
+
+        // Show specific page
         function showPage(pageName) {
             document.querySelectorAll('.page-content').forEach(page => {
                 page.classList.remove('active');
@@ -655,7 +662,12 @@
             });
             
             document.getElementById(pageName + '-page').classList.add('active');
-            event.currentTarget.classList.add('active');
+            
+            // Highlight active menu item
+            const menuItem = document.querySelector(`[data-page="${pageName}"]`);
+            if (menuItem) {
+                menuItem.classList.add('active');
+            }
             
             const titles = {
                 'overview': { title: 'Overview', subtitle: 'Your AI meeting dashboard' },
@@ -672,6 +684,22 @@
                 document.querySelector('.page-title p').textContent = titles[pageName].subtitle;
             }
         }
+
+        // Detect hash on page load
+        window.addEventListener('load', function() {
+            const hash = window.location.hash.substring(1); // Remove # symbol
+            if (hash && document.getElementById(hash + '-page')) {
+                showPage(hash);
+            }
+        });
+
+        // Detect hash changes (browser back/forward)
+        window.addEventListener('hashchange', function() {
+            const hash = window.location.hash.substring(1);
+            if (hash && document.getElementById(hash + '-page')) {
+                showPage(hash);
+            }
+        });
 
         async function handleLogout() {
             if (confirm('Are you sure you want to logout?')) {
