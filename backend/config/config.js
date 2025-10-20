@@ -2,7 +2,10 @@ const config = {
   didApiKey: process.env.DID_API_KEY,
   port: process.env.PORT || 3000,
   nodeEnv: process.env.NODE_ENV || 'development',
-  frontendUrl: process.env.FRONTEND_URL || 'https://bharathk2498.github.io',
+  // Allow both local and production origins
+  frontendUrl: process.env.NODE_ENV === 'production' 
+    ? (process.env.FRONTEND_URL || 'https://bharathk2498.github.io')
+    : 'http://127.0.0.1:5500', // Local Live Server default
   apiBaseUrl: 'https://api.d-id.com',
   supabaseUrl: process.env.SUPABASE_URL,
   supabaseKey: process.env.SUPABASE_KEY
