@@ -6,8 +6,19 @@
     <title>Import Clone Video | NeuralMeet</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="js/backend-config.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body class="bg-gray-900 text-white min-h-screen">
+    <!-- Top Navigation Bar -->
+    <nav class="bg-gray-800 border-b border-gray-700 px-8 py-4">
+        <div class="flex justify-between items-center max-w-6xl mx-auto">
+            <a href="dashboard.html" class="text-2xl font-bold text-blue-500">◆ NeuralMeet</a>
+            <button onclick="handleLogout()" class="text-gray-300 hover:text-white flex items-center gap-2">
+                <span>🚪</span> Logout
+            </button>
+        </div>
+    </nav>
+
     <div class="max-w-4xl mx-auto p-8">
         <!-- Header -->
         <div class="mb-8">
@@ -128,6 +139,41 @@
     </div>
 
     <script>
+        // Initialize Supabase
+        const SUPABASE_URL = 'https://axzvvnqasdsnopbzjqrq.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF4enZ2bnFhc2Rzbm9wYnpqcXJxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA4MTc5MjQsImV4cCI6MjA3NjM5MzkyNH0.Yw5PYzGAwOeTj0mgXQ5zYg_He045qO2j2c-Z40n5WIM';
+        
+        let supabase;
+        if (SUPABASE_URL && SUPABASE_ANON_KEY) {
+            supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        }
+
+        async function handleLogout() {
+            if (confirm('Are you sure you want to logout?')) {
+                try {
+                    // Sign out from Supabase
+                    if (supabase) {
+                        await supabase.auth.signOut();
+                    }
+                    
+                    // Clear storage
+                    localStorage.clear();
+                    sessionStorage.clear();
+                    
+                    // Clear cookies
+                    document.cookie.split(";").forEach((c) => {
+                        document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
+                    });
+                    
+                    // Redirect to auth page
+                    window.location.href = 'auth.html';
+                } catch (error) {
+                    console.error('Logout error:', error);
+                    window.location.href = 'auth.html';
+                }
+            }
+        }
+
         let selectedVideo = null;
 
         function showAlert(message, type) {
