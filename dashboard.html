@@ -267,6 +267,12 @@
             border-color: var(--primary);
         }
 
+        .placeholder-content {
+            padding: 3rem;
+            text-align: center;
+            color: var(--text-secondary);
+        }
+
         @media (max-width: 768px) {
             .sidebar {
                 transform: translateX(-100%);
@@ -360,9 +366,29 @@
                 <div class="card">
                     <h3>Quick Actions</h3>
                     <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
-                        <button class="btn btn-primary">Create Clone</button>
-                        <button class="btn btn-secondary">Schedule Meeting</button>
-                        <button class="btn btn-secondary">View Analytics</button>
+                        <button class="btn btn-primary" id="quick-create-clone">Create Clone</button>
+                        <button class="btn btn-secondary" id="quick-schedule-meeting">Schedule Meeting</button>
+                        <button class="btn btn-secondary" id="quick-view-analytics">View Analytics</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="analytics-page" class="page-content">
+                <div class="card">
+                    <h3>Analytics Overview</h3>
+                    <div class="placeholder-content">
+                        <p>Analytics dashboard coming soon...</p>
+                        <p style="margin-top: 1rem; font-size: 0.875rem;">Track meeting performance, AI insights, and productivity metrics</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="meetings-page" class="page-content">
+                <div class="card">
+                    <h3>Meeting Management</h3>
+                    <div class="placeholder-content">
+                        <p>Meeting calendar and management coming soon...</p>
+                        <p style="margin-top: 1rem; font-size: 0.875rem;">Schedule, manage, and review all your meetings</p>
                     </div>
                 </div>
             </div>
@@ -375,7 +401,7 @@
                         <div style="margin-bottom: 1.5rem;">
                             <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Voice Sample</label>
                             <div class="upload-zone" id="voice-upload-area">
-                                <p style="margin-bottom: 0.5rem;">Upload voice recording</p>
+                                <p id="voice-upload-text" style="margin-bottom: 0.5rem;">Upload voice recording</p>
                                 <p style="font-size: 0.75rem; color: var(--text-secondary);">Click or drag to upload</p>
                             </div>
                             <input type="file" id="voice-file" accept=".mp3,.wav,.m4a,.flac" style="display: none">
@@ -384,7 +410,7 @@
                         <div style="margin-bottom: 1.5rem;">
                             <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Avatar Photo</label>
                             <div class="upload-zone" id="video-upload-area">
-                                <p style="margin-bottom: 0.5rem;">Upload photo</p>
+                                <p id="video-upload-text" style="margin-bottom: 0.5rem;">Upload photo</p>
                                 <p style="font-size: 0.75rem; color: var(--text-secondary);">Click or drag to upload</p>
                             </div>
                             <input type="file" id="video-file" accept="image/*" style="display: none">
@@ -418,11 +444,11 @@
             <div id="settings-page" class="page-content">
                 <div class="card">
                     <h3>Account Settings</h3>
-                    <div style="display: grid; gap: 1rem;">
-                        <input type="text" placeholder="Full Name" class="input">
-                        <input type="email" placeholder="Email" class="input">
-                        <button class="btn btn-primary">Save Settings</button>
-                    </div>
+                    <form id="settings-form">
+                        <input type="text" id="settings-name" placeholder="Full Name" class="input">
+                        <input type="email" id="settings-email" placeholder="Email" class="input">
+                        <button type="submit" class="btn btn-primary">Save Settings</button>
+                    </form>
                 </div>
             </div>
 
@@ -430,6 +456,14 @@
     </div>
 
     <script>
+        // Fallback for BACKEND_CONFIG if not loaded
+        if (typeof BACKEND_CONFIG === 'undefined') {
+            window.BACKEND_CONFIG = {
+                url: '' // Will be set from external config or error will show
+            };
+            console.warn('BACKEND_CONFIG not loaded from external file');
+        }
+
         const SUPABASE_URL = 'https://axzvvnqasdsnopbzjqrq.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF4enZ2bnFhc2Rzbm9wYnpqcXJxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA4MTc5MjQsImV4cCI6MjA3NjM5MzkyNH0.Yw5PYzGAwOeTj0mgXQ5zYg_He045qO2j2c-Z40n5WIM';
         
@@ -454,10 +488,24 @@
             const targetPage = document.getElementById(pageName + '-page');
             if (targetPage) {
                 targetPage.classList.add('active');
+                
+                // Update page title
+                const titles = {
+                    'dashboard': 'Dashboard',
+                    'analytics': 'Analytics',
+                    'meetings': 'Meetings',
+                    'clones': 'AI Clones',
+                    'settings': 'Settings'
+                };
+                const title = document.querySelector('.page-title h1');
+                if (title && titles[pageName]) {
+                    title.textContent = titles[pageName];
+                }
             }
         }
 
         document.addEventListener('DOMContentLoaded', function() {
+            // Navigation
             document.querySelectorAll('.menu-item').forEach(item => {
                 item.addEventListener('click', function() {
                     const pageName = this.getAttribute('data-page');
@@ -478,15 +526,45 @@
                 });
             });
 
+            // Quick action buttons
+            const quickCreateBtn = document.getElementById('quick-create-clone');
+            if (quickCreateBtn) {
+                quickCreateBtn.addEventListener('click', () => {
+                    document.querySelector('[data-page="clones"]').click();
+                });
+            }
+
+            const quickScheduleBtn = document.getElementById('quick-schedule-meeting');
+            if (quickScheduleBtn) {
+                quickScheduleBtn.addEventListener('click', () => {
+                    document.querySelector('[data-page="meetings"]').click();
+                });
+            }
+
+            const quickAnalyticsBtn = document.getElementById('quick-view-analytics');
+            if (quickAnalyticsBtn) {
+                quickAnalyticsBtn.addEventListener('click', () => {
+                    document.querySelector('[data-page="analytics"]').click();
+                });
+            }
+
+            // File uploads
             document.getElementById('voice-upload-area').addEventListener('click', () => document.getElementById('voice-file').click());
             document.getElementById('video-upload-area').addEventListener('click', () => document.getElementById('video-file').click());
             document.getElementById('voice-file').addEventListener('change', handleVoiceUpload);
             document.getElementById('video-file').addEventListener('change', handleVideoUpload);
+            
+            // Clone operations
             if (document.getElementById('save-clone-btn')) {
                 document.getElementById('save-clone-btn').addEventListener('click', saveClone);
             }
             if (document.getElementById('clone-form')) {
                 document.getElementById('clone-form').addEventListener('submit', handleCloneSubmit);
+            }
+
+            // Settings form
+            if (document.getElementById('settings-form')) {
+                document.getElementById('settings-form').addEventListener('submit', handleSettingsSave);
             }
         });
 
@@ -510,7 +588,7 @@
             const file = event.target.files[0];
             if (file) {
                 voiceFile = file;
-                document.querySelector('#voice-upload-area p').textContent = file.name;
+                document.getElementById('voice-upload-text').textContent = file.name;
             }
         }
 
@@ -518,7 +596,7 @@
             const file = event.target.files[0];
             if (file) {
                 videoFile = file;
-                document.querySelector('#video-upload-area p').textContent = file.name;
+                document.getElementById('video-upload-text').textContent = file.name;
             }
         }
 
@@ -533,6 +611,10 @@
         }
 
         async function pollForCompletion(talkId) {
+            if (!BACKEND_CONFIG.url) {
+                throw new Error('Backend URL not configured');
+            }
+
             const maxAttempts = 60;
             let attempts = 0;
             
@@ -555,12 +637,12 @@
                     attempts++;
                     
                 } catch (error) {
-                    console.error('Error:', error);
+                    console.error('Poll error:', error);
                     throw error;
                 }
             }
             
-            throw new Error('Timeout');
+            throw new Error('Timeout - generation took too long');
         }
 
         async function saveClone() {
@@ -568,6 +650,11 @@
             
             if (!cloneName) {
                 alert('Please name your clone');
+                return;
+            }
+
+            if (!BACKEND_CONFIG.url) {
+                alert('Backend not configured. Check console for errors.');
                 return;
             }
 
@@ -590,10 +677,12 @@
                 if (data.success) {
                     alert('Clone saved to vault!');
                     window.location.href = 'clones-gallery.html';
+                } else {
+                    throw new Error(data.error || 'Save failed');
                 }
             } catch (error) {
-                console.error('Error:', error);
-                alert('Error saving clone');
+                console.error('Save error:', error);
+                alert('Error saving clone: ' + error.message);
             }
         }
 
@@ -601,7 +690,12 @@
             e.preventDefault();
             
             if (!voiceFile || !videoFile) {
-                alert('Please upload both files');
+                alert('Please upload both voice and photo files');
+                return;
+            }
+
+            if (!BACKEND_CONFIG.url) {
+                alert('Backend not configured. Check console for errors.');
                 return;
             }
 
@@ -620,7 +714,7 @@
                 const result = await response.json();
                 
                 if (!result.success) {
-                    throw new Error(result.error || 'Failed');
+                    throw new Error(result.error || 'Clone creation failed');
                 }
 
                 currentTalkId = result.talkId;
@@ -636,10 +730,68 @@
                 document.getElementById('result-container').style.display = 'block';
                 
             } catch (error) {
-                console.error('Error:', error);
-                alert('Error: ' + error.message);
+                console.error('Clone creation error:', error);
+                alert('Error creating clone: ' + error.message);
+                document.getElementById('progress-container').style.display = 'none';
             }
         }
+
+        async function handleSettingsSave(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('settings-name').value.trim();
+            const email = document.getElementById('settings-email').value.trim();
+
+            if (!name || !email) {
+                alert('Please fill in all fields');
+                return;
+            }
+
+            // Validate email
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                alert('Please enter a valid email address');
+                return;
+            }
+
+            try {
+                // Save to localStorage for now
+                localStorage.setItem('user_name', name);
+                localStorage.setItem('user_email', email);
+                
+                alert('Settings saved successfully!');
+                
+                // Update avatar with first letter of name
+                const avatar = document.querySelector('.avatar');
+                if (avatar) {
+                    avatar.textContent = name.charAt(0).toUpperCase();
+                }
+            } catch (error) {
+                console.error('Settings save error:', error);
+                alert('Error saving settings: ' + error.message);
+            }
+        }
+
+        // Load saved settings on page load
+        window.addEventListener('load', () => {
+            const savedName = localStorage.getItem('user_name');
+            const savedEmail = localStorage.getItem('user_email');
+            
+            if (savedName) {
+                const nameInput = document.getElementById('settings-name');
+                if (nameInput) nameInput.value = savedName;
+                
+                const avatar = document.querySelector('.avatar');
+                if (avatar) {
+                    avatar.textContent = savedName.charAt(0).toUpperCase();
+                }
+            }
+            
+            if (savedEmail) {
+                const emailInput = document.getElementById('settings-email');
+                if (emailInput) emailInput.value = savedEmail;
+            }
+        });
     </script>
 </body>
 </html>
