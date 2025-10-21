@@ -1150,9 +1150,23 @@
             if (targetPage) {
                 targetPage.classList.add('active');
             }
+            
+            // Update menu item
+            const menuItem = document.querySelector(`[data-page="${pageName}"]`);
+            if (menuItem) {
+                menuItem.classList.add('active');
+            }
         }
 
         document.addEventListener('DOMContentLoaded', function() {
+            // Handle hash navigation on page load
+            if (window.location.hash) {
+                const hash = window.location.hash.substring(1); // Remove the #
+                if (hash) {
+                    showPage(hash);
+                }
+            }
+
             document.querySelectorAll('.menu-item').forEach(item => {
                 item.addEventListener('click', function() {
                     const pageName = this.getAttribute('data-page');
