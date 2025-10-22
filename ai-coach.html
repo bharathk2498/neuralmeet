@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Meeting Coach - NeuralMeet</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="js/backend-config.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --neon-blue: #00d4ff;
+            --neon-purple: #b537f2;
+            --neon-green: #10b981;
+            --neon-yellow: #f59e0b;
+            --neon-red: #ef4444;
+            --bg-primary: #0a0a0f;
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --border: rgba(255, 255, 255, 0.08);
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+        .container { max-width: 1400px; margin: 0 auto; padding: 2rem; }
+        .header { text-align: center; padding: 3rem 0; margin-bottom: 2rem; }
+        .header h1 {
+            font-size: 3rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+        }
+        .back-btn {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            text-decoration: none;
+            color: var(--text-primary);
+            margin-bottom: 2rem;
+        }
+        .coach-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        .live-feed {
+            background: linear-gradient(135deg, rgba(79,70,229,0.2), rgba(20,184,166,0.2));
+            border: 2px solid var(--neon-blue);
+            border-radius: 20px;
+            padding: 2rem;
+            height: 600px;
+            overflow-y: auto;
+        }
+        .suggestion-card {
+            background: rgba(26,26,36,0.9);
+            border-left: 4px solid var(--neon-green);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            animation: slideIn 0.3s ease;
+        }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        .metrics-panel {
+            background: rgba(26,26,36,0.9);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 2rem;
+        }
+        .metric-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--border);
+        }
+        .score-circle {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: conic-gradient(var(--neon-blue) 0deg, var(--neon-blue) calc(var(--score) * 3.6deg), rgba(255,255,255,0.1) calc(var(--score) * 3.6deg));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 2rem auto;
+            position: relative;
+        }
+        .score-inner {
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            background: var(--bg-primary);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .sentiment-indicator {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 0.5rem;
+        }
+        .alert-box {
+            background: rgba(239,68,68,0.2);
+            border: 2px solid var(--neon-red);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="dashboard.html" class="back-btn">← Back to Dashboard</a>
+        
+        <div class="header">
+            <h1>🎯 AI Meeting Coach</h1>
+            <p style="color:var(--text-secondary);font-size:1.2rem;">Real-time intelligence for meeting mastery</p>
+        </div>
+
+        <div class="coach-grid">
+            <div class="live-feed">
+                <h2 style="margin-bottom:1.5rem;color:var(--neon-blue);">Live Insights</h2>
+                <div id="suggestions-feed"></div>
+            </div>
+
+            <div class="metrics-panel">
+                <h2 style="margin-bottom:1.5rem;color:var(--neon-purple);">Performance Metrics</h2>
+                
+                <div class="score-circle" style="--score: 87">
+                    <div class="score-inner">
+                        <div style="font-size:3rem;font-weight:900;color:var(--neon-blue);">87%</div>
+                        <div style="color:var(--text-secondary);">Meeting Score</div>
+                    </div>
+                </div>
+
+                <div class="metric-row">
+                    <span>Speaking Time</span>
+                    <strong style="color:var(--neon-green);">34%</strong>
+                </div>
+                <div class="metric-row">
+                    <span>Engagement Level</span>
+                    <strong style="color:var(--neon-blue);">High</strong>
+                </div>
+                <div class="metric-row">
+                    <span>Energy Level</span>
+                    <strong style="color:var(--neon-yellow);">Optimal</strong>
+                </div>
+                <div class="metric-row">
+                    <span>Questions Asked</span>
+                    <strong>12</strong>
+                </div>
+                <div class="metric-row">
+                    <span>Action Items Created</span>
+                    <strong>7</strong>
+                </div>
+            </div>
+        </div>
+
+        <div style="background:rgba(26,26,36,0.9);border:1px solid var(--border);border-radius:20px;padding:2rem;">
+            <h2 style="margin-bottom:1.5rem;">AI Recommendations</h2>
+            <div class="alert-box">
+                <strong>⚠️ Alert:</strong> Energy levels dropping. Suggest 5-minute break or transition to lighter topic.
+            </div>
+            <div class="suggestion-card">
+                <strong>💡 Smart Suggestion:</strong> Sarah mentioned budget concerns 3 times. Address this now for maximum impact.
+            </div>
+            <div class="suggestion-card">
+                <strong>📊 Data Insight:</strong> Team agrees 85% on technical approach. Push for decision now.
+            </div>
+            <div class="suggestion-card">
+                <strong>🎯 Next Move:</strong> Mike hasn't spoken in 15 minutes. Ask for his input on implementation timeline.
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const suggestions = [
+            { type: 'alert', text: 'Meeting running 10 minutes over. Suggest wrapping up.', color: 'red' },
+            { type: 'insight', text: 'Sentiment analysis: Team showing enthusiasm about AI features.', color: 'green' },
+            { type: 'recommendation', text: 'Perfect moment to discuss budget allocation.', color: 'blue' },
+            { type: 'warning', text: 'Two competing ideas emerging. Facilitate decision-making.', color: 'yellow' },
+            { type: 'success', text: 'Clear consensus reached on API architecture.', color: 'green' },
+            { type: 'insight', text: 'Lisa's body language suggests concern. Follow up privately.', color: 'purple' }
+        ];
+
+        function addSuggestion() {
+            const feed = document.getElementById('suggestions-feed');
+            const suggestion = suggestions[Math.floor(Math.random() * suggestions.length)];
+            
+            const card = document.createElement('div');
+            card.className = 'suggestion-card';
+            card.style.borderLeftColor = `var(--neon-${suggestion.color})`;
+            
+            const time = new Date().toLocaleTimeString();
+            card.innerHTML = `
+                <div style="display:flex;justify-content:space-between;margin-bottom:0.5rem;">
+                    <strong style="color:var(--neon-${suggestion.color});">${suggestion.type.toUpperCase()}</strong>
+                    <span style="color:var(--text-secondary);font-size:0.85rem;">${time}</span>
+                </div>
+                <p>${suggestion.text}</p>
+            `;
+            
+            feed.insertBefore(card, feed.firstChild);
+            
+            if (feed.children.length > 10) {
+                feed.removeChild(feed.lastChild);
+            }
+        }
+
+        setInterval(addSuggestion, 8000);
+        
+        for (let i = 0; i < 3; i++) {
+            setTimeout(addSuggestion, i * 2000);
+        }
+    </script>
+</body>
+</html>
