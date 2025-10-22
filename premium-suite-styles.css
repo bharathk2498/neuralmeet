@@ -1,0 +1,41 @@
+/* PREMIUM SUITE CSS - Add this after .menu-item.active style block */
+
+.premium-suite-section {
+    margin: 20px 0;
+    padding: 15px 0;
+    border-top: 1px solid rgba(255, 184, 36, 0.3);
+    border-bottom: 1px solid rgba(255, 184, 36, 0.3);
+}
+
+.premium-suite-title {
+    color: #fbbf24;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    margin-bottom: 12px;
+    padding: 0 1.5rem;
+}
+
+.premium-nav-item {
+    padding: 1rem 1.5rem;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-size: 0.95rem;
+    font-weight: 600;
+    text-decoration: none;
+    position: relative;
+}
+
+.premium-nav-item:hover {
+    background: rgba(255, 184, 36, 0.1);
+    color: #fbbf24;
+    transform: translateX(5px);
+}
+
+.premium-icon {
+    font-size: 16px;
+}
