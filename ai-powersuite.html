@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI PowerSuite - NeuralMeet</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --neon-blue: #00d4ff;
+            --neon-purple: #b537f2;
+            --neon-green: #10b981;
+            --neon-yellow: #f59e0b;
+            --neon-red: #ef4444;
+            --neon-pink: #ff2e97;
+            --bg-primary: #0a0a0f;
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --border: rgba(255, 255, 255, 0.08);
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+        .animated-bg {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: radial-gradient(circle at 20% 50%, rgba(79, 70, 229, 0.15) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 80%, rgba(20, 184, 166, 0.15) 0%, transparent 50%);
+            animation: bgShift 15s ease infinite;
+        }
+        @keyframes bgShift {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        .back-btn {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            text-decoration: none;
+            color: var(--text-primary);
+            margin-bottom: 2rem;
+        }
+        .header {
+            text-align: center;
+            padding: 4rem 0;
+            margin-bottom: 4rem;
+        }
+        .header h1 {
+            font-size: 4rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple), var(--neon-pink));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+            animation: textGlow 3s ease-in-out infinite;
+        }
+        @keyframes textGlow {
+            0%, 100% { filter: drop-shadow(0 0 20px rgba(0, 212, 255, 0.5)); }
+            50% { filter: drop-shadow(0 0 40px rgba(181, 55, 242, 0.8)); }
+        }
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2.5rem;
+            margin-bottom: 4rem;
+        }
+        .feature-card {
+            background: rgba(26, 26, 36, 0.9);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 2.5rem;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple));
+            transform: scaleX(0);
+            transition: transform 0.4s;
+        }
+        .feature-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 25px 70px rgba(79, 70, 229, 0.5);
+            border-color: var(--neon-blue);
+        }
+        .feature-card:hover::before {
+            transform: scaleX(1);
+        }
+        .feature-icon {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            display: block;
+        }
+        .feature-title {
+            font-size: 1.8rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .feature-desc {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+            line-height: 1.8;
+        }
+        .feature-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1.5rem;
+        }
+        .tag {
+            padding: 0.4rem 1rem;
+            background: rgba(0, 212, 255, 0.1);
+            border: 1px solid var(--neon-blue);
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--neon-blue);
+        }
+        .value-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            padding: 0.5rem 1rem;
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(0, 212, 255, 0.2));
+            border: 2px solid var(--neon-green);
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            color: var(--neon-green);
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 20px rgba(16, 185, 129, 0.5); }
+            50% { box-shadow: 0 0 40px rgba(16, 185, 129, 0.8); }
+        }
+        .stats-banner {
+            background: linear-gradient(135deg, rgba(79, 70, 229, 0.3), rgba(20, 184, 166, 0.3));
+            border: 2px solid var(--neon-blue);
+            border-radius: 24px;
+            padding: 3rem;
+            margin-bottom: 4rem;
+            text-align: center;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        .stat-item {
+            padding: 1.5rem;
+            background: rgba(15, 23, 42, 0.8);
+            border-radius: 16px;
+        }
+        .stat-value {
+            font-size: 3rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--neon-green), var(--neon-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .stat-label {
+            color: var(--text-secondary);
+            margin-top: 0.5rem;
+            font-size: 0.95rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="animated-bg"></div>
+    
+    <div class="container">
+        <a href="dashboard.html" class="back-btn">← Back to Dashboard</a>
+        
+        <div class="header">
+            <h1>🚀 AI PowerSuite</h1>
+            <p style="font-size:1.3rem;color:var(--text-secondary);margin-top:1rem;">
+                Enterprise-grade AI tools to 10x your meeting productivity
+            </p>
+        </div>
+
+        <div class="stats-banner">
+            <h2 style="font-size:2rem;margin-bottom:2rem;">Total Value Delivered</h2>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-value">$847K</div>
+                    <div class="stat-label">Saved in 90 Days</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">2,847h</div>
+                    <div class="stat-label">Time Recovered</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">94%</div>
+                    <div class="stat-label">Success Rate</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">234%</div>
+                    <div class="stat-label">ROI Achieved</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="feature-grid">
+            <a href="ai-coach.html" class="feature-card">
+                <span class="value-badge">HIGH VALUE</span>
+                <div class="feature-icon">🎯</div>
+                <div class="feature-title">AI Meeting Coach</div>
+                <div class="feature-desc">
+                    Get real-time coaching during meetings with live insights, suggestions, and performance metrics. AI analyzes engagement, clarity, and effectiveness.
+                </div>
+                <div class="feature-tags">
+                    <span class="tag">Real-time</span>
+                    <span class="tag">Live Coaching</span>
+                    <span class="tag">Performance</span>
+                </div>
+            </a>
+
+            <a href="predictive-analytics.html" class="feature-card">
+                <span class="value-badge">ENTERPRISE</span>
+                <div class="feature-icon">🔮</div>
+                <div class="feature-title">Predictive Analytics</div>
+                <div class="feature-desc">
+                    AI forecasts meeting outcomes, deal closures, team productivity, and risks with 90%+ confidence. See the future before it happens.
+                </div>
+                <div class="feature-tags">
+                    <span class="tag">Forecasting</span>
+                    <span class="tag">ML Powered</span>
+                    <span class="tag">Risk Detection</span>
+                </div>
+            </a>
+
+            <a href="roi-calculator.html" class="feature-card">
+                <span class="value-badge">$847K SAVED</span>
+                <div class="feature-icon">💰</div>
+                <div class="feature-title">Meeting ROI Calculator</div>
+                <div class="feature-desc">
+                    Calculate the true cost and value of every meeting. Identify optimization opportunities worth $188K/year.
+                </div>
+                <div class="feature-tags">
+                    <span class="tag">Cost Analysis</span>
+                    <span class="tag">Value Tracking</span>
+                    <span class="tag">Optimization</span>
+                </div>
+            </a>
+
+            <a href="meeting-intelligence.html" class="feature-card">
+                <span class="value-badge">KNOWLEDGE BASE</span>
+                <div class="feature-icon">🧠</div>
+                <div class="feature-title">Meeting Intelligence</div>
+                <div class="feature-desc">
+                    Complete meeting knowledge base with full storage, AI-powered search, and intelligent retrieval of all past discussions.
+                </div>
+                <div class="feature-tags">
+                    <span class="tag">Full Storage</span>
+                    <span class="tag">AI Search</span>
+                    <span class="tag">Context</span>
+                </div>
+            </a>
+
+            <div class="feature-card" style="opacity:0.7;cursor:not-allowed;">
+                <span class="value-badge" style="background:rgba(245,158,11,0.2);border-color:var(--neon-yellow);color:var(--neon-yellow);">COMING SOON</span>
+                <div class="feature-icon">📊</div>
+                <div class="feature-title">Team Performance Insights</div>
+                <div class="feature-desc">
+                    Advanced analytics on team productivity, meeting patterns, and collaboration effectiveness with actionable recommendations.
+                </div>
+                <div class="feature-tags">
+                    <span class="tag">Team Analytics</span>
+                    <span class="tag">Productivity</span>
+                    <span class="tag">Insights</span>
+                </div>
+            </div>
+
+            <div class="feature-card" style="opacity:0.7;cursor:not-allowed;">
+                <span class="value-badge" style="background:rgba(245,158,11,0.2);border-color:var(--neon-yellow);color:var(--neon-yellow);">COMING SOON</span>
+                <div class="feature-icon">🎨</div>
+                <div class="feature-title">Knowledge Graph</div>
+                <div class="feature-desc">
+                    Interactive visual network of all meetings, decisions, people, and topics. Discover hidden connections and patterns.
+                </div>
+                <div class="feature-tags">
+                    <span class="tag">Visualization</span>
+                    <span class="tag">Connections</span>
+                    <span class="tag">Insights</span>
+                </div>
+            </div>
+
+            <div class="feature-card" style="opacity:0.7;cursor:not-allowed;">
+                <span class="value-badge" style="background:rgba(245,158,11,0.2);border-color:var(--neon-yellow);color:var(--neon-yellow);">COMING SOON</span>
+                <div class="feature-icon">⚡</div>
+                <div class="feature-title">Smart Automation Hub</div>
+                <div class="feature-desc">
+                    Centralized control for all AI automations. Auto-schedule, auto-respond, auto-document, and auto-decide with full transparency.
+                </div>
+                <div class="feature-tags">
+                    <span class="tag">Automation</span>
+                    <span class="tag">Control Center</span>
+                    <span class="tag">AI Powered</span>
+                </div>
+            </div>
+
+            <div class="feature-card" style="opacity:0.7;cursor:not-allowed;">
+                <span class="value-badge" style="background:rgba(245,158,11,0.2);border-color:var(--neon-yellow);color:var(--neon-yellow);">COMING SOON</span>
+                <div class="feature-icon">🎯</div>
+                <div class="feature-title">Decision Impact Tracker</div>
+                <div class="feature-desc">
+                    Track every decision's downstream effects across projects, teams, and timelines. Understand the ripple effect of choices.
+                </div>
+                <div class="feature-tags">
+                    <span class="tag">Decision Tracking</span>
+                    <span class="tag">Impact Analysis</span>
+                    <span class="tag">Outcomes</span>
+                </div>
+            </div>
+
+            <div class="feature-card" style="opacity:0.7;cursor:not-allowed;">
+                <span class="value-badge" style="background:rgba(245,158,11,0.2);border-color:var(--neon-yellow);color:var(--neon-yellow);">COMING SOON</span>
+                <div class="feature-icon">📝</div>
+                <div class="feature-title">Auto-Documentation</div>
+                <div class="feature-desc">
+                    AI generates PRDs, status reports, meeting minutes, and technical docs automatically from meeting data. Save hours of writing.
+                </div>
+                <div class="feature-tags">
+                    <span class="tag">Auto-Generate</span>
+                    <span class="tag">Documents</span>
+                    <span class="tag">Time Saver</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="stats-banner" style="background:linear-gradient(135deg,rgba(181,55,242,0.3),rgba(255,46,151,0.3));border-color:var(--neon-purple);">
+            <h2 style="font-size:2rem;margin-bottom:1rem;">🚀 Enterprise-Ready Features</h2>
+            <p style="color:var(--text-secondary);font-size:1.1rem;margin-bottom:2rem;">
+                All features include enterprise-grade security, compliance, and scalability
+            </p>
+            <div style="display:flex;justify-content:center;flex-wrap:wrap;gap:2rem;margin-top:2rem;">
+                <div style="text-align:center;">
+                    <div style="font-size:2rem;margin-bottom:0.5rem;">🔒</div>
+                    <strong>Quantum Encryption</strong>
+                    <div style="color:var(--text-secondary);font-size:0.9rem;">Military-grade security</div>
+                </div>
+                <div style="text-align:center;">
+                    <div style="font-size:2rem;margin-bottom:0.5rem;">⚡</div>
+                    <strong>Real-time Processing</strong>
+                    <div style="color:var(--text-secondary);font-size:0.9rem;">Instant AI responses</div>
+                </div>
+                <div style="text-align:center;">
+                    <div style="font-size:2rem;margin-bottom:0.5rem;">🌐</div>
+                    <strong>Cloud Scale</strong>
+                    <div style="color:var(--text-secondary);font-size:0.9rem;">Infinite scalability</div>
+                </div>
+                <div style="text-align:center;">
+                    <div style="font-size:2rem;margin-bottom:0.5rem;">🔗</div>
+                    <strong>API Access</strong>
+                    <div style="color:var(--text-secondary);font-size:0.9rem;">Full integration support</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
