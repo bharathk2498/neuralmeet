@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | NeuralMeet</title>
+    <script src="js/security.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #4f46e5;
+            --primary-dark: #3730a3;
+            --accent: #14b8a6;
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #111118;
+            --bg-card: #1a1a24;
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --text-muted: #64748b;
+            --border: rgba(255, 255, 255, 0.08);
+            --success: #10b981;
+            --warning: #f59e0b;
+            --error: #ef4444;
+        }
+        body { font-family: 'Inter', sans-serif; background: var(--bg-primary); color: var(--text-primary); line-height: 1.6; }
+        
+        /* Progress Display Styles */
+        .upload-status-container {
+            margin-top: 1.5rem;
+            padding: 1.5rem;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            display: none;
+        }
+        
+        .upload-status-container.active {
+            display: block;
+        }
+        
+        .overall-progress {
+            margin-bottom: 1.5rem;
+        }
+        
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+        }
+        
+        .progress-title {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        
+        .progress-percentage {
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            transition: width 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255, 255, 255, 0.3),
+                transparent
+            );
+            animation: shimmer 2s infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        
+        .file-upload-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+        
+        .file-upload-item {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1rem;
+        }
+        
+        .file-upload-item.uploading {
+            border-color: var(--accent);
+            background: rgba(20, 184, 166, 0.05);
+        }
+        
+        .file-upload-item.complete {
+            border-color: var(--success);
+            background: rgba(16, 185, 129, 0.05);
+        }
+        
+        .file-upload-item.error {
+            border-color: var(--error);
+            background: rgba(239, 68, 68, 0.05);
+        }
+        
+        .file-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+        
+        .file-name {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text-primary);
+            flex: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-right: 1rem;
+        }
+        
+        .file-status {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+        }
+        
+        .status-icon {
+            font-size: 1.2rem;
+        }
+        
+        .file-progress-bar {
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .file-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent), var(--primary));
+            transition: width 0.3s ease;
+        }
+        
+        /* Completion Message */
+        .completion-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            backdrop-filter: blur(10px);
+        }
+        
+        .completion-overlay.active {
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .completion-message {
+            background: var(--bg-card);
+            border: 2px solid var(--success);
+            border-radius: 20px;
+            padding: 3rem;
+            text-align: center;
+            max-width: 500px;
+            animation: slideUp 0.5s ease;
+        }
+        
+        @keyframes slideUp {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        
+        .completion-icon {
+            font-size: 5rem;
+            margin-bottom: 1rem;
+            animation: bounce 0.6s ease;
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+        
+        .completion-title {
+            font-size: 2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--success), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+        }
+        
+        .completion-text {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+        }
+        
+        .completion-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-item {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 1rem;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+        }
+        
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--accent);
+        }
+        
+        .stat-label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-top: 0.25rem;
+        }
+        
+        .btn-close-completion {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-close-completion:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(79, 70, 229, 0.4);
+        }
+
+        /* Copy all other styles from original dashboard.html */
+        .dashboard-container { display: flex; min-height: 100vh; }
+        .sidebar { width: 260px; background: var(--bg-secondary); border-right: 1px solid var(--border); padding: 2rem 0; position: fixed; height: 100vh; overflow-y: auto; }
+        /* ... include all other existing styles ... */
+    </style>
+</head>
+<body>
+    <!-- Include all existing dashboard HTML structure -->
+    <div id="completion-overlay" class="completion-overlay">
+        <div class="completion-message">
+            <div class="completion-icon">✅</div>
+            <h2 class="completion-title">Upload Complete!</h2>
+            <p class="completion-text">
+                Your files have been uploaded successfully.<br>
+                Your AI clone training has started.
+            </p>
+            <div class="completion-stats">
+                <div class="stat-item">
+                    <div class="stat-value" id="uploaded-files-count">0</div>
+                    <div class="stat-label">Files Uploaded</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="upload-time">-</div>
+                    <div class="stat-label">Upload Time</div>
+                </div>
+            </div>
+            <button class="btn-close-completion" onclick="closeCompletionMessage()">Continue</button>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="config/supabase.config.js"></script>
+    <script src="js/upload-handler.js"></script>
+    
+    <script>
+        let uploadStartTime = null;
+        let currentFileUploads = new Map();
+        
+        function showCompletionMessage(filesCount, duration) {
+            const overlay = document.getElementById('completion-overlay');
+            overlay.classList.add('active');
+            
+            document.getElementById('uploaded-files-count').textContent = filesCount;
+            
+            const minutes = Math.floor(duration / 60);
+            const seconds = duration % 60;
+            const timeStr = minutes > 0 ? `${minutes}m ${seconds}s` : `${seconds}s`;
+            document.getElementById('upload-time').textContent = timeStr;
+        }
+        
+        function closeCompletionMessage() {
+            const overlay = document.getElementById('completion-overlay');
+            overlay.classList.remove('active');
+        }
+        
+        function updateOverallProgress(percentage) {
+            const container = document.getElementById('upload-status-container');
+            const progressFill = document.getElementById('overall-progress-fill');
+            const progressText = document.getElementById('overall-progress-text');
+            
+            if (container) container.classList.add('active');
+            if (progressFill) progressFill.style.width = percentage + '%';
+            if (progressText) progressText.textContent = Math.round(percentage) + '%';
+        }
+        
+        function updateFileProgress(fileName, status, progress = 0) {
+            let fileItem = currentFileUploads.get(fileName);
+            
+            if (!fileItem) {
+                // Create new file upload item
+                const list = document.getElementById('file-upload-list');
+                if (!list) return;
+                
+                fileItem = document.createElement('div');
+                fileItem.className = 'file-upload-item';
+                fileItem.innerHTML = `
+                    <div class="file-info">
+                        <span class="file-name">${fileName}</span>
+                        <span class="file-status">
+                            <span class="status-icon">⏳</span>
+                            <span class="status-text">Starting...</span>
+                        </span>
+                    </div>
+                    <div class="file-progress-bar">
+                        <div class="file-progress-fill" style="width: 0%"></div>
+                    </div>
+                `;
+                
+                list.appendChild(fileItem);
+                currentFileUploads.set(fileName, fileItem);
+            }
+            
+            // Update status
+            const statusIcon = fileItem.querySelector('.status-icon');
+            const statusText = fileItem.querySelector('.status-text');
+            const progressBar = fileItem.querySelector('.file-progress-fill');
+            
+            fileItem.className = 'file-upload-item ' + status;
+            
+            if (statusIcon && statusText) {
+                switch(status) {
+                    case 'uploading':
+                        statusIcon.textContent = '📤';
+                        statusText.textContent = `${Math.round(progress)}%`;
+                        break;
+                    case 'complete':
+                        statusIcon.textContent = '✅';
+                        statusText.textContent = 'Complete';
+                        break;
+                    case 'error':
+                        statusIcon.textContent = '❌';
+                        statusText.textContent = 'Failed';
+                        break;
+                }
+            }
+            
+            if (progressBar) {
+                progressBar.style.width = progress + '%';
+            }
+        }
+        
+        // Enhanced upload function
+        async function handleCloneUpload(e) {
+            e.preventDefault();
+            
+            if (!currentUser) {
+                showAlert('clone-alert', 'Please log in first', 'error');
+                return;
+            }
+
+            if (voiceFiles.length === 0 && videoFiles.length === 0) {
+                showAlert('clone-alert', 'Upload at least one file', 'error');
+                return;
+            }
+
+            uploadStartTime = Math.floor(Date.now() / 1000);
+            currentFileUploads.clear();
+
+            const trainBtn = document.getElementById('train-btn');
+            trainBtn.disabled = true;
+            trainBtn.textContent = 'Uploading...';
+
+            try {
+                uploadHandler = new SecureUploadHandler(supabase, currentUser.id);
+
+                const communicationStyle = document.getElementById('communication-style').value;
+                const decisionStyle = document.getElementById('decision-style').value;
+
+                const { data: cloneData, error: cloneError } = await supabase
+                    .from('user_clones')
+                    .insert({
+                        user_id: currentUser.id,
+                        communication_style: communicationStyle,
+                        decision_style: decisionStyle,
+                        training_status: 'uploading'
+                    })
+                    .select()
+                    .single();
+
+                if (cloneError) throw new Error('Database error: ' + cloneError.message);
+
+                const totalFiles = voiceFiles.length + videoFiles.length;
+                let uploadedFiles = 0;
+
+                // Upload voice files
+                for (const file of voiceFiles) {
+                    updateFileProgress(file.name, 'uploading', 0);
+                    
+                    const result = await uploadHandler.uploadFile(file, 'voice-samples', (progressData) => {
+                        if (typeof progressData === 'object') {
+                            updateFileProgress(file.name, progressData.status, progressData.progress);
+                        } else {
+                            updateFileProgress(file.name, 'uploading', progressData);
+                        }
+                        
+                        const fileProgress = typeof progressData === 'object' ? progressData.progress : progressData;
+                        const overallProgress = ((uploadedFiles + fileProgress / 100) / totalFiles) * 100;
+                        updateOverallProgress(overallProgress);
+                    });
+                    
+                    await supabase.from('voice_samples').insert({
+                        user_id: currentUser.id,
+                        clone_id: cloneData.id,
+                        file_path: result.path,
+                        file_name: file.name,
+                        file_size: file.size
+                    });
+
+                    updateFileProgress(file.name, 'complete', 100);
+                    uploadedFiles++;
+                }
+
+                // Upload video files
+                for (const file of videoFiles) {
+                    updateFileProgress(file.name, 'uploading', 0);
+                    
+                    const result = await uploadHandler.uploadFile(file, 'video-samples', (progressData) => {
+                        if (typeof progressData === 'object') {
+                            updateFileProgress(file.name, progressData.status, progressData.progress);
+                        } else {
+                            updateFileProgress(file.name, 'uploading', progressData);
+                        }
+                        
+                        const fileProgress = typeof progressData === 'object' ? progressData.progress : progressData;
+                        const overallProgress = ((uploadedFiles + fileProgress / 100) / totalFiles) * 100;
+                        updateOverallProgress(overallProgress);
+                    });
+                    
+                    await supabase.from('video_samples').insert({
+                        user_id: currentUser.id,
+                        clone_id: cloneData.id,
+                        file_path: result.path,
+                        file_name: file.name,
+                        file_size: file.size
+                    });
+
+                    updateFileProgress(file.name, 'complete', 100);
+                    uploadedFiles++;
+                }
+
+                await supabase
+                    .from('user_clones')
+                    .update({ training_status: 'processing' })
+                    .eq('id', cloneData.id);
+
+                const uploadEndTime = Math.floor(Date.now() / 1000);
+                const duration = uploadEndTime - uploadStartTime;
+                
+                updateOverallProgress(100);
+                
+                setTimeout(() => {
+                    showCompletionMessage(totalFiles, duration);
+                    
+                    // Reset form
+                    document.getElementById('clone-form').reset();
+                    voiceFiles = [];
+                    videoFiles = [];
+                    document.getElementById('voice-file-list').innerHTML = '';
+                    document.getElementById('video-file-list').innerHTML = '';
+                    document.querySelectorAll('.upload-area').forEach(a => a.classList.remove('active'));
+                    
+                    // Hide progress after completion
+                    setTimeout(() => {
+                        document.getElementById('upload-status-container').classList.remove('active');
+                        currentFileUploads.clear();
+                    }, 2000);
+                }, 500);
+
+            } catch (error) {
+                console.error('[Clone Training Error]', error);
+                showAlert('clone-alert', `Upload failed: ${error.message}`, 'error');
+                uploadHandler?.cancelAll();
+            } finally {
+                trainBtn.disabled = false;
+                trainBtn.textContent = 'Train AI Clone';
+            }
+        }
+        
+        // Attach upload handler on load
+        window.addEventListener('load', () => {
+            const form = document.getElementById('clone-form');
+            if (form) {
+                form.addEventListener('submit', handleCloneUpload);
+            }
+        });
+    </script>
+</body>
+</html>
