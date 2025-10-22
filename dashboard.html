@@ -685,6 +685,9 @@
                 <li class="menu-item" data-page="timemachine">
                     <span>Time Machine</span>
                 </li>
+                <li class="menu-item" data-page="intelligence">
+                    <span>🧠 Meeting Intelligence</span>
+                </li>
                 <li class="menu-item" data-page="settings">
                     <span>Settings</span>
                 </li>
@@ -1173,6 +1176,11 @@
                     
                     if (pageName === 'vault') {
                         window.location.href = 'clones-gallery.html';
+                        return;
+                    }
+                    
+                    if (pageName === 'intelligence') {
+                        window.location.href = 'meeting-intelligence.html';
                         return;
                     }
                     
