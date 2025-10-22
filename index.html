@@ -144,7 +144,8 @@
             align-items: center;
         }
 
-        .nav-menu a {
+        .nav-menu > a,
+        .nav-dropdown > a {
             color: var(--text-secondary);
             text-decoration: none;
             font-weight: 500;
@@ -153,11 +154,12 @@
             position: relative;
         }
 
-        .nav-menu a:hover {
+        .nav-menu > a:hover,
+        .nav-dropdown > a:hover {
             color: var(--text-primary);
         }
 
-        .nav-menu a::after {
+        .nav-menu > a::after {
             content: '';
             position: absolute;
             bottom: -4px;
@@ -168,8 +170,111 @@
             transition: width 0.3s;
         }
 
-        .nav-menu a:hover::after {
+        .nav-menu > a:hover::after {
             width: 100%;
+        }
+
+        .nav-dropdown {
+            position: relative;
+        }
+
+        .nav-dropdown > a {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            cursor: pointer;
+        }
+
+        .nav-dropdown > a::before {
+            content: '▼';
+            font-size: 0.7rem;
+            transition: transform 0.3s;
+            order: 2;
+        }
+
+        .nav-dropdown:hover > a::before {
+            transform: rotate(180deg);
+        }
+
+        .nav-dropdown > a::after {
+            display: none;
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: calc(100% + 1rem);
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(17, 17, 24, 0.98);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 0.8rem 0;
+            min-width: 320px;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            z-index: 1000;
+        }
+
+        .nav-dropdown:hover .dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            top: calc(100% + 0.5rem);
+        }
+
+        .dropdown-menu a {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 1.5rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: all 0.2s;
+            font-size: 0.9rem;
+        }
+
+        .dropdown-menu a::after {
+            display: none;
+        }
+
+        .dropdown-menu a:hover {
+            background: rgba(79, 70, 229, 0.1);
+            color: var(--text-primary);
+            padding-left: 1.8rem;
+        }
+
+        .dropdown-menu a .icon {
+            font-size: 1.4rem;
+            width: 28px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+
+        .dropdown-menu a .label {
+            display: flex;
+            flex-direction: column;
+            gap: 0.2rem;
+            flex: 1;
+        }
+
+        .dropdown-menu a .label-title {
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 0.95rem;
+        }
+
+        .dropdown-menu a .label-desc {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            line-height: 1.3;
+        }
+
+        .dropdown-divider {
+            height: 1px;
+            background: var(--border);
+            margin: 0.5rem 1rem;
         }
 
         .nav-cta {
@@ -806,7 +911,8 @@
                 gap: 1rem;
             }
             
-            .nav-menu a:not(.nav-cta) {
+            .nav-menu > a:not(.nav-cta),
+            .nav-dropdown {
                 display: none;
             }
 
@@ -874,7 +980,48 @@
             <div class="logo">NeuralMeet</div>
             <div class="nav-menu">
                 <a href="#features">Features</a>
-                <a href="#roi">ROI Calculator</a>
+                <div class="nav-dropdown">
+                    <a>Premium</a>
+                    <div class="dropdown-menu">
+                        <a href="ai-powersuite.html">
+                            <span class="icon">🚀</span>
+                            <span class="label">
+                                <span class="label-title">AI PowerSuite</span>
+                                <span class="label-desc">Complete feature ecosystem</span>
+                            </span>
+                        </a>
+                        <a href="ai-coach.html">
+                            <span class="icon">🎯</span>
+                            <span class="label">
+                                <span class="label-title">AI Meeting Coach</span>
+                                <span class="label-desc">Real-time guidance & insights</span>
+                            </span>
+                        </a>
+                        <a href="predictive-analytics.html">
+                            <span class="icon">🔮</span>
+                            <span class="label">
+                                <span class="label-title">Predictive Analytics</span>
+                                <span class="label-desc">Forecast outcomes with 90%+ confidence</span>
+                            </span>
+                        </a>
+                        <a href="roi-calculator.html">
+                            <span class="icon">💰</span>
+                            <span class="label">
+                                <span class="label-title">ROI Calculator</span>
+                                <span class="label-desc">Calculate meeting value & savings</span>
+                            </span>
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="meeting-intelligence.html">
+                            <span class="icon">🧠</span>
+                            <span class="label">
+                                <span class="label-title">Meeting Intelligence</span>
+                                <span class="label-desc">AI-powered knowledge base</span>
+                            </span>
+                        </a>
+                    </div>
+                </div>
+                <a href="#roi">ROI</a>
                 <a href="#use-cases">Use Cases</a>
                 <a href="#security">Security</a>
                 <a href="auth.html" class="nav-cta">Login</a>
@@ -1103,6 +1250,7 @@
                 <h4>Product</h4>
                 <ul>
                     <li><a href="#features">Features</a></li>
+                    <li><a href="ai-powersuite.html">Premium Features</a></li>
                     <li><a href="#roi">ROI Calculator</a></li>
                     <li><a href="#use-cases">Use Cases</a></li>
                     <li><a href="#security">Security</a></li>
