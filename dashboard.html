@@ -125,43 +125,43 @@
             box-shadow: 0 0 20px rgba(79, 70, 229, 0.3);
         }
 
-        .premium-suite-section {
-            margin: 20px 0;
-            padding: 15px 0;
-            border-top: 1px solid rgba(99, 102, 241, 0.2);
-            border-bottom: 1px solid rgba(99, 102, 241, 0.2);
+        .dropdown-arrow {
+            margin-left: auto;
+            transition: transform 0.3s;
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+        }
+        
+        .dropdown-arrow.expanded {
+            transform: rotate(180deg);
         }
 
-        .premium-suite-title {
-            color: #fbbf24;
-            font-size: 11px;
-            font-weight: 600;
-            letter-spacing: 1.5px;
-            margin-bottom: 12px;
-            padding: 0 1.5rem;
+        .premium-suite-submenu {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .premium-suite-submenu.expanded {
+            max-height: 500px;
         }
 
         .premium-nav-item {
-            padding: 12px 1.5rem;
+            padding: 12px 2.5rem;
             color: var(--text-secondary);
             cursor: pointer;
             transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            font-size: 0.95rem;
-            font-weight: 600;
+            display: block;
+            font-size: 0.9rem;
+            font-weight: 500;
             text-decoration: none;
         }
 
         .premium-nav-item:hover {
-            background: rgba(99, 102, 241, 0.1);
+            background: rgba(99, 102, 241, 0.15);
             color: var(--text-primary);
-            transform: translateX(5px);
-        }
-
-        .premium-icon {
-            font-size: 16px;
+            padding-left: 3rem;
         }
 
         .main-content {
@@ -394,24 +394,15 @@
                     <span>Neural Command</span>
                 </li>
                 
-                <div class="premium-suite-section">
-                    <div class="premium-suite-title">PREMIUM SUITE</div>
-                    
-                    <a href="ai-powersuite.html" class="premium-nav-item">
-                        AI PowerSuite
-                    </a>
-                    
-                    <a href="ai-coach.html" class="premium-nav-item">
-                        AI Coach
-                    </a>
-                    
-                    <a href="predictive-analytics.html" class="premium-nav-item">
-                        Predictive Analytics
-                    </a>
-                    
-                    <a href="roi-calculator.html" class="premium-nav-item">
-                        ROI Calculator
-                    </a>
+                <li class="menu-item" id="premium-suite-toggle">
+                    <span>Premium Suite</span>
+                    <span class="dropdown-arrow">▼</span>
+                </li>
+                <div class="premium-suite-submenu" id="premium-submenu">
+                    <a href="ai-powersuite.html" class="premium-nav-item">AI PowerSuite</a>
+                    <a href="ai-coach.html" class="premium-nav-item">AI Coach</a>
+                    <a href="predictive-analytics.html" class="premium-nav-item">Predictive Analytics</a>
+                    <a href="roi-calculator.html" class="premium-nav-item">ROI Calculator</a>
                 </div>
                 
                 <li class="menu-item" data-page="dimension">
@@ -488,8 +479,23 @@
     </div>
 
     <script>
+        // Premium Suite Toggle
+        const premiumToggle = document.getElementById('premium-suite-toggle');
+        const premiumSubmenu = document.getElementById('premium-submenu');
+        const dropdownArrow = premiumToggle.querySelector('.dropdown-arrow');
+        
+        premiumToggle.addEventListener('click', function(e) {
+            e.stopPropagation();
+            premiumSubmenu.classList.toggle('expanded');
+            dropdownArrow.classList.toggle('expanded');
+        });
+        
+        // Menu Navigation
         document.querySelectorAll('.menu-item').forEach(item => {
             item.addEventListener('click', function() {
+                // Skip if this is the premium suite toggle
+                if (this.id === 'premium-suite-toggle') return;
+                
                 const pageName = this.getAttribute('data-page');
                 
                 if (pageName === 'vault') {
