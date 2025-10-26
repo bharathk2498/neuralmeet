@@ -3,18 +3,31 @@ const config = require('../config/config');
 
 class DIDService {
   constructor() {
-    this.client = axios.create({
-      baseURL: config.apiBaseUrl,
-      headers: {
-        'Authorization': `Basic ${config.didApiKey}`,
-        'Content-Type': 'application/json'
-      },
-      timeout: 30000
-    });
+    // Only create client if API key is available
+    if (config.didApiKey) {
+      this.client = axios.create({
+        baseURL: config.apiBaseUrl,
+        headers: {
+          'Authorization': `Basic ${config.didApiKey}`,
+          'Content-Type': 'application/json'
+        },
+        timeout: 30000
+      });
+    } else {
+      this.client = null;
+    }
+  }
+
+  checkApiKey() {
+    if (!this.client) {
+      throw new Error('D-ID API key not configured. Please set DID_API_KEY environment variable in Render dashboard.');
+    }
   }
 
   async createTalk(audioUrl, imageUrl, options = {}) {
     try {
+      this.checkApiKey();
+
       const payload = {
         script: {
           type: 'audio',
@@ -40,7 +53,7 @@ class DIDService {
       console.error('D-ID API Error:', error.response?.data || error.message);
       return {
         success: false,
-        error: error.response?.data?.message || 'Failed to create talk',
+        error: error.response?.data?.message || error.message || 'Failed to create talk',
         details: error.response?.data
       };
     }
@@ -48,6 +61,7 @@ class DIDService {
 
   async getTalkStatus(talkId) {
     try {
+      this.checkApiKey();
       const response = await this.client.get(`/talks/${talkId}`);
       return {
         success: true,
@@ -61,6 +75,7 @@ class DIDService {
 
   async getCredits() {
     try {
+      this.checkApiKey();
       const response = await this.client.get('/credits');
       return {
         success: true,
@@ -74,6 +89,7 @@ class DIDService {
 
   async deleteTalk(talkId) {
     try {
+      this.checkApiKey();
       await this.client.delete(`/talks/${talkId}`);
       return {
         success: true,
