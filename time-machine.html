@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Time Machine - NeuralMeet</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --neon-blue: #00d4ff;
+            --neon-purple: #b537f2;
+            --neon-pink: #ff2e97;
+            --bg-primary: #0a0a0f;
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --border: rgba(255, 255, 255, 0.08);
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+        .animated-bg {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: radial-gradient(circle at 20% 50%, rgba(0, 212, 255, 0.15) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 80%, rgba(181, 55, 242, 0.15) 0%, transparent 50%);
+            animation: bgShift 15s ease infinite;
+        }
+        @keyframes bgShift {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        .back-btn {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            text-decoration: none;
+            color: var(--text-primary);
+            margin-bottom: 2rem;
+            transition: all 0.3s;
+        }
+        .back-btn:hover {
+            background: rgba(0, 212, 255, 0.2);
+            transform: translateX(-5px);
+        }
+        .header {
+            text-align: center;
+            padding: 4rem 0;
+            margin-bottom: 4rem;
+        }
+        .header h1 {
+            font-size: 4rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+        }
+        .timeline-container {
+            position: relative;
+            padding: 2rem 0;
+        }
+        .timeline-controls {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        .time-btn {
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.2), rgba(181, 55, 242, 0.2));
+            border: 2px solid var(--neon-blue);
+            border-radius: 12px;
+            color: var(--text-primary);
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .time-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px rgba(0, 212, 255, 0.5);
+        }
+        .temporal-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+        .temporal-card {
+            background: rgba(26, 26, 36, 0.9);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 2rem;
+            transition: all 0.4s;
+        }
+        .temporal-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--neon-blue);
+            box-shadow: 0 20px 60px rgba(0, 212, 255, 0.3);
+        }
+        .time-stamp {
+            font-size: 2.5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="animated-bg"></div>
+    
+    <div class="container">
+        <a href="dashboard.html" class="back-btn">← Back to Dashboard</a>
+        
+        <div class="header">
+            <h1>⏰ Time Machine</h1>
+            <p style="font-size:1.3rem;color:var(--text-secondary);margin-top:1rem;">
+                Navigate through temporal meeting data and analyze patterns across time
+            </p>
+        </div>
+
+        <div class="timeline-controls">
+            <button class="time-btn">Last 7 Days</button>
+            <button class="time-btn">Last 30 Days</button>
+            <button class="time-btn">Last 90 Days</button>
+            <button class="time-btn">All Time</button>
+        </div>
+
+        <div class="temporal-grid">
+            <div class="temporal-card">
+                <div class="time-stamp">847</div>
+                <div style="color:var(--text-secondary);">Total Meetings Analyzed</div>
+                <div style="margin-top:1rem;font-size:0.9rem;color:var(--neon-blue);">Across all timelines</div>
+            </div>
+            
+            <div class="temporal-card">
+                <div class="time-stamp">2,847h</div>
+                <div style="color:var(--text-secondary);">Time Recovered</div>
+                <div style="margin-top:1rem;font-size:0.9rem;color:var(--neon-purple);">Through AI automation</div>
+            </div>
+            
+            <div class="temporal-card">
+                <div class="time-stamp">94%</div>
+                <div style="color:var(--text-secondary);">Pattern Recognition</div>
+                <div style="margin-top:1rem;font-size:0.9rem;color:var(--neon-pink);">Temporal accuracy rate</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
