@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Consciousness - NeuralMeet</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root { --neon-blue: #00d4ff; --neon-purple: #b537f2; --bg-primary: #0a0a0f; --text-primary: #f8fafc; --text-secondary: #cbd5e1; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg-primary); color: var(--text-primary); }
+        .container { max-width: 1400px; margin: 0 auto; padding: 2rem; }
+        .back-btn { display: inline-block; padding: 0.75rem 1.5rem; background: rgba(255,255,255,0.1); border-radius: 10px; text-decoration: none; color: var(--text-primary); margin-bottom: 2rem; transition: all 0.3s; }
+        .back-btn:hover { background: rgba(181, 55, 242, 0.2); }
+        .header { text-align: center; padding: 4rem 0; }
+        .header h1 { font-size: 4rem; font-weight: 900; background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .consciousness-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 2rem; margin-top: 3rem; }
+        .neural-card { background: rgba(26, 26, 36, 0.9); border-radius: 20px; padding: 2.5rem; border: 1px solid rgba(255,255,255,0.08); transition: all 0.3s; }
+        .neural-card:hover { transform: translateY(-5px); box-shadow: 0 20px 40px rgba(181, 55, 242, 0.3); }
+        .neural-stat { font-size: 3rem; font-weight: 900; color: var(--neon-blue); margin-bottom: 0.5rem; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="dashboard.html" class="back-btn">← Back to Dashboard</a>
+        <div class="header">
+            <h1>🧠 AI Consciousness</h1>
+            <p style="font-size:1.3rem;color:var(--text-secondary);margin-top:1rem;">Advanced neural network intelligence and autonomous decision-making</p>
+        </div>
+        <div class="consciousness-grid">
+            <div class="neural-card">
+                <div class="neural-stat">99.9%</div>
+                <p style="color:var(--text-secondary);">Neural Network Accuracy</p>
+            </div>
+            <div class="neural-card">
+                <div class="neural-stat">847</div>
+                <p style="color:var(--text-secondary);">Autonomous Decisions Made</p>
+            </div>
+            <div class="neural-card">
+                <div class="neural-stat">24/7</div>
+                <p style="color:var(--text-secondary);">Continuous Learning Active</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
