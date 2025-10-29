@@ -479,7 +479,6 @@
     </div>
 
     <script>
-        // Premium Suite Toggle
         const premiumToggle = document.getElementById('premium-suite-toggle');
         const premiumSubmenu = document.getElementById('premium-submenu');
         const dropdownArrow = premiumToggle.querySelector('.dropdown-arrow');
@@ -490,10 +489,8 @@
             dropdownArrow.classList.toggle('expanded');
         });
         
-        // Menu Navigation
         document.querySelectorAll('.menu-item').forEach(item => {
             item.addEventListener('click', function() {
-                // Skip if this is the premium suite toggle
                 if (this.id === 'premium-suite-toggle') return;
                 
                 const pageName = this.getAttribute('data-page');
@@ -505,6 +502,16 @@
                 
                 if (pageName === 'intelligence') {
                     window.location.href = 'meeting-intelligence.html';
+                    return;
+                }
+
+                if (pageName === 'timemachine') {
+                    window.location.href = 'time-machine.html';
+                    return;
+                }
+
+                if (pageName === 'biometric') {
+                    window.location.href = 'biometric-sync.html';
                     return;
                 }
                 
