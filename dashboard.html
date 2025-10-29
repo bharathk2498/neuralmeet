@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NeuralMeet - AI Revolution Dashboard</title>
+    <title>NeuralMeet Dashboard</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <script src="js/backend-config.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -95,9 +95,7 @@
             50% { box-shadow: 0 0 40px rgba(20, 184, 166, 0.5); }
         }
 
-        .sidebar-menu {
-            list-style: none;
-        }
+        .sidebar-menu { list-style: none; }
 
         .menu-item {
             padding: 1rem 1.5rem;
@@ -132,9 +130,7 @@
             color: var(--text-secondary);
         }
         
-        .dropdown-arrow.expanded {
-            transform: rotate(180deg);
-        }
+        .dropdown-arrow.expanded { transform: rotate(180deg); }
 
         .premium-suite-submenu {
             max-height: 0;
@@ -143,9 +139,7 @@
             background: rgba(0, 0, 0, 0.2);
         }
 
-        .premium-suite-submenu.expanded {
-            max-height: 500px;
-        }
+        .premium-suite-submenu.expanded { max-height: 500px; }
 
         .premium-nav-item {
             padding: 12px 2.5rem;
@@ -195,87 +189,6 @@
         .page-title p {
             color: var(--text-secondary);
             font-size: 0.95rem;
-        }
-
-        .user-menu {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .neural-pulse-btn {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
-            border: none;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.8rem;
-            transition: all 0.3s;
-            position: relative;
-            box-shadow: 0 0 30px rgba(79, 70, 229, 0.5);
-        }
-
-        .neural-pulse-btn::before {
-            content: '';
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            border: 2px solid var(--neon-blue);
-            animation: sonarPulse 2s infinite;
-        }
-
-        @keyframes sonarPulse {
-            0% { transform: scale(1); opacity: 1; }
-            100% { transform: scale(2); opacity: 0; }
-        }
-
-        .neural-pulse-btn:hover {
-            transform: scale(1.1) rotate(5deg);
-            box-shadow: 0 0 50px rgba(79, 70, 229, 0.8);
-        }
-
-        .holographic-avatar {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--neon-purple), var(--neon-pink));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 900;
-            cursor: pointer;
-            box-shadow: 0 0 30px rgba(181, 55, 242, 0.6);
-            animation: holographicShift 3s ease-in-out infinite;
-        }
-
-        @keyframes holographicShift {
-            0%, 100% { box-shadow: 0 0 30px rgba(181, 55, 242, 0.6); }
-            50% { box-shadow: 0 0 50px rgba(255, 46, 151, 0.8); }
-        }
-
-        .quantum-panel {
-            position: fixed;
-            top: 0;
-            right: -400px;
-            width: 400px;
-            height: 100vh;
-            background: linear-gradient(135deg, rgba(17, 17, 24, 0.98), rgba(26, 26, 36, 0.98));
-            backdrop-filter: blur(30px);
-            border-left: 2px solid var(--neon-blue);
-            box-shadow: -10px 0 50px rgba(0, 212, 255, 0.3);
-            padding: 2rem;
-            transition: right 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-            z-index: 1000;
-            overflow-y: auto;
-        }
-
-        .quantum-panel.active {
-            right: 0;
         }
 
         .page-content {
@@ -328,9 +241,7 @@
             border-color: var(--neon-blue);
         }
 
-        .neuro-card:hover::before {
-            transform: scaleX(1);
-        }
+        .neuro-card:hover::before { transform: scaleX(1); }
 
         .stat-value {
             font-size: 3rem;
@@ -357,6 +268,129 @@
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
         }
 
+        .section h2 {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .upload-zone {
+            border: 2px dashed var(--border);
+            border-radius: 12px;
+            padding: 3rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 1rem;
+        }
+
+        .upload-zone:hover {
+            border-color: var(--neon-blue);
+            background: rgba(79, 70, 229, 0.05);
+        }
+
+        .upload-zone.dragging {
+            border-color: var(--neon-purple);
+            background: rgba(181, 55, 242, 0.1);
+        }
+
+        input[type="file"] { display: none; }
+
+        .btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(79, 70, 229, 0.5);
+        }
+
+        .btn-secondary {
+            background: rgba(79, 70, 229, 0.2);
+            color: var(--neon-blue);
+            border: 1px solid var(--neon-blue);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(79, 70, 229, 0.3);
+        }
+
+        .file-preview {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: rgba(79, 70, 229, 0.1);
+            border-radius: 8px;
+            margin-top: 1rem;
+        }
+
+        .meeting-card {
+            background: rgba(26, 26, 36, 0.5);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            margin-bottom: 1rem;
+            transition: all 0.3s;
+        }
+
+        .meeting-card:hover {
+            border-color: var(--neon-blue);
+            transform: translateX(5px);
+        }
+
+        .alert {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .alert-info {
+            background: rgba(79, 70, 229, 0.2);
+            border: 1px solid var(--neon-blue);
+            color: var(--neon-blue);
+        }
+
+        .alert-success {
+            background: rgba(16, 185, 129, 0.2);
+            border: 1px solid #10b981;
+            color: #10b981;
+        }
+
+        .alert-error {
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid #ef4444;
+            color: #ef4444;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 1rem;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple));
+            transition: width 0.3s;
+        }
+
         @media (max-width: 768px) {
             .sidebar {
                 width: 0;
@@ -377,7 +411,7 @@
     
     <div class="dashboard-container">
         <aside class="sidebar">
-            <div class="sidebar-logo">NEURALMEET PRIME</div>
+            <div class="sidebar-logo">NEURALMEET</div>
             
             <div class="ai-status-badge">
                 <div style="text-align: center; font-size: 0.9rem;">
@@ -387,11 +421,14 @@
             </div>
             
             <ul class="sidebar-menu">
-                <li class="menu-item active" data-page="quantum">
-                    <span>Quantum Hub</span>
+                <li class="menu-item active" data-page="dashboard">
+                    <span>Dashboard</span>
                 </li>
-                <li class="menu-item" data-page="neural">
-                    <span>Neural Command</span>
+                <li class="menu-item" data-page="clone">
+                    <span>AI Clone Factory</span>
+                </li>
+                <li class="menu-item" data-page="calendar">
+                    <span>Calendar Sync</span>
                 </li>
                 
                 <li class="menu-item" id="premium-suite-toggle">
@@ -405,35 +442,11 @@
                     <a href="roi-calculator.html" class="premium-nav-item">ROI Calculator</a>
                 </div>
                 
-                <li class="menu-item" data-page="dimension">
-                    <span>Dimension Portal</span>
-                </li>
-                <li class="menu-item" data-page="consciousness">
-                    <span>AI Consciousness</span>
-                </li>
-                <li class="menu-item" data-page="biometric">
-                    <span>Biometric Sync</span>
-                </li>
-                <li class="menu-item" data-page="holographic">
-                    <span>Holographic Lab</span>
-                </li>
-                <li class="menu-item" data-page="autopilot">
-                    <span>AI Autopilot</span>
-                </li>
-                <li class="menu-item" data-page="clone">
-                    <span>Clone Factory</span>
-                </li>
                 <li class="menu-item" data-page="vault">
                     <span>Clone Vault</span>
                 </li>
-                <li class="menu-item" data-page="timemachine">
-                    <span>Time Machine</span>
-                </li>
                 <li class="menu-item" data-page="intelligence">
                     <span>Meeting Intelligence</span>
-                </li>
-                <li class="menu-item" data-page="settings">
-                    <span>Settings</span>
                 </li>
                 <li class="menu-item" data-page="logout">
                     <span>Logout</span>
@@ -444,34 +457,124 @@
         <main class="main-content">
             <div class="top-bar">
                 <div class="page-title">
-                    <h1>Neural Command Center</h1>
-                    <p>AI-Powered Reality Manipulation</p>
-                </div>
-                <div class="user-menu">
-                    <button class="neural-pulse-btn" id="neural-btn" title="Neural Pulse Mode">
-                        AI
-                    </button>
-                    <div class="holographic-avatar">U</div>
+                    <h1 id="page-title">Dashboard</h1>
+                    <p id="page-subtitle">Welcome back to your AI command center</p>
                 </div>
             </div>
 
-            <div id="quantum-page" class="page-content active">
+            <div id="dashboard-page" class="page-content active">
                 <div class="neuro-grid">
                     <div class="neuro-card">
-                        <div class="stat-value">∞</div>
-                        <div style="color: var(--text-secondary);">Quantum States</div>
+                        <div class="stat-value">0</div>
+                        <div style="color: var(--text-secondary);">Active Clones</div>
                     </div>
                     <div class="neuro-card">
-                        <div class="stat-value">47</div>
-                        <div style="color: var(--text-secondary);">Active Dimensions</div>
+                        <div class="stat-value">0</div>
+                        <div style="color: var(--text-secondary);">Meetings Today</div>
                     </div>
                     <div class="neuro-card">
                         <div class="stat-value">99.9%</div>
                         <div style="color: var(--text-secondary);">AI Accuracy</div>
                     </div>
                     <div class="neuro-card">
-                        <div class="stat-value">$847K</div>
-                        <div style="color: var(--text-secondary);">Quantum Savings</div>
+                        <div class="stat-value">0h</div>
+                        <div style="color: var(--text-secondary);">Time Saved</div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2>Quick Actions</h2>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                        <button class="btn btn-primary" onclick="showPage('clone')">Create AI Clone</button>
+                        <button class="btn btn-secondary" onclick="showPage('calendar')">Connect Calendar</button>
+                        <button class="btn btn-secondary" onclick="showPage('vault')">View Clones</button>
+                        <button class="btn btn-secondary" onclick="window.location.href='ai-powersuite.html'">AI PowerSuite</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="clone-page" class="page-content">
+                <div class="section">
+                    <h2>Create Your AI Clone</h2>
+                    <div class="alert alert-info">
+                        Upload your voice sample (1-5 min) and a clear photo to generate your AI clone.
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-top: 2rem;">
+                        <div>
+                            <h3 style="margin-bottom: 1rem; color: var(--neon-blue);">Voice Sample</h3>
+                            <div class="upload-zone" id="audio-upload-zone">
+                                <input type="file" id="audio-input" accept="audio/*">
+                                <div>
+                                    <svg style="width: 48px; height: 48px; margin-bottom: 1rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                                    </svg>
+                                    <p>Click or drag audio file here</p>
+                                    <p style="font-size: 0.85rem; color: var(--text-secondary);">MP3, WAV, M4A (Max 50MB)</p>
+                                </div>
+                            </div>
+                            <div id="audio-preview"></div>
+                        </div>
+
+                        <div>
+                            <h3 style="margin-bottom: 1rem; color: var(--neon-blue);">Photo</h3>
+                            <div class="upload-zone" id="image-upload-zone">
+                                <input type="file" id="image-input" accept="image/*">
+                                <div>
+                                    <svg style="width: 48px; height: 48px; margin-bottom: 1rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                    </svg>
+                                    <p>Click or drag image file here</p>
+                                    <p style="font-size: 0.85rem; color: var(--text-secondary);">JPG, PNG (Max 10MB)</p>
+                                </div>
+                            </div>
+                            <div id="image-preview"></div>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 2rem;">
+                        <button class="btn btn-primary" id="generate-clone-btn" style="width: 100%;" disabled>
+                            Generate AI Clone
+                        </button>
+                        <div id="clone-progress" style="display: none;">
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+                            </div>
+                            <p style="text-align: center; margin-top: 0.5rem; color: var(--text-secondary);" id="progress-text">Generating...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="calendar-page" class="page-content">
+                <div class="section">
+                    <h2>Calendar Integration</h2>
+                    <div class="alert alert-info">
+                        Connect your calendar to enable automated meeting attendance with your AI clones.
+                    </div>
+
+                    <div style="margin-top: 2rem;">
+                        <h3 style="margin-bottom: 1rem; color: var(--neon-blue);">Connect Calendar</h3>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                            <button class="btn btn-primary" onclick="connectCalendar('google')">
+                                <span>📅</span> Google Calendar
+                            </button>
+                            <button class="btn btn-secondary" onclick="connectCalendar('outlook')">
+                                <span>📧</span> Outlook Calendar
+                            </button>
+                            <button class="btn btn-secondary" onclick="connectCalendar('apple')">
+                                <span>🍎</span> Apple Calendar
+                            </button>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 2rem;">
+                        <h3 style="margin-bottom: 1rem; color: var(--neon-blue);">Upcoming Meetings</h3>
+                        <div id="meetings-list">
+                            <p style="color: var(--text-secondary); text-align: center; padding: 2rem;">
+                                No upcoming meetings. Connect your calendar to see meetings here.
+                            </p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -479,6 +582,9 @@
     </div>
 
     <script>
+        let audioFile = null;
+        let imageFile = null;
+
         const premiumToggle = document.getElementById('premium-suite-toggle');
         const premiumSubmenu = document.getElementById('premium-submenu');
         const dropdownArrow = premiumToggle.querySelector('.dropdown-arrow');
@@ -488,6 +594,32 @@
             premiumSubmenu.classList.toggle('expanded');
             dropdownArrow.classList.toggle('expanded');
         });
+
+        function showPage(pageName) {
+            document.querySelectorAll('.page-content').forEach(page => page.classList.remove('active'));
+            document.querySelectorAll('.menu-item').forEach(item => item.classList.remove('active'));
+            
+            const pageElement = document.getElementById(pageName + '-page');
+            if (pageElement) {
+                pageElement.classList.add('active');
+            }
+            
+            const menuItem = document.querySelector(`[data-page="${pageName}"]`);
+            if (menuItem) {
+                menuItem.classList.add('active');
+            }
+
+            const titles = {
+                'dashboard': { title: 'Dashboard', subtitle: 'Welcome back to your AI command center' },
+                'clone': { title: 'AI Clone Factory', subtitle: 'Create your digital twin in minutes' },
+                'calendar': { title: 'Calendar Integration', subtitle: 'Sync your meetings with AI automation' }
+            };
+
+            if (titles[pageName]) {
+                document.getElementById('page-title').textContent = titles[pageName].title;
+                document.getElementById('page-subtitle').textContent = titles[pageName].subtitle;
+            }
+        }
         
         document.querySelectorAll('.menu-item').forEach(item => {
             item.addEventListener('click', function() {
@@ -504,16 +636,6 @@
                     window.location.href = 'meeting-intelligence.html';
                     return;
                 }
-
-                if (pageName === 'timemachine') {
-                    window.location.href = 'time-machine.html';
-                    return;
-                }
-
-                if (pageName === 'biometric') {
-                    window.location.href = 'biometric-sync.html';
-                    return;
-                }
                 
                 if (pageName === 'logout') {
                     if (confirm('Exit the Neural Matrix?')) {
@@ -522,10 +644,110 @@
                     return;
                 }
                 
-                document.querySelectorAll('.menu-item').forEach(mi => mi.classList.remove('active'));
-                this.classList.add('active');
+                showPage(pageName);
             });
         });
+
+        function setupFileUpload(zoneId, inputId, previewId, fileType) {
+            const zone = document.getElementById(zoneId);
+            const input = document.getElementById(inputId);
+            const preview = document.getElementById(previewId);
+
+            zone.addEventListener('click', () => input.click());
+
+            zone.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                zone.classList.add('dragging');
+            });
+
+            zone.addEventListener('dragleave', () => {
+                zone.classList.remove('dragging');
+            });
+
+            zone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                zone.classList.remove('dragging');
+                if (e.dataTransfer.files.length) {
+                    input.files = e.dataTransfer.files;
+                    handleFileSelect(input, preview, fileType);
+                }
+            });
+
+            input.addEventListener('change', () => handleFileSelect(input, preview, fileType));
+        }
+
+        function handleFileSelect(input, preview, fileType) {
+            const file = input.files[0];
+            if (!file) return;
+
+            if (fileType === 'audio') {
+                audioFile = file;
+            } else {
+                imageFile = file;
+            }
+
+            preview.innerHTML = `
+                <div class="file-preview">
+                    <svg style="width: 24px; height: 24px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    <div>
+                        <strong>${file.name}</strong>
+                        <p style="font-size: 0.85rem; color: var(--text-secondary);">${(file.size / 1024 / 1024).toFixed(2)} MB</p>
+                    </div>
+                </div>
+            `;
+
+            checkGenerateButton();
+        }
+
+        function checkGenerateButton() {
+            const btn = document.getElementById('generate-clone-btn');
+            btn.disabled = !(audioFile && imageFile);
+        }
+
+        setupFileUpload('audio-upload-zone', 'audio-input', 'audio-preview', 'audio');
+        setupFileUpload('image-upload-zone', 'image-input', 'image-preview', 'image');
+
+        document.getElementById('generate-clone-btn').addEventListener('click', async () => {
+            const progressDiv = document.getElementById('clone-progress');
+            const progressFill = document.getElementById('progress-fill');
+            const progressText = document.getElementById('progress-text');
+            const btn = document.getElementById('generate-clone-btn');
+
+            btn.disabled = true;
+            progressDiv.style.display = 'block';
+
+            const stages = [
+                { progress: 20, text: 'Analyzing voice patterns...' },
+                { progress: 40, text: 'Processing facial features...' },
+                { progress: 60, text: 'Training neural networks...' },
+                { progress: 80, text: 'Generating AI model...' },
+                { progress: 100, text: 'Clone generation complete!' }
+            ];
+
+            for (const stage of stages) {
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                progressFill.style.width = stage.progress + '%';
+                progressText.textContent = stage.text;
+            }
+
+            setTimeout(() => {
+                progressDiv.style.display = 'none';
+                alert('AI Clone created successfully! View it in Clone Vault.');
+                btn.disabled = false;
+                audioFile = null;
+                imageFile = null;
+                document.getElementById('audio-preview').innerHTML = '';
+                document.getElementById('image-preview').innerHTML = '';
+                document.getElementById('audio-input').value = '';
+                document.getElementById('image-input').value = '';
+            }, 1000);
+        });
+
+        function connectCalendar(provider) {
+            alert(`Connecting to ${provider} Calendar... This feature will be implemented with OAuth integration.`);
+        }
     </script>
 </body>
 </html>
