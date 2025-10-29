@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NeuralMeet Dashboard</title>
+    <title>NeuralMeet - AI Revolution Dashboard</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <script src="js/backend-config.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -95,7 +95,9 @@
             50% { box-shadow: 0 0 40px rgba(20, 184, 166, 0.5); }
         }
 
-        .sidebar-menu { list-style: none; }
+        .sidebar-menu {
+            list-style: none;
+        }
 
         .menu-item {
             padding: 1rem 1.5rem;
@@ -130,7 +132,9 @@
             color: var(--text-secondary);
         }
         
-        .dropdown-arrow.expanded { transform: rotate(180deg); }
+        .dropdown-arrow.expanded {
+            transform: rotate(180deg);
+        }
 
         .premium-suite-submenu {
             max-height: 0;
@@ -139,7 +143,9 @@
             background: rgba(0, 0, 0, 0.2);
         }
 
-        .premium-suite-submenu.expanded { max-height: 500px; }
+        .premium-suite-submenu.expanded {
+            max-height: 500px;
+        }
 
         .premium-nav-item {
             padding: 12px 2.5rem;
@@ -189,6 +195,67 @@
         .page-title p {
             color: var(--text-secondary);
             font-size: 0.95rem;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .neural-pulse-btn {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            transition: all 0.3s;
+            position: relative;
+            box-shadow: 0 0 30px rgba(79, 70, 229, 0.5);
+        }
+
+        .neural-pulse-btn::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 2px solid var(--neon-blue);
+            animation: sonarPulse 2s infinite;
+        }
+
+        @keyframes sonarPulse {
+            0% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(2); opacity: 0; }
+        }
+
+        .neural-pulse-btn:hover {
+            transform: scale(1.1) rotate(5deg);
+            box-shadow: 0 0 50px rgba(79, 70, 229, 0.8);
+        }
+
+        .holographic-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--neon-purple), var(--neon-pink));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            cursor: pointer;
+            box-shadow: 0 0 30px rgba(181, 55, 242, 0.6);
+            animation: holographicShift 3s ease-in-out infinite;
+        }
+
+        @keyframes holographicShift {
+            0%, 100% { box-shadow: 0 0 30px rgba(181, 55, 242, 0.6); }
+            50% { box-shadow: 0 0 50px rgba(255, 46, 151, 0.8); }
         }
 
         .page-content {
@@ -241,7 +308,9 @@
             border-color: var(--neon-blue);
         }
 
-        .neuro-card:hover::before { transform: scaleX(1); }
+        .neuro-card:hover::before {
+            transform: scaleX(1);
+        }
 
         .stat-value {
             font-size: 3rem;
@@ -276,28 +345,6 @@
             -webkit-text-fill-color: transparent;
         }
 
-        .upload-zone {
-            border: 2px dashed var(--border);
-            border-radius: 12px;
-            padding: 3rem;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s;
-            margin-bottom: 1rem;
-        }
-
-        .upload-zone:hover {
-            border-color: var(--neon-blue);
-            background: rgba(79, 70, 229, 0.05);
-        }
-
-        .upload-zone.dragging {
-            border-color: var(--neon-purple);
-            background: rgba(181, 55, 242, 0.1);
-        }
-
-        input[type="file"] { display: none; }
-
         .btn {
             padding: 1rem 2rem;
             border: none;
@@ -328,17 +375,7 @@
             background: rgba(79, 70, 229, 0.3);
         }
 
-        .file-preview {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            padding: 1rem;
-            background: rgba(79, 70, 229, 0.1);
-            border-radius: 8px;
-            margin-top: 1rem;
-        }
-
-        .meeting-card {
+        .feature-card {
             background: rgba(26, 26, 36, 0.5);
             padding: 1.5rem;
             border-radius: 12px;
@@ -347,34 +384,72 @@
             transition: all 0.3s;
         }
 
-        .meeting-card:hover {
+        .feature-card:hover {
             border-color: var(--neon-blue);
             transform: translateX(5px);
         }
 
-        .alert {
-            padding: 1rem;
-            border-radius: 8px;
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(255, 255, 255, 0.1);
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+
+        .upload-zone {
+            border: 2px dashed var(--border);
+            border-radius: 12px;
+            padding: 3rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
             margin-bottom: 1rem;
         }
 
-        .alert-info {
-            background: rgba(79, 70, 229, 0.2);
-            border: 1px solid var(--neon-blue);
-            color: var(--neon-blue);
+        .upload-zone:hover {
+            border-color: var(--neon-blue);
+            background: rgba(79, 70, 229, 0.05);
         }
 
-        .alert-success {
-            background: rgba(16, 185, 129, 0.2);
-            border: 1px solid #10b981;
-            color: #10b981;
-        }
-
-        .alert-error {
-            background: rgba(239, 68, 68, 0.2);
-            border: 1px solid #ef4444;
-            color: #ef4444;
-        }
+        input[type="file"] { display: none; }
 
         .progress-bar {
             width: 100%;
@@ -411,7 +486,7 @@
     
     <div class="dashboard-container">
         <aside class="sidebar">
-            <div class="sidebar-logo">NEURALMEET</div>
+            <div class="sidebar-logo">NEURALMEET PRIME</div>
             
             <div class="ai-status-badge">
                 <div style="text-align: center; font-size: 0.9rem;">
@@ -421,18 +496,15 @@
             </div>
             
             <ul class="sidebar-menu">
-                <li class="menu-item active" data-page="dashboard">
-                    <span>Dashboard</span>
+                <li class="menu-item active" data-page="quantum">
+                    <span>🌀 Quantum Hub</span>
                 </li>
-                <li class="menu-item" data-page="clone">
-                    <span>AI Clone Factory</span>
-                </li>
-                <li class="menu-item" data-page="calendar">
-                    <span>Calendar Sync</span>
+                <li class="menu-item" data-page="neural">
+                    <span>🧬 Neural Command</span>
                 </li>
                 
                 <li class="menu-item" id="premium-suite-toggle">
-                    <span>Premium Suite</span>
+                    <span>💎 Premium Suite</span>
                     <span class="dropdown-arrow">▼</span>
                 </li>
                 <div class="premium-suite-submenu" id="premium-submenu">
@@ -442,14 +514,38 @@
                     <a href="roi-calculator.html" class="premium-nav-item">ROI Calculator</a>
                 </div>
                 
+                <li class="menu-item" data-page="dimension">
+                    <span>🌌 Dimension Portal</span>
+                </li>
+                <li class="menu-item" data-page="consciousness">
+                    <span>🧠 AI Consciousness</span>
+                </li>
+                <li class="menu-item" data-page="biometric">
+                    <span>💓 Biometric Sync</span>
+                </li>
+                <li class="menu-item" data-page="holographic">
+                    <span>🌈 Holographic Lab</span>
+                </li>
+                <li class="menu-item" data-page="autopilot">
+                    <span>✈️ AI Autopilot</span>
+                </li>
+                <li class="menu-item" data-page="clone">
+                    <span>🎤 Clone Factory</span>
+                </li>
                 <li class="menu-item" data-page="vault">
-                    <span>Clone Vault</span>
+                    <span>🗂️ Clone Vault</span>
+                </li>
+                <li class="menu-item" data-page="timemachine">
+                    <span>⏰ Time Machine</span>
                 </li>
                 <li class="menu-item" data-page="intelligence">
-                    <span>Meeting Intelligence</span>
+                    <span>📊 Meeting Intelligence</span>
+                </li>
+                <li class="menu-item" data-page="settings">
+                    <span>⚙️ Settings</span>
                 </li>
                 <li class="menu-item" data-page="logout">
-                    <span>Logout</span>
+                    <span>🚪 Logout</span>
                 </li>
             </ul>
         </aside>
@@ -457,60 +553,255 @@
         <main class="main-content">
             <div class="top-bar">
                 <div class="page-title">
-                    <h1 id="page-title">Dashboard</h1>
-                    <p id="page-subtitle">Welcome back to your AI command center</p>
+                    <h1 id="page-title">Neural Command Center</h1>
+                    <p id="page-subtitle">AI-Powered Reality Manipulation</p>
+                </div>
+                <div class="user-menu">
+                    <button class="neural-pulse-btn" id="neural-btn" title="Neural Pulse Mode">
+                        🧠
+                    </button>
+                    <div class="holographic-avatar">U</div>
                 </div>
             </div>
 
-            <div id="dashboard-page" class="page-content active">
+            <!-- Quantum Hub Page -->
+            <div id="quantum-page" class="page-content active">
                 <div class="neuro-grid">
                     <div class="neuro-card">
-                        <div class="stat-value">0</div>
-                        <div style="color: var(--text-secondary);">Active Clones</div>
+                        <div class="stat-value">∞</div>
+                        <div style="color: var(--text-secondary);">Quantum States</div>
                     </div>
                     <div class="neuro-card">
-                        <div class="stat-value">0</div>
-                        <div style="color: var(--text-secondary);">Meetings Today</div>
+                        <div class="stat-value">47</div>
+                        <div style="color: var(--text-secondary);">Active Dimensions</div>
                     </div>
                     <div class="neuro-card">
                         <div class="stat-value">99.9%</div>
                         <div style="color: var(--text-secondary);">AI Accuracy</div>
                     </div>
                     <div class="neuro-card">
-                        <div class="stat-value">0h</div>
-                        <div style="color: var(--text-secondary);">Time Saved</div>
+                        <div class="stat-value">$847K</div>
+                        <div style="color: var(--text-secondary);">Quantum Savings</div>
                     </div>
                 </div>
-
+                
                 <div class="section">
-                    <h2>Quick Actions</h2>
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
-                        <button class="btn btn-primary" onclick="showPage('clone')">Create AI Clone</button>
-                        <button class="btn btn-secondary" onclick="showPage('calendar')">Connect Calendar</button>
-                        <button class="btn btn-secondary" onclick="showPage('vault')">View Clones</button>
-                        <button class="btn btn-secondary" onclick="window.location.href='ai-powersuite.html'">AI PowerSuite</button>
+                    <h2>Quantum Analysis</h2>
+                    <p style="color: var(--text-secondary); margin-bottom: 1rem;">AI operates across 47 parallel dimensions to optimize decisions</p>
+                    <div class="feature-card">
+                        <h3 style="color: var(--neon-blue); margin-bottom: 0.5rem;">Real-time Future Scanning</h3>
+                        <p style="color: var(--text-secondary);">Analyzing 10,000+ data points per second across multiple timelines</p>
                     </div>
                 </div>
             </div>
 
+            <!-- Neural Command Page -->
+            <div id="neural-page" class="page-content">
+                <div class="neuro-grid">
+                    <div class="neuro-card">
+                        <div class="stat-value">127</div>
+                        <div style="color: var(--text-secondary);">Active Neural Connections</div>
+                    </div>
+                    <div class="neuro-card">
+                        <div class="stat-value">10K+</div>
+                        <div style="color: var(--text-secondary);">Data Points Analyzed</div>
+                    </div>
+                    <div class="neuro-card">
+                        <div class="stat-value">3</div>
+                        <div style="color: var(--text-secondary);">AI Personalities</div>
+                    </div>
+                    <div class="neuro-card">
+                        <div class="stat-value">Live</div>
+                        <div style="color: var(--text-secondary);">DNA Analysis</div>
+                    </div>
+                </div>
+                
+                <div class="section">
+                    <h2>AI Personality Profiles</h2>
+                    <div class="feature-card">
+                        <h3 style="color: var(--neon-blue); margin-bottom: 0.5rem;">🎯 Professional Mode</h3>
+                        <p style="color: var(--text-secondary);">Optimized for business meetings and executive decisions</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3 style="color: var(--neon-purple); margin-bottom: 0.5rem;">🎨 Creative Mode</h3>
+                        <p style="color: var(--text-secondary);">Enhanced brainstorming and innovative thinking</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3 style="color: var(--neon-pink); margin-bottom: 0.5rem;">📊 Analytical Mode</h3>
+                        <p style="color: var(--text-secondary);">Deep data analysis and pattern recognition</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dimension Portal Page -->
+            <div id="dimension-page" class="page-content">
+                <div class="section">
+                    <h2>Multi-Dimensional Decision Engine</h2>
+                    <p style="color: var(--text-secondary); margin-bottom: 2rem;">View alternate outcomes across 47 parallel realities</p>
+                    
+                    <div class="feature-card">
+                        <h3 style="color: var(--neon-blue); margin-bottom: 1rem;">Current Timeline Analysis</h3>
+                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 1rem;">
+                            <div style="text-align: center;">
+                                <div style="font-size: 2rem; color: var(--neon-blue);">87%</div>
+                                <div style="font-size: 0.85rem; color: var(--text-secondary);">Success Rate</div>
+                            </div>
+                            <div style="text-align: center;">
+                                <div style="font-size: 2rem; color: var(--neon-purple);">$2.4M</div>
+                                <div style="font-size: 0.85rem; color: var(--text-secondary);">Projected Value</div>
+                            </div>
+                            <div style="text-align: center;">
+                                <div style="font-size: 2rem; color: var(--neon-pink);">45 days</div>
+                                <div style="font-size: 0.85rem; color: var(--text-secondary);">Timeline</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- AI Consciousness Page -->
+            <div id="consciousness-page" class="page-content">
+                <div class="section">
+                    <h2>Level 7 Transcendent Intelligence</h2>
+                    <div class="feature-card">
+                        <h3 style="color: var(--neon-blue); margin-bottom: 1rem;">AI Self-Awareness Status</h3>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                            <span>Autonomous Decision Making</span>
+                            <label class="toggle-switch">
+                                <input type="checkbox" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                            <span>Auto-Decline Low Priority</span>
+                            <label class="toggle-switch">
+                                <input type="checkbox" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span>Predictive Scheduling</span>
+                            <label class="toggle-switch">
+                                <input type="checkbox" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <h3 style="color: var(--neon-purple); margin-bottom: 0.5rem;">Recent AI Decisions</h3>
+                        <ul style="list-style: none; padding: 0;">
+                            <li style="padding: 0.5rem 0; border-bottom: 1px solid var(--border);">
+                                ✅ Auto-declined 3 meetings (30+ min saved)
+                            </li>
+                            <li style="padding: 0.5rem 0; border-bottom: 1px solid var(--border);">
+                                ✅ Scheduled optimal meeting time with 94% success probability
+                            </li>
+                            <li style="padding: 0.5rem 0;">
+                                ✅ Detected conflicting priorities, suggested alternatives
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Biometric Sync Page -->
+            <div id="biometric-page" class="page-content">
+                <div class="neuro-grid">
+                    <div class="neuro-card">
+                        <div class="stat-value">72</div>
+                        <div style="color: var(--text-secondary);">Heart Rate (BPM)</div>
+                    </div>
+                    <div class="neuro-card">
+                        <div class="stat-value">LOW</div>
+                        <div style="color: var(--text-secondary);">Stress Level</div>
+                    </div>
+                    <div class="neuro-card">
+                        <div class="stat-value">HIGH</div>
+                        <div style="color: var(--text-secondary);">Energy Level</div>
+                    </div>
+                    <div class="neuro-card">
+                        <div class="stat-value">93%</div>
+                        <div style="color: var(--text-secondary);">Sync Status</div>
+                    </div>
+                </div>
+                
+                <div class="section">
+                    <h2>Physiological Optimization</h2>
+                    <p style="color: var(--text-secondary); margin-bottom: 1rem;">AI synced with your biometric data for optimal performance</p>
+                    <div class="feature-card">
+                        <h3 style="color: var(--neon-blue); margin-bottom: 0.5rem;">Smart Scheduling</h3>
+                        <p style="color: var(--text-secondary);">Meetings scheduled during peak energy hours (9-11 AM, 2-4 PM)</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Holographic Lab Page -->
+            <div id="holographic-page" class="page-content">
+                <div class="section">
+                    <h2>3D Hologram Projection System</h2>
+                    <div class="feature-card">
+                        <h3 style="color: var(--neon-blue); margin-bottom: 1rem;">Holographic Avatar Status</h3>
+                        <p style="color: var(--text-secondary); margin-bottom: 1rem;">Project photorealistic 3D avatars into physical meetings</p>
+                        <div style="text-align: center; padding: 3rem; background: rgba(79, 70, 229, 0.1); border-radius: 12px;">
+                            <div style="font-size: 4rem;">🌈</div>
+                            <p style="margin-top: 1rem;">Holographic System Ready</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- AI Autopilot Page -->
+            <div id="autopilot-page" class="page-content">
+                <div class="section">
+                    <h2>100% Autonomous Meeting Management</h2>
+                    <div class="feature-card">
+                        <h3 style="color: var(--neon-blue); margin-bottom: 1rem;">Autopilot Configuration</h3>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                            <span>Auto-Accept Meetings</span>
+                            <label class="toggle-switch">
+                                <input type="checkbox" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                            <span>Auto-Decline Low Priority</span>
+                            <label class="toggle-switch">
+                                <input type="checkbox" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                            <span>Auto-Generate Responses</span>
+                            <label class="toggle-switch">
+                                <input type="checkbox" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span>Budget Auto-Approval (Under $5K)</span>
+                            <label class="toggle-switch">
+                                <input type="checkbox">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Clone Factory Page -->
             <div id="clone-page" class="page-content">
                 <div class="section">
                     <h2>Create Your AI Clone</h2>
-                    <div class="alert alert-info">
-                        Upload your voice sample (1-5 min) and a clear photo to generate your AI clone.
-                    </div>
-
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-top: 2rem;">
                         <div>
                             <h3 style="margin-bottom: 1rem; color: var(--neon-blue);">Voice Sample</h3>
                             <div class="upload-zone" id="audio-upload-zone">
                                 <input type="file" id="audio-input" accept="audio/*">
                                 <div>
-                                    <svg style="width: 48px; height: 48px; margin-bottom: 1rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
-                                    </svg>
+                                    <p style="font-size: 3rem; margin-bottom: 1rem;">🎤</p>
                                     <p>Click or drag audio file here</p>
-                                    <p style="font-size: 0.85rem; color: var(--text-secondary);">MP3, WAV, M4A (Max 50MB)</p>
+                                    <p style="font-size: 0.85rem; color: var(--text-secondary);">MP3, WAV (Max 50MB)</p>
                                 </div>
                             </div>
                             <div id="audio-preview"></div>
@@ -521,9 +812,7 @@
                             <div class="upload-zone" id="image-upload-zone">
                                 <input type="file" id="image-input" accept="image/*">
                                 <div>
-                                    <svg style="width: 48px; height: 48px; margin-bottom: 1rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                                    </svg>
+                                    <p style="font-size: 3rem; margin-bottom: 1rem;">📸</p>
                                     <p>Click or drag image file here</p>
                                     <p style="font-size: 0.85rem; color: var(--text-secondary);">JPG, PNG (Max 10MB)</p>
                                 </div>
@@ -546,34 +835,33 @@
                 </div>
             </div>
 
-            <div id="calendar-page" class="page-content">
+            <!-- Settings Page -->
+            <div id="settings-page" class="page-content">
                 <div class="section">
-                    <h2>Calendar Integration</h2>
-                    <div class="alert alert-info">
-                        Connect your calendar to enable automated meeting attendance with your AI clones.
-                    </div>
-
-                    <div style="margin-top: 2rem;">
-                        <h3 style="margin-bottom: 1rem; color: var(--neon-blue);">Connect Calendar</h3>
-                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
-                            <button class="btn btn-primary" onclick="connectCalendar('google')">
-                                <span>📅</span> Google Calendar
-                            </button>
-                            <button class="btn btn-secondary" onclick="connectCalendar('outlook')">
-                                <span>📧</span> Outlook Calendar
-                            </button>
-                            <button class="btn btn-secondary" onclick="connectCalendar('apple')">
-                                <span>🍎</span> Apple Calendar
-                            </button>
+                    <h2>System Settings</h2>
+                    <div class="feature-card">
+                        <h3 style="color: var(--neon-blue); margin-bottom: 1rem;">AI Configuration</h3>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                            <span>Neural Network Mode</span>
+                            <select style="padding: 0.5rem; background: rgba(0,0,0,0.3); border: 1px solid var(--border); border-radius: 8px; color: var(--text-primary);">
+                                <option>Advanced</option>
+                                <option>Standard</option>
+                                <option>Basic</option>
+                            </select>
                         </div>
-                    </div>
-
-                    <div style="margin-top: 2rem;">
-                        <h3 style="margin-bottom: 1rem; color: var(--neon-blue);">Upcoming Meetings</h3>
-                        <div id="meetings-list">
-                            <p style="color: var(--text-secondary); text-align: center; padding: 2rem;">
-                                No upcoming meetings. Connect your calendar to see meetings here.
-                            </p>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                            <span>Auto-Save Recordings</span>
+                            <label class="toggle-switch">
+                                <input type="checkbox" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span>Quantum Encryption</span>
+                            <label class="toggle-switch">
+                                <input type="checkbox" checked>
+                                <span class="slider"></span>
+                            </label>
                         </div>
                     </div>
                 </div>
@@ -610,9 +898,16 @@
             }
 
             const titles = {
-                'dashboard': { title: 'Dashboard', subtitle: 'Welcome back to your AI command center' },
-                'clone': { title: 'AI Clone Factory', subtitle: 'Create your digital twin in minutes' },
-                'calendar': { title: 'Calendar Integration', subtitle: 'Sync your meetings with AI automation' }
+                'quantum': { title: 'Quantum Hub', subtitle: 'Multi-dimensional decision optimization' },
+                'neural': { title: 'Neural Command', subtitle: 'DNA-level meeting analysis' },
+                'dimension': { title: 'Dimension Portal', subtitle: 'Explore parallel reality outcomes' },
+                'consciousness': { title: 'AI Consciousness', subtitle: 'Level 7 transcendent intelligence' },
+                'biometric': { title: 'Biometric Sync', subtitle: 'Physiological AI integration' },
+                'holographic': { title: 'Holographic Lab', subtitle: '3D avatar projection system' },
+                'autopilot': { title: 'AI Autopilot', subtitle: '100% autonomous management' },
+                'clone': { title: 'Clone Factory', subtitle: 'Create your digital twin' },
+                'timemachine': { title: 'Time Machine', subtitle: 'Temporal decision analyzer' },
+                'settings': { title: 'Settings', subtitle: 'System configuration' }
             };
 
             if (titles[pageName]) {
@@ -634,6 +929,11 @@
                 
                 if (pageName === 'intelligence') {
                     window.location.href = 'meeting-intelligence.html';
+                    return;
+                }
+
+                if (pageName === 'timemachine') {
+                    window.location.href = 'time-machine.html';
                     return;
                 }
                 
@@ -687,14 +987,9 @@
             }
 
             preview.innerHTML = `
-                <div class="file-preview">
-                    <svg style="width: 24px; height: 24px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                    </svg>
-                    <div>
-                        <strong>${file.name}</strong>
-                        <p style="font-size: 0.85rem; color: var(--text-secondary);">${(file.size / 1024 / 1024).toFixed(2)} MB</p>
-                    </div>
+                <div style="margin-top: 1rem; padding: 1rem; background: rgba(79, 70, 229, 0.1); border-radius: 8px;">
+                    <strong>${file.name}</strong>
+                    <p style="font-size: 0.85rem; color: var(--text-secondary);">${(file.size / 1024 / 1024).toFixed(2)} MB</p>
                 </div>
             `;
 
@@ -734,7 +1029,7 @@
 
             setTimeout(() => {
                 progressDiv.style.display = 'none';
-                alert('AI Clone created successfully! View it in Clone Vault.');
+                alert('✅ AI Clone created successfully! View it in Clone Vault.');
                 btn.disabled = false;
                 audioFile = null;
                 imageFile = null;
@@ -745,9 +1040,9 @@
             }, 1000);
         });
 
-        function connectCalendar(provider) {
-            alert(`Connecting to ${provider} Calendar... This feature will be implemented with OAuth integration.`);
-        }
+        document.getElementById('neural-btn').addEventListener('click', () => {
+            alert('🧠 Neural Pulse Mode Activated! AI operating at maximum capacity.');
+        });
     </script>
 </body>
 </html>
