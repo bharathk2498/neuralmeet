@@ -101,6 +101,25 @@
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
         }
 
+        .demo-banner {
+            background: linear-gradient(135deg, rgba(79, 70, 229, 0.2), rgba(20, 184, 166, 0.1));
+            border: 1px solid var(--primary);
+            border-radius: 12px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .demo-banner a {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .demo-banner a:hover {
+            text-decoration: underline;
+        }
+
         .auth-header {
             text-align: center;
             margin-bottom: 2rem;
@@ -345,6 +364,10 @@
         </div>
 
         <div class="auth-card">
+            <div class="demo-banner">
+                🚀 <strong>Demo Mode:</strong> <a href="dashboard.html">Skip to Dashboard</a> to explore features without login
+            </div>
+
             <div id="alert" class="alert"></div>
 
             <div class="tabs">
@@ -550,7 +573,7 @@
             }
         }
 
-        // Google OAuth
+        // Google OAuth - FIXED redirect paths
         async function loginWithGoogle() {
             try {
                 if (!supabase) {
@@ -561,7 +584,7 @@
                 const { data, error } = await supabase.auth.signInWithOAuth({
                     provider: 'google',
                     options: {
-                        redirectTo: window.location.origin + '/neuralmeet/dashboard.html'
+                        redirectTo: window.location.origin + window.location.pathname.replace('auth.html', 'dashboard.html')
                     }
                 });
 
@@ -571,7 +594,7 @@
             }
         }
 
-        // Password Reset
+        // Password Reset - FIXED redirect path
         async function resetPassword() {
             const email = prompt('Enter your email address:');
             if (!email) return;
@@ -583,7 +606,7 @@
                 }
 
                 const { error } = await supabase.auth.resetPasswordForEmail(email, {
-                    redirectTo: window.location.origin + '/neuralmeet/auth.html'
+                    redirectTo: window.location.origin + window.location.pathname
                 });
 
                 if (error) throw error;
